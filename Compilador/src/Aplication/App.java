@@ -2,7 +2,6 @@ package Aplication;
 
 import AnalizadorLexico.AnalizadorLexico;
 import AnalizadorLexico.FileHandler;
-import AnalizadorLexico.TablaDeSimbolos;
 import AnalizadorSintactico.AnalizadorSintactico;
 import AnalizadorSintactico.Parser;
 

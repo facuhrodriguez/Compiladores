@@ -18,9 +18,15 @@ public class Token {
 		
 	}
 	
+	/**
+	 * 
+	 * @param clave
+	 * @param obj
+	 */
 	public void addAttr (String clave, Object obj) {
 		attr.put (clave, obj);
 	}
+	
 	
 	public Object getAttr (String clave) {
 		return attr.get(clave);

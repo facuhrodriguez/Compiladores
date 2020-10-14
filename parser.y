@@ -60,7 +60,7 @@ declaraciones_id : declaracion_id ';' { this.s.addSyntaxStruct( AnalizadorSintac
 				 | declaracion_id { this.s.addSyntaxError( new Error(AnalizadorSintactico.errorDeclarative, this.l )); }
 				 ;
 
-declaracion_id : tipo IDENTIFICADOR
+declaracion_id : tipo IDENTIFICADOR 
 			   ;
 
 tipo : UINT { }
@@ -100,7 +100,9 @@ sentencia_ejecutable : asignaciones ';' { this.s.addSyntaxStruct( AnalizadorSint
 					 | invocaciones_procedimiento ';' { this.s.addSyntaxStruct( AnalizadorSintactico.invocProcStructure ); }
 					 ;
 
-asignaciones : lado_izquierdo '=' expresion_aritmetica 
+asignaciones : lado_izquierdo '=' expresion_aritmetica { polaca.addAsig($1);
+													     polaca.addAsigOperador($2);
+													   }
 			 | lado_izquierdo COMPARACION expresion_aritmetica { this.s.addSyntaxError(new Error(AnalizadorSintactico.errorOperatorComp, this.l));}
 			 ;
 
@@ -108,8 +110,8 @@ lado_izquierdo : IDENTIFICADOR { $$ = $1; }
 			   ;
 
 expresion_aritmetica : termino
-					 | expresion_aritmetica '+' termino
-					 | expresion_aritmetica '-' termino
+					 | expresion_aritmetica '+' termino { polaca.addOperador($2);}
+					 | expresion_aritmetica '-' termino { polaca.addOperador($2); }
 					 ;
 					 
 termino : factor {  // termino : factor 
@@ -147,9 +149,25 @@ factor : lado_izquierdo { // factor : IDENTIFICADOR
 					polaca.addOperando($$);}
 	   ;
 	   
-sentencia_seleccion : IF '(' condicion ')' cuerpo_if END_IF { this.s.addSyntaxStruct( AnalizadorSintactico.ifStructure ) ;} 
+sentencia_seleccion : IF '(' condicion ')' cuerpo_if END_IF { 
+															  this.s.addSyntaxStruct( AnalizadorSintactico.ifStructure );
+															  //Desapila dirección incompleta
+															  Integer pasoIncompleto = polaca.getTop(); 	
+															  // Completa el destino de la BF
+															  polaca.addDirection(pasoIncompleto, CodigoIntermedio.polacaNumber+2);
+															  // Crea paso incompleto
+															  polaca.addOperador('');
+															  // Apila el número del paso incompleto
+															  polaca.stackUp(CodigoIntermedio.polacaNumber);
+															  // Se crea el paso BI
+															  polaca.addOperador('BI');
+															 
+															 } 
 					| IF '(' condicion cuerpo_if { this.s.addSyntaxError(new Error(AnalizadorSintactico.parFinal, this.l));}
-					| IF '(' condicion ')' cuerpo_if ELSE cuerpo_else END_IF { this.s.addSyntaxStruct( AnalizadorSintactico.ifStructure ) ;} 
+					| IF '(' condicion ')' cuerpo_if ELSE cuerpo_else END_IF { 
+																			this.s.addSyntaxStruct( AnalizadorSintactico.ifStructure );
+																			
+																		} 
 					;
 
 cuerpo_if : '{' sentencias_ejecutables  '}'
@@ -160,7 +178,13 @@ cuerpo_else : '{' sentencias_ejecutables '}'
 			| sentencia_ejecutable
 			;
 
-condicion : expresion_aritmetica operador expresion_aritmetica { this.s.addSyntaxStruct( AnalizadorSintactico.conditionStructure ); }
+condicion : expresion_aritmetica operador expresion_aritmetica { polaca.addOperando('');
+																 // Apilo paso incompleto
+																 polaca.stackUp(CodigoIntermedio.polacaNumber);
+																 // Creo el paso BF
+																 polaca.addOperando('BF');
+																this.s.addSyntaxStruct( AnalizadorSintactico.conditionStructure ); 
+																}
 		  | condicion error expresion_aritmetica { this.s.addSyntaxError( new Error(AnalizadorSintactico.conditionError, this.l)); }
 		  | condicion operador expresion_aritmetica
 		  ;

@@ -20,6 +20,7 @@ public class CodigoIntermedio {
 	 * @param op
 	 */
 	public void addOperando(String op) {
+		System.out.println("op " + op);
 		if (op != null) {
 			this.polaca.put(CodigoIntermedio.polacaNumber, op);
 			CodigoIntermedio.polacaNumber++;
@@ -30,7 +31,7 @@ public class CodigoIntermedio {
 	 * Agrega el operador a la polaca, junto con el paso correspondiente
 	 * @param op
 	 */
-	public void addOperator(String op) {
+	public void addOperador(String op) {
 		if (op != null) {
 			this.polaca.put(CodigoIntermedio.polacaNumber, op);
 			CodigoIntermedio.polacaNumber++;
@@ -63,13 +64,20 @@ public class CodigoIntermedio {
 	
 	
 	/**
-	 * Agrega la dirección de memoria al paso correspondiente
+	 * Agrega la direcciï¿½n de memoria al paso correspondiente
 	 * @param paso
 	 * @param op
 	 */
 	public void addDirection(Integer paso, Integer direction) {
 		if (this.polaca.containsKey(paso))
 			this.polaca.put(paso, direction.toString());
+	}
+	
+	public void printPolaca () {
+		System.out.println("Llego " + this.polaca.keySet());
+		for (Integer polaca : this.polaca.keySet()) {
+			System.out.println("paso " + polaca + " " + this.polaca.get(polaca));
+		}
 	}
 	
 }

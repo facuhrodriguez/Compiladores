@@ -7,7 +7,6 @@ public class Error implements AccionSemantica {
 	public Error(String m, AnalizadorLexico l) {
 		this.message = m;
 		this.l = l;
-		this.setMessage();
 	}
 	
 	public String showMessage() {
@@ -20,6 +19,7 @@ public class Error implements AccionSemantica {
 
 	@Override
 	public int run() {
+		this.setMessage();
 		this.l.addError(this);
 		this.l.panicMode();
 		return -1;

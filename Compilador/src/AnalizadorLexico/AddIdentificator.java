@@ -19,7 +19,7 @@ public class AddIdentificator implements AccionSemantica {
 		
 		if (this.l.getBuffer().length() > AnalizadorLexico.MAX_CAR_ID ) {
 			lexema = this.l.getBuffer().substring(0, AnalizadorLexico.MAX_CAR_ID - 1);
-			Error e = new Error(AnalizadorLexico.WARNING_IDENTIFICADOR, this.l);
+			Error e = new Error(AnalizadorLexico.WARNING_IDENTIFICADOR, this.l, this.l.getLine());
 			this.l.addWarning(e);
 		}
 		

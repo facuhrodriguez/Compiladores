@@ -1,2 +1,3 @@
-UINT a;
-a=-2.0;
+WHILELOOP
+WHILE LOOP
+UINT a = 2;

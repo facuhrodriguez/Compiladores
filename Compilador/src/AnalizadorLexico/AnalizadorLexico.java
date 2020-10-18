@@ -1546,7 +1546,7 @@ public class AnalizadorLexico {
 	}
 
 	/**
-	 * Devuelve a la entrada el ï¿½ltimo caracter leido
+	 * Devuelve a la entrada el último caracter leido
 	 */
 	public void unget() {
 		this.fh.goBack();

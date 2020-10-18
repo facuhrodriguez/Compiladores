@@ -65,7 +65,9 @@ public class AddPalabraReservada implements AccionSemantica {
 			tokenNumber = AnalizadorLexico.REF;
 			break;
 		default:
-			break;
+			this.l.addError(new Error(AnalizadorLexico.ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this.l, this.l.getLine()));
+			return tokenNumber;
+			
 		} 
 		
 		Token token = new Token (tokenNumber, buffer, "PALABRA RESERVADA");

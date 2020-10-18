@@ -43,7 +43,7 @@ public class AddConstant implements AccionSemantica {
 			}
 				
 			if (MyDouble.truncate) 
-				this.l.addWarning(new Error(AnalizadorLexico.WARNING_CONSTANT_DOUBLE, this.l));
+				this.l.addWarning(new Error(AnalizadorLexico.WARNING_CONSTANT_DOUBLE, this.l, this.l.getLine()));
 			Token token = new Token(AnalizadorLexico.CONSTANTE, number, AnalizadorLexico.CONSTANTE_DOUBLE);
 			this.l.addToken(token);
 			this.l.addOnTablaDeSimbolos(token.getAttr("VALOR").toString(), token);	
@@ -58,16 +58,16 @@ public class AddConstant implements AccionSemantica {
 				number = Integer.parseInt(this.l.getBuffer().substring(0, this.l.getBuffer().length() - 3));
 				if ((number < AnalizadorLexico.MIN_CONSTANT_UI)) {
 					number = AnalizadorLexico.MIN_CONSTANT_UI;
-					this.l.addWarning(new Error(AnalizadorLexico.WARNING_CONSTANT_UI, this.l));
+					this.l.addWarning(new Error(AnalizadorLexico.WARNING_CONSTANT_UI, this.l, this.l.getLine()));
 				} else {
 					if ((number > AnalizadorLexico.MAX_CONSTANT_UI)) {
 						number = AnalizadorLexico.MAX_CONSTANT_UI;
-						this.l.addWarning(new Error(AnalizadorLexico.WARNING_CONSTANT_UI, this.l));
+						this.l.addWarning(new Error(AnalizadorLexico.WARNING_CONSTANT_UI, this.l, this.l.getLine()));
 					}
 				}
 			}
 			catch(NumberFormatException n) {
-				this.l.addWarning(new Error(AnalizadorLexico.WARNING_CONSTANT_UI, this.l));
+				this.l.addWarning(new Error(AnalizadorLexico.WARNING_CONSTANT_UI, this.l, this.l.getLine()));
 				number = AnalizadorLexico.MAX_CONSTANT_UI;
 			}
 			

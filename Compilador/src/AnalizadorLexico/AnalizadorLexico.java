@@ -1518,7 +1518,7 @@ public class AnalizadorLexico {
 	}
 
 	/**
-	 * Realiza el anï¿½lisis lï¿½xico
+	 * Realiza el análisis léxico
 	 * @return
 	 */
 	public int yylex() {
@@ -1579,7 +1579,7 @@ public class AnalizadorLexico {
 	}
 
 	/**
-	 * Agrega un token a la tabla de sï¿½mbolos
+	 * Agrega un token a la tabla de símbolos
 	 * @param token
 	 * @param lexema
 	 */
@@ -1588,7 +1588,7 @@ public class AnalizadorLexico {
 	}
 	
 	/**
-	 * Devuelve la lï¿½nea actual del cï¿½digo.
+	 * Devuelve la línea actual del código.
 	 * @return
 	 */
 	public Integer getLine() {
@@ -1711,5 +1711,13 @@ public class AnalizadorLexico {
 	
 	public TablaDeSimbolos getTS() {
 		return this.table;
+	}
+
+	public boolean warningExist(String valor) {
+		for (Error e : this.warnings) {
+			if (e.getReason().equals(valor))
+				return true;
+		}
+		return false;
 	}
 }

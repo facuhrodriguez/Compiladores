@@ -1,3 +1,1 @@
-WHILELOOP
-WHILE LOOP
-UINT a = 2;
+a = -2.4d-587;

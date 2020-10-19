@@ -42,8 +42,12 @@ public class AddConstant implements AccionSemantica {
 					number = MyDouble.checkNegativeRange(d, 0.0);
 			}
 				
-			if (MyDouble.truncate) 
-				this.l.addWarning(new Error(AnalizadorLexico.WARNING_CONSTANT_DOUBLE, this.l, this.l.getLine()));
+			if (MyDouble.truncate) {
+				Error warning = new Error(AnalizadorLexico.WARNING_CONSTANT_DOUBLE, this.l, this.l.getLine());
+				warning.setReason(buffer);
+				this.l.addWarning(warning);
+				
+			}
 			Token token = new Token(AnalizadorLexico.CONSTANTE, number, AnalizadorLexico.CONSTANTE_DOUBLE);
 			this.l.addToken(token);
 			this.l.addOnTablaDeSimbolos(token.getAttr("VALOR").toString(), token);	

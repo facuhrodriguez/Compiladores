@@ -14,21 +14,21 @@ public class App {
 	public static void main(String[] args) {
 		file = new FileHandler(args[0]);
 		analizadorLexico = new AnalizadorLexico(file);
-//		Parser parser = new Parser();
-//		parser.setLexico(analizadorLexico);
-//		parser.setSintactico(analizadorSintactico);
-//		analizadorSintactico.setLexico(analizadorLexico);
-//		parser.setTS(analizadorLexico.getTS());
-//		CodigoIntermedio code = new CodigoIntermedio ();
-//		parser.setCodigoIntermedio(code);
-//		analizadorSintactico.setCodigoIntermedio(code);
-//		parser.run();
+		Parser parser = new Parser();
+		parser.setLexico(analizadorLexico);
+		parser.setSintactico(analizadorSintactico);
+		analizadorSintactico.setLexico(analizadorLexico);
+		parser.setTS(analizadorLexico.getTS());
+		//CodigoIntermedio code = new CodigoIntermedio ();
+	//	parser.setCodigoIntermedio(code);
+	//	analizadorSintactico.setCodigoIntermedio(code);
+		parser.run();
 
 		//System.out.println("Analizador Sintï¿½ctico");
 		//analizadorSintactico.printErrors();
 		//analizadorSintactico.printStructures();
-		for (int i=0; i < file.getContentFile().length(); i++)
-			analizadorLexico.yylex();
+//		for (int i=0; i < file.getContentFile().length(); i++)
+//			analizadorLexico.yylex();
 		System.out.println('\n');
 		System.err.println('\n');
 		System.out.println("Analizador Léxico");

@@ -727,21 +727,25 @@ case 35:
 break;
 case 39:
 //#line 124 "parser.y"
-{ String lexema = yylval.sval;
-		 if (this.ts.getToken(lexema).getAttr("TIPO") == AnalizadorLexico.CONSTANTE_ENTERA_SIN_SIGNO) {
-			this.l.addWarning(new Error(AnalizadorLexico.WARNING_CONSTANT_UI, this.l, this.l.getLine()));
-			Token t = new Token(AnalizadorLexico.CONSTANTE, 0, AnalizadorLexico.CONSTANTE_ENTERA_SIN_SIGNO);
-			this.ts.addToken(lexema, t);
-			yyval = new ParserVal(lexema);
-		 } else 
-			if (this.ts.getToken(lexema).getAttr("TIPO") == AnalizadorLexico.CONSTANTE_DOUBLE) {
-				Double d = Double.parseDouble((String) this.ts.getToken(lexema).getAttr("VALOR"));
-				Double number = MyDouble.checkNegativeRange(-d, 0.0);
-				Token t = new Token(AnalizadorLexico.CONSTANTE, number, AnalizadorLexico.CONSTANTE_DOUBLE);
-				this.ts.addToken(lexema, t);
-				yyval = new ParserVal(lexema);
-		 } 
-		  /*// polaca.addOperando($$);*/
+{  	String valor = yylval.sval;
+	if (this.ts.getToken(valor).getAttr("TIPO") == AnalizadorLexico.CONSTANTE_ENTERA_SIN_SIGNO) {
+		this.l.addWarning(new Error(AnalizadorLexico.WARNING_CONSTANT_UI, this.l, this.l.getLine()));
+		Token t = new Token(AnalizadorLexico.CONSTANTE, 0, AnalizadorLexico.CONSTANTE_ENTERA_SIN_SIGNO);
+		this.ts.addToken(valor, t);
+		yyval = new ParserVal(valor);
+	} else 
+		if (this.ts.getToken(valor).getAttr("TIPO") == AnalizadorLexico.CONSTANTE_DOUBLE) {
+			Double number = MyDouble.check(this.l);
+			if (MyDouble.truncate) { 
+				if (!this.l.warningExist(this.l.getBuffer()))
+					this.l.addWarning(new Error(AnalizadorLexico.WARNING_CONSTANT_DOUBLE, this.l, this.l.getLine()));
+			}
+				
+			Token t = new Token(AnalizadorLexico.CONSTANTE, number, AnalizadorLexico.CONSTANTE_DOUBLE);
+			this.ts.addToken(valor, t);
+			yyval = new ParserVal(valor);
+	} 
+	  /*// polaca.addOperando($$);*/
 		  }
 break;
 case 40:

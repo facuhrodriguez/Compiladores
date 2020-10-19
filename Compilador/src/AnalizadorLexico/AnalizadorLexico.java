@@ -1712,4 +1712,12 @@ public class AnalizadorLexico {
 	public TablaDeSimbolos getTS() {
 		return this.table;
 	}
+
+	public boolean warningExist(String valor) {
+		for (Error e : this.warnings) {
+			if (e.getReason().equals(valor))
+				return true;
+		}
+		return false;
+	}
 }

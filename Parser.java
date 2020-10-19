@@ -18,6 +18,7 @@
 
 //#line 30 "parser.y"
 package AnalizadorSintactico;
+package CodigoIntermedio;
 import AnalizadorLexico.*;
 import AnalizadorLexico.Error;
 //#line 22 "Parser.java"
@@ -448,7 +449,7 @@ AnalizadorLexico l;
 AnalizadorSintactico s;
 TablaDeSimbolos ts;
 Integer count = 0;
-
+CodigoIntermedio // polaca;
 
 public void setLexico(AnalizadorLexico l) {
 	this.l = l;
@@ -727,9 +728,8 @@ case 35:
 break;
 case 39:
 //#line 124 "parser.y"
-{ String lexema = yylval.sval;
+{ String lexema = yyval.sval;
 		 if (this.ts.getToken(lexema).getAttr("TIPO") == AnalizadorLexico.CONSTANTE_ENTERA_SIN_SIGNO) {
-			this.l.addWarning(new Error(AnalizadorLexico.WARNING_CONSTANT_UI, this.l, this.l.getLine()));
 			Token t = new Token(AnalizadorLexico.CONSTANTE, 0, AnalizadorLexico.CONSTANTE_ENTERA_SIN_SIGNO);
 			this.ts.addToken(lexema, t);
 			yyval = new ParserVal(lexema);

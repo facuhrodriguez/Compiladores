@@ -28,7 +28,6 @@
 
 %{
 package AnalizadorSintactico;
-package CodigoIntermedio;
 import AnalizadorLexico.*;
 import AnalizadorLexico.Error;
 %}
@@ -39,7 +38,6 @@ programa : sentencias { this.s.addSyntaxStruct( AnalizadorSintactico.principalSt
 
 sentencias : sentencia 
 		   | sentencias sentencia
-		   | error sentencia { this.s.addSyntaxError( new Error(AnalizadorSintactico.sentencia, this.l, this.l.getLine()));}
 		   ;
 		   
 sentencia : sentencia_declarativa 
@@ -57,7 +55,7 @@ sentencia_declarativa : declaraciones_id
 
 declaraciones_id : declaracion_id ';' { this.s.addSyntaxStruct( AnalizadorSintactico.declarativeStruct ); }
 				 | declaraciones_id ',' declaracion_id
-				 | declaracion_id { this.s.addSyntaxError( new Error(AnalizadorSintactico.errorDeclarative, this.l, this.l.getLine() )); }
+				 
 				 ;
 
 declaracion_id : tipo IDENTIFICADOR 
@@ -71,7 +69,9 @@ declaraciones_procedimiento : encabezado_procedimiento '{' sentencias '}' { this
 							;
 
 encabezado_procedimiento : PROC IDENTIFICADOR '(' parametros ')' NI '=' CONSTANTE
-						 | PROC IDENTIFICADOR '(' ')' NI '=' CONSTANTE 
+						 | PROC IDENTIFICADOR '(' ')' NI '=' CONSTANTE  
+																		
+						 | PROC '(' { this.s.addSyntaxError( new Error(AnalizadorSintactico.errorProcedure, this.l, this.l.getLine()));}
 						 ;
 
 parametros : declaracion_id { this.count++;
@@ -98,6 +98,7 @@ sentencia_ejecutable : asignaciones ';' { this.s.addSyntaxStruct( AnalizadorSint
 					 | sentencia_control
 					 | sentencia_salida ';' { this.s.addSyntaxStruct( AnalizadorSintactico.outStruct ); }
 					 | invocaciones_procedimiento ';' { this.s.addSyntaxStruct( AnalizadorSintactico.invocProcStructure ); }
+					 | error  {this.s.addSyntaxError(new Error(AnalizadorSintactico.errorSentenciaEjecutable, this.l, this.l.getLine()));}
 					 ;
 
 asignaciones : lado_izquierdo '=' expresion_aritmetica { // polaca.addAsig($1);
@@ -126,7 +127,7 @@ factor : '-' CONSTANTE { String valor = yylval.sval;
 		this.l.addWarning(new Error(AnalizadorLexico.WARNING_CONSTANT_UI, this.l, this.l.getLine()));
 		Token t = new Token(AnalizadorLexico.CONSTANTE, 0, AnalizadorLexico.CONSTANTE_ENTERA_SIN_SIGNO);
 		this.ts.addToken(valor, t);
-		yyval = new ParserVal(valor);
+		$$ = new ParserVal(valor);
 	} else 
 		if (this.ts.getToken(valor).getAttr("TIPO") == AnalizadorLexico.CONSTANTE_DOUBLE) {
 			Double number = MyDouble.check(this.l);
@@ -137,7 +138,7 @@ factor : '-' CONSTANTE { String valor = yylval.sval;
 				
 			Token t = new Token(AnalizadorLexico.CONSTANTE, number, AnalizadorLexico.CONSTANTE_DOUBLE);
 			this.ts.addToken(valor, t);
-			yyval = new ParserVal(valor);
+			$$ = new ParserVal(valor);
 	} 
 	  /*// polaca.addOperando($$);*/
 	 }
@@ -170,11 +171,13 @@ sentencia_seleccion : IF '(' condicion ')' cuerpo_if END_IF {
 															  // polaca.addOperador('BI');
 															 
 															 } 
-					| IF '(' condicion cuerpo_if { this.s.addSyntaxError(new Error(AnalizadorSintactico.parFinal, this.l, this.l.getLine()));}
+					| IF '(' condicion cuerpo_if END_IF { this.s.addSyntaxError(new Error(AnalizadorSintactico.parFinal, this.l, this.l.getLine()));}
 					| IF '(' condicion ')' cuerpo_if ELSE cuerpo_else END_IF { 
 																			this.s.addSyntaxStruct( AnalizadorSintactico.ifStructure );
 																			
 																		} 
+					| IF condicion cuerpo_if END_IF { this.s.addSyntaxError((new Error(AnalizadorSintactico.sinPar, this.l, this.l.getLine()));}											
+					| IF condicion ')' cuerpo_if END_IF { this.s.addSyntaxError((new Error(AnalizadorSintactico.parI, this.l, this.l.getLine()));}
 					;
 
 cuerpo_if : '{' sentencias_ejecutables  '}'
@@ -208,6 +211,7 @@ parametros_invocacion : IDENTIFICADOR ':' IDENTIFICADOR
 
 sentencia_control : WHILE '(' condicion ')' LOOP '{' sentencias_ejecutables'}' { this.s.addSyntaxStruct( AnalizadorSintactico.whileStructure ) ; } 
 				  | WHILE '(' condicion ')' LOOP sentencia_ejecutable { this.s.addSyntaxStruct( AnalizadorSintactico.whileStructure ) ;} 
+				  | error LOOP { this.s.addSyntaxError(new Error(AnalizadorSintactico.whileStructure, this.l, this.l.getLine())) ; }
 				  ;
 				  
 operador : '<' { $$ = $1; }
@@ -223,7 +227,7 @@ AnalizadorLexico l;
 AnalizadorSintactico s;
 TablaDeSimbolos ts;
 Integer count = 0;
-CodigoIntermedio // polaca;
+
 
 public void setLexico(AnalizadorLexico l) {
 	this.l = l;

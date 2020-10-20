@@ -66,7 +66,8 @@ public class AddPalabraReservada implements AccionSemantica {
 			break;
 		default:
 			this.l.addError(new Error(AnalizadorLexico.ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this.l, this.l.getLine()));
-			return tokenNumber;
+			this.l.panicMode();
+			return 1;
 			
 		} 
 		

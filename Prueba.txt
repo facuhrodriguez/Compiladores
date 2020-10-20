@@ -1,1 +1,5 @@
-a = -2.4d-587;
+PROC dd (UINT a) NI = 3_ui {
+IF (a < b )
+a = 4_ui + 1_ui;
+
+}

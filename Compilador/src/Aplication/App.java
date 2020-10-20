@@ -25,8 +25,8 @@ public class App {
 		parser.run();
 
 		//System.out.println("Analizador Sint�ctico");
-		//analizadorSintactico.printErrors();
-		//analizadorSintactico.printStructures();
+		analizadorSintactico.printErrors();
+		analizadorSintactico.printStructures();
 //		for (int i=0; i < file.getContentFile().length(); i++)
 //			analizadorLexico.yylex();
 		System.out.println('\n');

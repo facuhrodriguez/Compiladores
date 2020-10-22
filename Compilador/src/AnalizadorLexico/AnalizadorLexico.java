@@ -93,6 +93,10 @@ public class AnalizadorLexico {
 	public static final String ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA = "Error - Constante double mal declarada en línea ";
 	public static final String ERROR_IDENTIFICADOR_MAL_DECLARADO = "Error - Identificador mal declarado en línea ";
 	public static final String ERROR_PALABRA_RESERVADA_MAL_DEFINIDA = "Error - Palabra reservada mal definida en línea ";
+	
+	public static final String TYPE_UINT = "UINT";
+	public static final String TYPE_DOUBLE = "DOUBLE";
+	
 
 	// Estructuras
 	private AccionSemantica[][] matAS;

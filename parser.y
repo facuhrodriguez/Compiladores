@@ -30,6 +30,7 @@
 package AnalizadorSintactico;
 import AnalizadorLexico.*;
 import AnalizadorLexico.Error;
+import CodigoIntermedio.*;
 %}
 
 programa : sentencias { this.s.addSyntaxStruct( AnalizadorSintactico.principalStruct );}
@@ -58,11 +59,15 @@ declaraciones_id : declaracion_id ';' { this.s.addSyntaxStruct( AnalizadorSintac
 				 
 				 ;
 
-declaracion_id : tipo IDENTIFICADOR 
+declaracion_id : tipo IDENTIFICADOR { String lexema = $2;
+									  Token t = this.ts.getToken(lexema);
+									  t.addAttr("TIPO", $1.sval);
+									  this.ts.addToken(lexema, t);
+									 }
 			   ;
 
-tipo : UINT { }
-	 | DOUBLE {  }
+tipo : UINT { $$ = new ParserVal(AnalizadorLexico.TYPE_UINT);}
+	 | DOUBLE { $$ = new ParserVal( AnalizadorLexico.TYPE_DOUBLE); }
 	 ;
 
 declaraciones_procedimiento : encabezado_procedimiento '{' sentencias '}' { this.s.addSyntaxStruct( AnalizadorSintactico.procStruct ); };
@@ -101,8 +106,8 @@ sentencia_ejecutable : asignaciones ';' { this.s.addSyntaxStruct( AnalizadorSint
 					 | error  {this.s.addSyntaxError(new Error(AnalizadorSintactico.errorSentenciaEjecutable, this.l, this.l.getLine()));}
 					 ;
 
-asignaciones : lado_izquierdo '=' expresion_aritmetica { // polaca.addAsig($1);
-													     // polaca.addAsigOperador($2);
+asignaciones : lado_izquierdo '=' expresion_aritmetica {  polaca.addOperando($1.sval);
+													      polaca.addOperador($2.sval);
 													   }
 			 | lado_izquierdo COMPARACION expresion_aritmetica { this.s.addSyntaxError(new Error(AnalizadorSintactico.errorOperatorComp, this.l, this.l.getLine()));}
 			 ;
@@ -111,8 +116,8 @@ lado_izquierdo : IDENTIFICADOR { $$ = $1; }
 			   ;
 
 expresion_aritmetica : termino
-					 | expresion_aritmetica '+' termino { /* polaca.addOperador($2); */}
-					 | expresion_aritmetica '-' termino { /* polaca.addOperador($2); */}
+					 | expresion_aritmetica '+' termino {  polaca.addOperador($2.sval); }
+					 | expresion_aritmetica '-' termino {  polaca.addOperador($2.sval); }
 					 ;
 					 
 termino : factor {  // termino : factor 
@@ -140,21 +145,21 @@ factor : '-' CONSTANTE { String valor = yylval.sval;
 			this.ts.addToken(valor, t);
 			$$ = new ParserVal(valor);
 	} 
-	  /*// polaca.addOperando($$);*/
+	   polaca.addOperando($$);
 	 }
 
 		| lado_izquierdo { // factor : IDENTIFICADOR
 						 $$ = $1;
-						 // polaca.addOperando($$);
+						 polaca.addOperando($$.sval);
 						}
 		| CONSTANTE { 	// factor : CONSTANTE 
 						$$ = $1;
-						// polaca.addOperando($$);
+						polaca.addOperando($$.sval);
 					}
 		
 	   | CADENA { // factor : cadena
 					$$ = $1; 
-					/* polaca.addOperando($$); */}
+					polaca.addOperando($$.sval); }
 	   ;
 	   
 sentencia_seleccion : IF '(' condicion ')' cuerpo_if END_IF { 
@@ -176,8 +181,8 @@ sentencia_seleccion : IF '(' condicion ')' cuerpo_if END_IF {
 																			this.s.addSyntaxStruct( AnalizadorSintactico.ifStructure );
 																			
 																		} 
-					| IF condicion cuerpo_if END_IF { this.s.addSyntaxError((new Error(AnalizadorSintactico.sinPar, this.l, this.l.getLine()));}											
-					| IF condicion ')' cuerpo_if END_IF { this.s.addSyntaxError((new Error(AnalizadorSintactico.parI, this.l, this.l.getLine()));}
+					| IF condicion cuerpo_if END_IF { this.s.addSyntaxError(new Error(AnalizadorSintactico.sinPar, this.l, this.l.getLine()));}											
+					| IF condicion ')' cuerpo_if END_IF { this.s.addSyntaxError(new Error(AnalizadorSintactico.parI, this.l, this.l.getLine()));}
 					;
 
 cuerpo_if : '{' sentencias_ejecutables  '}'
@@ -188,11 +193,11 @@ cuerpo_else : '{' sentencias_ejecutables '}'
 			| sentencia_ejecutable
 			;
 
-condicion : expresion_aritmetica operador expresion_aritmetica { // polaca.addOperando('');
+condicion : expresion_aritmetica operador expresion_aritmetica { polaca.addOperando("");
 																 // Apilo paso incompleto
-																 // polaca.stackUp(CodigoIntermedio.// polacaNumber);
+																 polaca.stackUp(CodigoIntermedio.polacaNumber);
 																 // Creo el paso BF
-																 // polaca.addOperando('BF');
+																 polaca.addOperando("BF");
 																this.s.addSyntaxStruct( AnalizadorSintactico.conditionStructure ); 
 																}
 		  | condicion error expresion_aritmetica { this.s.addSyntaxError( new Error(AnalizadorSintactico.conditionError, this.l, this.l.getLine())); }
@@ -227,6 +232,7 @@ AnalizadorLexico l;
 AnalizadorSintactico s;
 TablaDeSimbolos ts;
 Integer count = 0;
+CodigoIntermedio polaca;
 
 
 public void setLexico(AnalizadorLexico l) {
@@ -235,6 +241,10 @@ public void setLexico(AnalizadorLexico l) {
 
 public void setSintactico(AnalizadorSintactico s) {
 	this.s = s;
+}
+
+public void setCodigoIntermedio(CodigoIntermedio p) {
+	this.polaca = p;
 }
 
 public void setTS(TablaDeSimbolos t) {

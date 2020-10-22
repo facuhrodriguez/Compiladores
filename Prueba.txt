@@ -1,5 +1,3 @@
-PROC dd (UINT a) NI = 3_ui {
-IF (a < b )
-a = 4_ui + 1_ui;
-
-}
+UINT u;
+DOUBLE b;
+2_ui;

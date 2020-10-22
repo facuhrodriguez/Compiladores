@@ -23,7 +23,7 @@ public class AddIdentificator implements AccionSemantica {
 			this.l.addWarning(e);
 		}
 		
-		Token token = new Token(AnalizadorLexico.IDENTIFICADOR, lexema, "IDENTIFICADOR");
+		Token token = new Token(AnalizadorLexico.IDENTIFICADOR, lexema, "");
 		this.l.addToken(token);
 		this.l.addOnTablaDeSimbolos(lexema, token);
 		this.l.setYylval(lexema);

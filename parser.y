@@ -59,9 +59,10 @@ declaraciones_id : declaracion_id ';' { this.s.addSyntaxStruct( AnalizadorSintac
 				 
 				 ;
 
-declaracion_id : tipo IDENTIFICADOR { String lexema = $2;
+declaracion_id : tipo IDENTIFICADOR { String lexema = $2.sval;
 									  Token t = this.ts.getToken(lexema);
 									  t.addAttr("TIPO", $1.sval);
+									  t.addAttr("USO", AnalizadorSintactico.VARIABLE);
 									  this.ts.addToken(lexema, t);
 									 }
 			   ;
@@ -73,8 +74,11 @@ tipo : UINT { $$ = new ParserVal(AnalizadorLexico.TYPE_UINT);}
 declaraciones_procedimiento : encabezado_procedimiento '{' sentencias '}' { this.s.addSyntaxStruct( AnalizadorSintactico.procStruct ); };
 							;
 
-encabezado_procedimiento : PROC IDENTIFICADOR '(' parametros ')' NI '=' CONSTANTE
-						 | PROC IDENTIFICADOR '(' ')' NI '=' CONSTANTE  
+encabezado_procedimiento : PROC IDENTIFICADOR '(' parametros ')' NI '=' CONSTANTE { String lexema = $2.sval; }
+						 | PROC IDENTIFICADOR '(' ')' NI '=' CONSTANTE  { String lexema = $2.sval; 
+																		  Token t = this.ts.getToken(lexema);
+																		  t.addAttr("USO", AnalizadorSintactico.NOMBREPROC);
+																		  this.ts.addToken(lexema, t);}
 																		
 						 | PROC '(' { this.s.addSyntaxError( new Error(AnalizadorSintactico.errorProcedure, this.l, this.l.getLine()));}
 						 ;
@@ -84,6 +88,7 @@ parametros : declaracion_id { this.count++;
 								this.s.addSyntaxError( new Error(AnalizadorSintactico.errorMaxProcPar, this.l, this.l.getLine()));
 								this.count = 0;
 							  }
+							  String lexema = $1.sval;
 							}
 		   | parametros ',' declaracion_id { this.count++;
 											 if (this.count > AnalizadorSintactico.maxProcPar) 
@@ -112,7 +117,12 @@ asignaciones : lado_izquierdo '=' expresion_aritmetica {  polaca.addOperando($1.
 			 | lado_izquierdo COMPARACION expresion_aritmetica { this.s.addSyntaxError(new Error(AnalizadorSintactico.errorOperatorComp, this.l, this.l.getLine()));}
 			 ;
 
-lado_izquierdo : IDENTIFICADOR { $$ = $1; }
+lado_izquierdo : IDENTIFICADOR { $$ = $1;
+								String lexema = $1.sval;
+								Token t = this.ts.getToken(lexema);
+							    t.addAttr("USO", AnalizadorSintactico.VARIABLE);
+							    this.ts.addToken(lexema, t);
+								 }
 			   ;
 
 expresion_aritmetica : termino
@@ -145,7 +155,7 @@ factor : '-' CONSTANTE { String valor = yylval.sval;
 			this.ts.addToken(valor, t);
 			$$ = new ParserVal(valor);
 	} 
-	   polaca.addOperando($$);
+	   polaca.addOperando($$.sval);
 	 }
 
 		| lado_izquierdo { // factor : IDENTIFICADOR

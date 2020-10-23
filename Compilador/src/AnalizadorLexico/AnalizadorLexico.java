@@ -1675,7 +1675,7 @@ public class AnalizadorLexico {
 	public void printTablaSimbolos() {
 		System.out.println("\n");
 		System.out.println("---------------- TABLA DE SIMBOLOS ----------------" + "\n" );
-		System.out.println("TOKEN " + "               NAME            " + "       TYPE");
+		System.out.println("TOKEN   " + "    NAME     " + "	     TIPO" + "		USO");
 		for (Token t : this.table.getTokens())
 			System.out.println("" + t.toString());
 	}

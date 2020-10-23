@@ -471,7 +471,7 @@ final static String yyrule[] = {
 "operador : COMPARACION",
 };
 
-//#line 230 ".\parser.y"
+//#line 240 ".\parser.y"
 
 AnalizadorLexico l;
 AnalizadorSintactico s;
@@ -679,43 +679,56 @@ case 13:
 { String lexema = val_peek(0).sval;
 									  Token t = this.ts.getToken(lexema);
 									  t.addAttr("TIPO", val_peek(1).sval);
+									  t.addAttr("USO", AnalizadorSintactico.VARIABLE);
 									  this.ts.addToken(lexema, t);
 									 }
 break;
 case 14:
-//#line 69 ".\parser.y"
+//#line 70 ".\parser.y"
 { yyval = new ParserVal(AnalizadorLexico.TYPE_UINT);}
 break;
 case 15:
-//#line 70 ".\parser.y"
+//#line 71 ".\parser.y"
 { yyval = new ParserVal( AnalizadorLexico.TYPE_DOUBLE); }
 break;
 case 16:
-//#line 73 ".\parser.y"
+//#line 74 ".\parser.y"
 { this.s.addSyntaxStruct( AnalizadorSintactico.procStruct ); }
 break;
+case 17:
+//#line 77 ".\parser.y"
+{ String lexema = val_peek(6).sval; }
+break;
+case 18:
+//#line 78 ".\parser.y"
+{ String lexema = val_peek(5).sval; 
+																		  Token t = this.ts.getToken(lexema);
+																		  t.addAttr("USO", AnalizadorSintactico.NOMBREPROC);
+																		  this.ts.addToken(lexema, t);}
+break;
 case 19:
-//#line 79 ".\parser.y"
+//#line 83 ".\parser.y"
 { this.s.addSyntaxError( new Error(AnalizadorSintactico.errorProcedure, this.l, this.l.getLine()));}
 break;
 case 20:
-//#line 82 ".\parser.y"
+//#line 86 ".\parser.y"
 { this.count++;
 							  if (this.count > AnalizadorSintactico.maxProcPar){ 
 								this.s.addSyntaxError( new Error(AnalizadorSintactico.errorMaxProcPar, this.l, this.l.getLine()));
 								this.count = 0;
 							  }
+							  String lexema = val_peek(0).sval;
 							}
 break;
 case 21:
-//#line 88 ".\parser.y"
+//#line 93 ".\parser.y"
 { this.count++;
 											 if (this.count > AnalizadorSintactico.maxProcPar) 
 												this.s.addSyntaxError( new Error(AnalizadorSintactico.errorMaxProcPar, this.l, this.l.getLine()));
 											}
 break;
 case 22:
-//#line 92 ".\parser.y"
+//#line 97 ".\parser.y"
 {  this.count++;
 								   if (this.count > AnalizadorSintactico.maxProcPar){ 
 										this.s.addSyntaxError( new Error(AnalizadorSintactico.errorMaxProcPar, this.l, this.l.getLine()));
@@ -724,51 +737,56 @@ case 22:
 								}
 break;
 case 23:
-//#line 100 ".\parser.y"
+//#line 105 ".\parser.y"
 { this.s.addSyntaxStruct( AnalizadorSintactico.asigStruct ); 
 										  }
 break;
 case 26:
-//#line 104 ".\parser.y"
+//#line 109 ".\parser.y"
 { this.s.addSyntaxStruct( AnalizadorSintactico.outStruct ); }
 break;
 case 27:
-//#line 105 ".\parser.y"
+//#line 110 ".\parser.y"
 { this.s.addSyntaxStruct( AnalizadorSintactico.invocProcStructure ); }
 break;
 case 28:
-//#line 106 ".\parser.y"
+//#line 111 ".\parser.y"
 {this.s.addSyntaxError(new Error(AnalizadorSintactico.errorSentenciaEjecutable, this.l, this.l.getLine()));}
 break;
 case 29:
-//#line 109 ".\parser.y"
+//#line 114 ".\parser.y"
 {  polaca.addOperando(val_peek(2).sval);
 													      polaca.addOperador(val_peek(1).sval);
 													   }
 break;
 case 30:
-//#line 112 ".\parser.y"
+//#line 117 ".\parser.y"
 { this.s.addSyntaxError(new Error(AnalizadorSintactico.errorOperatorComp, this.l, this.l.getLine()));}
 break;
 case 31:
-//#line 115 ".\parser.y"
-{ yyval = val_peek(0); }
+//#line 120 ".\parser.y"
+{ yyval = val_peek(0);
+								String lexema = val_peek(0).sval;
+								Token t = this.ts.getToken(lexema);
+							    t.addAttr("USO", AnalizadorSintactico.VARIABLE);
+							    this.ts.addToken(lexema, t);
+								 }
 break;
 case 33:
-//#line 119 ".\parser.y"
+//#line 129 ".\parser.y"
 {  polaca.addOperador(val_peek(1).sval); }
 break;
 case 34:
-//#line 120 ".\parser.y"
+//#line 130 ".\parser.y"
 {  polaca.addOperador(val_peek(1).sval); }
 break;
 case 35:
-//#line 123 ".\parser.y"
+//#line 133 ".\parser.y"
 {  /* termino : factor */
 					yyval = val_peek(0); }
 break;
 case 39:
-//#line 130 ".\parser.y"
+//#line 140 ".\parser.y"
 { String valor = yylval.sval;
 	if (this.ts.getToken(valor).getAttr("TIPO") == AnalizadorLexico.CONSTANTE_ENTERA_SIN_SIGNO) {
 		this.l.addWarning(new Error(AnalizadorLexico.WARNING_CONSTANT_UI, this.l, this.l.getLine()));
@@ -791,27 +809,27 @@ case 39:
 	 }
 break;
 case 40:
-//#line 151 ".\parser.y"
+//#line 161 ".\parser.y"
 { /* factor : IDENTIFICADOR*/
 						 yyval = val_peek(0);
 						 polaca.addOperando(yyval.sval);
 						}
 break;
 case 41:
-//#line 155 ".\parser.y"
+//#line 165 ".\parser.y"
 { 	/* factor : CONSTANTE */
 						yyval = val_peek(0);
 						polaca.addOperando(yyval.sval);
 					}
 break;
 case 42:
-//#line 160 ".\parser.y"
+//#line 170 ".\parser.y"
 { /* factor : cadena*/
 					yyval = val_peek(0); 
 					polaca.addOperando(yyval.sval); }
 break;
 case 43:
-//#line 165 ".\parser.y"
+//#line 175 ".\parser.y"
 { 
 															  this.s.addSyntaxStruct( AnalizadorSintactico.ifStructure );
 															  /*Desapila dirección incompleta*/
@@ -828,26 +846,26 @@ case 43:
 															 }
 break;
 case 44:
-//#line 179 ".\parser.y"
+//#line 189 ".\parser.y"
 { this.s.addSyntaxError(new Error(AnalizadorSintactico.parFinal, this.l, this.l.getLine()));}
 break;
 case 45:
-//#line 180 ".\parser.y"
+//#line 190 ".\parser.y"
 { 
 																			this.s.addSyntaxStruct( AnalizadorSintactico.ifStructure );
 																			
 																		}
 break;
 case 46:
-//#line 184 ".\parser.y"
+//#line 194 ".\parser.y"
 { this.s.addSyntaxError(new Error(AnalizadorSintactico.sinPar, this.l, this.l.getLine()));}
 break;
 case 47:
-//#line 185 ".\parser.y"
+//#line 195 ".\parser.y"
 { this.s.addSyntaxError(new Error(AnalizadorSintactico.parI, this.l, this.l.getLine()));}
 break;
 case 52:
-//#line 196 ".\parser.y"
+//#line 206 ".\parser.y"
 { polaca.addOperando("");
 																 /* Apilo paso incompleto*/
 																 polaca.stackUp(CodigoIntermedio.polacaNumber);
@@ -857,46 +875,46 @@ case 52:
 																}
 break;
 case 53:
-//#line 203 ".\parser.y"
+//#line 213 ".\parser.y"
 { this.s.addSyntaxError( new Error(AnalizadorSintactico.conditionError, this.l, this.l.getLine())); }
 break;
 case 59:
-//#line 217 ".\parser.y"
+//#line 227 ".\parser.y"
 { this.s.addSyntaxStruct( AnalizadorSintactico.whileStructure ) ; }
 break;
 case 60:
-//#line 218 ".\parser.y"
+//#line 228 ".\parser.y"
 { this.s.addSyntaxStruct( AnalizadorSintactico.whileStructure ) ;}
 break;
 case 61:
-//#line 219 ".\parser.y"
+//#line 229 ".\parser.y"
 { this.s.addSyntaxError(new Error(AnalizadorSintactico.whileStructure, this.l, this.l.getLine())) ; }
 break;
 case 62:
-//#line 222 ".\parser.y"
+//#line 232 ".\parser.y"
 { yyval = val_peek(0); }
 break;
 case 63:
-//#line 223 ".\parser.y"
+//#line 233 ".\parser.y"
 { yyval = val_peek(0); }
 break;
 case 64:
-//#line 224 ".\parser.y"
+//#line 234 ".\parser.y"
 { yyval = val_peek(0); }
 break;
 case 65:
-//#line 225 ".\parser.y"
+//#line 235 ".\parser.y"
 { yyval = val_peek(0); }
 break;
 case 66:
-//#line 226 ".\parser.y"
+//#line 236 ".\parser.y"
 { yyval = val_peek(0); }
 break;
 case 67:
-//#line 227 ".\parser.y"
+//#line 237 ".\parser.y"
 { yyval = val_peek(0); }
 break;
-//#line 823 "Parser.java"
+//#line 841 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

@@ -39,7 +39,7 @@ public class Token {
 		while (i.hasNext()) {
 			String key = (String) i.next();
 			Object value = (Object) attr.get(key);
-			return  " " +value + "               " + this.toString() + "                  ";
+			return  " " +value + "  	    " + this.toString() + "                 ";
 		}
 		i = (Iterator<String>) attr.keys();
 		return " " ;

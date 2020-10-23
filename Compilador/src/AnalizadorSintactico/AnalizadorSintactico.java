@@ -27,7 +27,7 @@ public class AnalizadorSintactico {
 	protected static final String whileStructure = "Sentencia WHILE";
 	protected static final String loopStructure = "Sentencia LOOP";
 	protected static final String conditionStructure = "Condición";
-	
+
 	
 	// Errores sintï¿½cticos
 	public static final String errorPrincipal = "Error en la generación del programa principal";
@@ -45,6 +45,12 @@ public class AnalizadorSintactico {
 	public static final String parI = "Error - Falta paréntesis inicial en la condición en línea ";
 	public static final String errorSentenciaEjecutable = "Error en sentencia ejecutable en línea ";
 
+	
+	// Chequeos semánticos
+	public static final String VARIABLE = "Variable";
+	public static final String NOMBREPROC = "Nombre de procedimiento";
+	public static final String NOMBREPAR = "Nombre de parámetro";
+	
 	private ArrayList<Error> syntaxErrors;
 	
 	public AnalizadorSintactico() {

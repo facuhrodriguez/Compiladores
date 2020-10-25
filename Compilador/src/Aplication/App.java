@@ -24,11 +24,9 @@ public class App {
 		analizadorSintactico.setCodigoIntermedio(code);
 		parser.run();
 
-		//System.out.println("Analizador Sint�ctico");
-//		analizadorSintactico.printErrors();
-//		analizadorSintactico.printStructures();
-//		for (int i=0; i < file.getContentFile().length(); i++)
-//			analizadorLexico.yylex();
+		System.out.println("Analizador Sint�ctico");
+		analizadorSintactico.printErrors();
+		analizadorSintactico.printStructures();
 		System.out.println('\n');
 //		System.err.println('\n');
 //		System.out.println("Analizador L�xico");

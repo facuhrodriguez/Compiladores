@@ -20,7 +20,7 @@ public class CodigoIntermedio {
 	 * @param op
 	 */
 	public void addOperando(String op) {
-		System.out.println("op " + op);
+		
 		if (op != null) {
 			this.polaca.put(CodigoIntermedio.polacaNumber, op);
 			CodigoIntermedio.polacaNumber++;

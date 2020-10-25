@@ -47,6 +47,7 @@ sentencia : sentencia_declarativa
 
 sentencias_ejecutables : sentencia_ejecutable
 					   | sentencias_ejecutables sentencia_ejecutable
+					   | error sentencia_ejecutable {this.s.addSyntaxError(new Error(AnalizadorSintactico.errorSentenciaEjecutable, this.l, this.l.getLine()));}
 					   ;
 
 sentencia_declarativa : declaraciones_id
@@ -108,7 +109,6 @@ sentencia_ejecutable : asignaciones ';' { this.s.addSyntaxStruct( AnalizadorSint
 					 | sentencia_control
 					 | sentencia_salida ';' { this.s.addSyntaxStruct( AnalizadorSintactico.outStruct ); }
 					 | invocaciones_procedimiento ';' { this.s.addSyntaxStruct( AnalizadorSintactico.invocProcStructure ); }
-					 | error  {this.s.addSyntaxError(new Error(AnalizadorSintactico.errorSentenciaEjecutable, this.l, this.l.getLine()));}
 					 ;
 
 asignaciones : lado_izquierdo '=' expresion_aritmetica {  polaca.addOperando($1.sval);
@@ -172,7 +172,7 @@ factor : '-' CONSTANTE { String valor = yylval.sval;
 					polaca.addOperando($$.sval); }
 	   ;
 	   
-sentencia_seleccion : IF '(' condicion ')' cuerpo_if END_IF { 
+sentencia_seleccion : IF '(' condicion ')' cuerpo_if_bien_definido END_IF { 
 															  this.s.addSyntaxStruct( AnalizadorSintactico.ifStructure );
 															  //Desapila dirección incompleta
 															  //Integer pasoIncompleto = // polaca.getTop(); 	
@@ -186,22 +186,31 @@ sentencia_seleccion : IF '(' condicion ')' cuerpo_if END_IF {
 															  // polaca.addOperador('BI');
 															 
 															 } 
-					| IF '(' condicion cuerpo_if END_IF { this.s.addSyntaxError(new Error(AnalizadorSintactico.parFinal, this.l, this.l.getLine()));}
-					| IF '(' condicion ')' cuerpo_if ELSE cuerpo_else END_IF { 
+					| IF '(' condicion cuerpo_if_bien_definido END_IF { this.s.addSyntaxError(new Error(AnalizadorSintactico.parFinal, this.l, this.l.getLine()));}
+					| IF '(' condicion ')' cuerpo_if_bien_definido ELSE cuerpo_else_bien_definido END_IF { 
 																			this.s.addSyntaxStruct( AnalizadorSintactico.ifStructure );
 																			
-																		} 
-					| IF condicion cuerpo_if END_IF { this.s.addSyntaxError(new Error(AnalizadorSintactico.sinPar, this.l, this.l.getLine()));}											
-					| IF condicion ')' cuerpo_if END_IF { this.s.addSyntaxError(new Error(AnalizadorSintactico.parI, this.l, this.l.getLine()));}
+																		} 							
+					| IF condicion cuerpo_if_bien_definido END_IF { this.s.addSyntaxError(new Error(AnalizadorSintactico.sinPar, this.l, this.l.getLine()));}											
+					| IF '(' condicion ')' cuerpo_if_mal_definido END_IF { this.s.addSyntaxError( new Error( AnalizadorSintactico.sinLlaves, this.l, this.l.getLine())); }
+					| IF condicion ')' cuerpo_if_bien_definido END_IF { this.s.addSyntaxError(new Error(AnalizadorSintactico.parI, this.l, this.l.getLine()));}
+					| IF '(' condicion ')' cuerpo_if_bien_definido ELSE cuerpo_else_mal_definido END_IF { this.s.addSyntaxError( new Error(AnalizadorSintactico.sinLlaves, this.l, this.l.getLine())); }
+					| IF '(' condicion ')' cuerpo_if_mal_definido ELSE cuerpo_else_mal_definido END_IF{ this.s.addSyntaxError( new Error(AnalizadorSintactico.sinLlaves, this.l, this.l.getLine())); }
+					| IF '(' condicion ')' cuerpo_if_mal_definido ELSE cuerpo_else_bien_definido END_IF { this.s.addSyntaxError( new Error(AnalizadorSintactico.sinLlaves, this.l, this.l.getLine())); }
 					;
 
-cuerpo_if : '{' sentencias_ejecutables  '}'
-		  | sentencia_ejecutable
-		  ;
+
+cuerpo_if_bien_definido: '{' sentencias_ejecutables '}' 
+					   ;
+cuerpo_if_mal_definido : sentencias_ejecutables 
+					   ;
 		  
-cuerpo_else : '{' sentencias_ejecutables '}'
-			| sentencia_ejecutable
-			;
+cuerpo_else_bien_definido : '{' sentencias_ejecutables '}' 
+						  ;
+
+cuerpo_else_mal_definido:  sentencias_ejecutables 
+						;
+
 
 condicion : expresion_aritmetica operador expresion_aritmetica { polaca.addOperando("");
 																 // Apilo paso incompleto
@@ -210,7 +219,6 @@ condicion : expresion_aritmetica operador expresion_aritmetica { polaca.addOpera
 																 polaca.addOperando("BF");
 																this.s.addSyntaxStruct( AnalizadorSintactico.conditionStructure ); 
 																}
-		  | condicion error expresion_aritmetica { this.s.addSyntaxError( new Error(AnalizadorSintactico.conditionError, this.l, this.l.getLine())); }
 		  | condicion operador expresion_aritmetica
 		  ;
 
@@ -224,11 +232,17 @@ invocaciones_procedimiento : IDENTIFICADOR '(' parametros_invocacion')'
 parametros_invocacion : IDENTIFICADOR ':' IDENTIFICADOR
 					  ;
 
-sentencia_control : WHILE '(' condicion ')' LOOP '{' sentencias_ejecutables'}' { this.s.addSyntaxStruct( AnalizadorSintactico.whileStructure ) ; } 
-				  | WHILE '(' condicion ')' LOOP sentencia_ejecutable { this.s.addSyntaxStruct( AnalizadorSintactico.whileStructure ) ;} 
-				  | error LOOP { this.s.addSyntaxError(new Error(AnalizadorSintactico.whileStructure, this.l, this.l.getLine())) ; }
+sentencia_control : WHILE '(' condicion ')' LOOP cuerpo_while_bien_definido { this.s.addSyntaxStruct( AnalizadorSintactico.whileStructure ) ; } 
+				  | WHILE condicion LOOP cuerpo_while_bien_definido { this.s.addSyntaxError( new Error(AnalizadorSintactico.sinPar, this.l, this.l.getLine()));}
+				  | WHILE '(' condicion ')' LOOP cuerpo_while_mal_definido { this.s.addSyntaxError( new Error(AnalizadorSintactico.sinLlaves, this.l, this.l.getLine())); }
 				  ;
 				  
+cuerpo_while_bien_definido : '{' sentencias_ejecutables '}' 
+
+cuerpo_while_mal_definido :  sentencia_ejecutable 
+
+			
+
 operador : '<' { $$ = $1; }
 		 | '>' { $$ = $1; }
 		 | MAYORIGUAL { $$ = $1; }

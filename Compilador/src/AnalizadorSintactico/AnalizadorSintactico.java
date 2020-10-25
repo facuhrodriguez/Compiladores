@@ -31,19 +31,19 @@ public class AnalizadorSintactico {
 	
 	// Errores sintï¿½cticos
 	public static final String errorPrincipal = "Error en la generación del programa principal";
-	protected static final String errorDeclarative = "Error en declaración de variables";
-	protected static final String errorProc = "Error en la declaración de procedimiento";
-	protected static final String errorMaxProcPar = "Cantidad de parámetros excedida (Max: 3)";
-	protected static final String errorFactor = "Error en la definiciï¿½n de constante";
-	protected static final String conditionError = "Error en condición.";
+	protected static final String errorProc = "Error en la declaración de procedimiento en línea ";
+	protected static final String errorMaxProcPar = "Cantidad de parámetros excedida (Max: 3) en línea " ;
 	public static final String errorOperatorComp = "Error en el comparador de comparacion";
 	public static final String sentencia =  "Error en generación de sentencia";
 	public static final String parFinal = "Error: Falta cerrar el paréntesis";
 	public static final String llaveFinal = "Error: Falta cerrar la llave";
+	public static final String conditionError = "Error en la condición en línea ";
 	public static final String errorProcedure = "Error - declaración de procedimiento incorrecta";
 	public static final String sinPar = "Error - Condición sin paréntesis en línea ";
 	public static final String parI = "Error - Falta paréntesis inicial en la condición en línea ";
 	public static final String errorSentenciaEjecutable = "Error en sentencia ejecutable en línea ";
+	public static final String sinLlaves = "Faltan llaves de inicio de bloque en línea ";
+	public static final String faltaEndIf = "Falta la palabra reservada END_IF en línea ";
 
 	
 	// Chequeos semánticos
@@ -69,7 +69,7 @@ public class AnalizadorSintactico {
 	}
 	
 	public void addSyntaxError(Error e) {
-		if (e != null)
+		if (e != null && ! this.syntaxErrors.contains(e))
 			this.syntaxErrors.add(e);
 	}
 	

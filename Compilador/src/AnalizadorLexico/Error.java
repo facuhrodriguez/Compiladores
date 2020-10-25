@@ -36,7 +36,15 @@ public class Error implements AccionSemantica {
 
 	
 	@Override
+	public boolean equals(Object obj) {
+		Error e = (Error) obj;
+		return (this.toString().equals(e.toString()));
+	}
+
+	@Override
 	public String toString() {
 		return this.showMessage();
 	}
+	
+
 }

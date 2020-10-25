@@ -24,12 +24,12 @@ public class App {
 		analizadorSintactico.setCodigoIntermedio(code);
 		parser.run();
 
-		System.out.println("Analizador Sintáctico");
+		System.out.println(" ----------------------------------------- ANALIZADOR SINTACTICO -----------------------------------------");
 		analizadorSintactico.printErrors();
 		analizadorSintactico.printStructures();
 		System.out.println('\n');
 		System.err.println('\n');
-		System.out.println("Analizador Léxico");
+		System.out.println("------------------------- ANALIZADOR LEXICO ------------------------------");
 		analizadorLexico.printTokens();
 		analizadorLexico.printTablaSimbolos();		
 		analizadorLexico.printErrors();	

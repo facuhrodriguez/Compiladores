@@ -49,7 +49,7 @@ Thumbs.db
 *.wmv
 /.metadata/
 /.recommenders/
-.recommenders
+.recommenders/*
 .metadata
 yacc*
 *.xlsx

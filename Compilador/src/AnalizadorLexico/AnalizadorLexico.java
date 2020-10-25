@@ -1623,7 +1623,7 @@ public class AnalizadorLexico {
 	 */
 	public void printTokens() {
 		System.out.println("\n");
-		System.out.println("---------------------------------- TOKENS ---------------------------------------------------------" + "\n" );
+		System.out.println("					    TOKENS		" + "\n" );
 		System.out.println("NUMERO " + "        			NAME            " + "       	        TIPO     " +   
 				"			 USO");
 		for (Token t : this.tokens)
@@ -1676,7 +1676,7 @@ public class AnalizadorLexico {
 	 */
 	public void printTablaSimbolos() {
 		System.out.println("\n");
-		System.out.println("---------------------------------- TABLA DE SIMBOLOS ----------------------------------------------" + "\n" );
+		System.out.println("					TABLA DE SIMBOLOS					" + "\n" );
 		System.out.println("NUMERO " + "        			NAME            " + "       	        TIPO     " +   
 				"			 USO");
 		for (Token t : this.table.getTokens())

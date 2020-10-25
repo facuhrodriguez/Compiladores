@@ -33,6 +33,7 @@ public class AnalizadorSintactico {
 	public static final String errorPrincipal = "Error en la generación del programa principal";
 	protected static final String errorProc = "Error en la declaración de procedimiento en línea ";
 	protected static final String errorMaxProcPar = "Cantidad de parámetros excedida (Max: 3) en línea " ;
+	public static final String errorCondition = "Falta la condición de la sentencia en línea ";
 	public static final String errorOperatorComp = "Error en el comparador de comparacion";
 	public static final String sentencia =  "Error en generación de sentencia";
 	public static final String parFinal = "Error: Falta cerrar el paréntesis";
@@ -83,7 +84,12 @@ public class AnalizadorSintactico {
 	
 	public void printStructures() {
 		System.out.println('\n');
-		System.out.println("Estructuras encontradas");
+		
+		if (this.structures.size() == 0) {
+			System.out.println("No se encontraron estructuras sintácticas");
+			return;
+		}
+		System.out.println("Estructuras encontradas: ");
 		for (String key : this.structures.keySet())
 			if (key != AnalizadorSintactico.principalStruct)
 				System.out.println(key + " en línea " + this.structures.get(key));

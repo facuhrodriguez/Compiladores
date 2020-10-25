@@ -16,13 +16,13 @@ public class AddOperators implements AccionSemantica {
 		if (this.back)
 			this.l.unget();
 		else 
-			if (c == l.COMPARACION || c == l.DISTINTO || c == l.MAYORIGUAL || c == l.MENORIGUAL)
+			if (c == AnalizadorLexico.COMPARACION || c == AnalizadorLexico.DISTINTO || 
+				c == AnalizadorLexico.MAYORIGUAL || c == AnalizadorLexico.MENORIGUAL)
 				this.l.addBuffer('=');
-			else
-				this.l.addBuffer((char) this.c);
+
 		Token t = new Token((short) this.c, this.l.getBuffer(), "OPERADOR");
 		this.l.addToken(t);
-		// Devuelvo el nï¿½mero ASCII asociado al caracter
+		// Devuelvo el número ASCII asociado al caracter
 		return this.c;
 		
 	}

@@ -1,12 +1,10 @@
 package AnalizadorLexico;
 
-import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Iterator;
 
 public class Token {
 	private Hashtable <String, Object >attr;
-	private Iterator<String> i;
+
 	
 	public Token () {
 		attr = new Hashtable <String,Object>();
@@ -27,7 +25,6 @@ public class Token {
 	 */
 	public void addAttr (String clave, Object obj) {
 		attr.put (clave, obj);
-		i = (Iterator<String>) attr.keys();
 	}
 	
 	

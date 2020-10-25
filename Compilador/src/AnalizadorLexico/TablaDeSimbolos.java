@@ -36,22 +36,4 @@ public class TablaDeSimbolos {
 	}
 	
 	
-	/**
-	 * Imprime por pantalla la tabla de simbolo en el momento. Cuando el iterador llega
-	 al final, este se resetea al principio de la tabla de nuevo*/
-//	public String toString () {
-//		int number = 0;
-//		return "";
-////		while (this.i.hasNext() ){
-////			System.out.print(number + " ");
-////			String lexema = (String) i.next();
-////			Token t = simbolos.get(lexema);
-////			number++;
-////			return t.toString() +" "+ lexema + "\n";
-////		}
-////		this.i = (Iterator) simbolos.keys();
-////		return "";
-//		
-//	}
-	
 }

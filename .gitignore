@@ -48,3 +48,9 @@ Thumbs.db
 *.mov
 *.wmv
 /.metadata/
+/.recommenders/
+.recommenders/*
+.metadata
+yacc*
+*.xlsx
+*.jar

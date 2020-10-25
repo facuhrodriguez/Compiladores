@@ -60,4 +60,32 @@ public class MyDouble {
 		truncate = false;
 		return d;
 	}
+	
+	public static Double check(AnalizadorLexico l) {
+		Double number = 0.0;
+		double d = 0.0;
+		String buffer = l.getBuffer();
+		// Si la constante tiene exponente
+		if (buffer.contains("d")) {
+			Character sign = buffer.charAt(buffer.indexOf('d') + 1);
+			Integer indexSign = buffer.indexOf(sign);
+			Integer exp = Integer.parseInt(buffer.substring(indexSign + 1, buffer.length()));
+			double mantissa = Double.parseDouble('-' + buffer.substring(0, buffer.indexOf('d')));
+			if (sign.equals('+')) 
+				 d = Math.pow(mantissa, exp);
+			 else 
+				 d = Math.pow(mantissa, -exp);
+			if (d > 0)
+				number = MyDouble.checkPositiveRange(d);
+			else 
+				number = MyDouble.checkNegativeRange(d, mantissa);
+		} else {
+			d = Double.parseDouble('-' + buffer);
+			if (d > 0) 
+				number = MyDouble.checkPositiveRange(d);
+			else 
+				number = MyDouble.checkNegativeRange(d, 0.0);
+		}
+		return number;
+	}
 }

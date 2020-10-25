@@ -1,2 +1,10 @@
-UINT a;
-a=-2.0;
+PROC a (UINT a, UINT b, UINT c) NI = 3_ui {
+    IF ( a < b ){
+        b = -4.d-3;
+    }ELSE {
+        a = 3.d+4;
+    }END_IF
+    WHILE (a <= b) LOOP{
+        a = a + 1_ui; 
+    }
+}

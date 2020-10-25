@@ -82,17 +82,22 @@ public class AnalizadorLexico {
 	public static final Integer MIN_EXPONENT_DOUBLE = -308;
 
 	// Warnings
-	public static final String WARNING_IDENTIFICADOR = "Warning - Identificador muy largo.";
-	public static final String WARNING_CONSTANT_UI = "Warning - Constante entera sin signo fuera de rango";
-	public static final String WARNING_CONSTANT_DOUBLE = "Warning - Constante double fuera de rango";
+	public static final String WARNING_IDENTIFICADOR = "Warning - Identificador muy largo en línea ";
+	public static final String WARNING_CONSTANT_UI = "Warning - Constante entera sin signo fuera de rango en línea ";
+	public static final String WARNING_CONSTANT_DOUBLE = "Warning - Constante double fuera de rango en línea ";
 
 	// Errores
-	public static final String ERROR_CARACTER_NO_RECONOCIDO = "Error - Caracter no reconocido";
-	public static final String ERROR_CONSTANTE_MAL_DECLARADA = "Error - Constante mal declarada";
-	public static final String ERROR_CONSTANTE_ENTERA_MAL_DECLARADA = "Error - Constante entera sin signo mal declarada.";
-	public static final String ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA = "Error - Constante double mal declarada.";
-	public static final String ERROR_IDENTIFICADOR_MAL_DECLARADO = "Error - Identificador mal declarado.";
-	public static final String ERROR_PALABRA_RESERVADA_MAL_DEFINIDA = "Error - Palabra reservada mal definida.";
+	public static final String ERROR_CARACTER_NO_RECONOCIDO = "Error - Caracter no reconocido en línea ";
+	public static final String ERROR_CONSTANTE_MAL_DECLARADA = "Error - Constante mal declarada en línea ";
+	public static final String ERROR_CONSTANTE_ENTERA_MAL_DECLARADA = "Error - Constante entera sin signo mal declarada en línea ";
+	public static final String ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA = "Error - Constante double mal declarada en línea ";
+	public static final String ERROR_IDENTIFICADOR_MAL_DECLARADO = "Error - Identificador mal declarado en línea ";
+	public static final String ERROR_PALABRA_RESERVADA_MAL_DEFINIDA = "Error - Palabra reservada mal definida en línea ";
+	public static final String ERROR_CADENA_MAL_DEFINIDA = "Error- Cadena mal definida en línea ";
+	
+	public static final String TYPE_UINT = "UINT";
+	public static final String TYPE_DOUBLE = "DOUBLE";
+	
 
 	// Estructuras
 	private AccionSemantica[][] matAS;
@@ -872,17 +877,17 @@ public class AnalizadorLexico {
 		this.matAS[0][22] = new AddBuffer(this);
 		this.matAS[0][23] = new AddBuffer(this);
 		this.matAS[0][24] = new AddBuffer(this);;
-		this.matAS[0][25] = new Error(AnalizadorLexico.ERROR_CARACTER_NO_RECONOCIDO, this);
+		this.matAS[0][25] = new Error(AnalizadorLexico.ERROR_CARACTER_NO_RECONOCIDO, this, getLine());
 		this.matAS[0][26] = null;
 		this.matAS[0][27] = null;
 		this.matAS[0][28] = null; 
 
 		// Estado 1
 		this.matAS[1][0] = new AddBuffer(this);
-		this.matAS[1][1] = new Error(AnalizadorLexico.ERROR_IDENTIFICADOR_MAL_DECLARADO, this);
+		this.matAS[1][1] = new Error(AnalizadorLexico.ERROR_IDENTIFICADOR_MAL_DECLARADO, this, getLine());
 		this.matAS[1][2] = new AddBuffer(this);
 		this.matAS[1][3] = new AddBuffer(this);
-		this.matAS[1][4] = new Error(AnalizadorLexico.ERROR_IDENTIFICADOR_MAL_DECLARADO, this);
+		this.matAS[1][4] = new Error(AnalizadorLexico.ERROR_IDENTIFICADOR_MAL_DECLARADO, this, getLine());
 		this.matAS[1][5] = new AddIdentificator(this);
 		this.matAS[1][6] = new AddIdentificator(this);
 		this.matAS[1][7] = new AddIdentificator(this);
@@ -891,10 +896,10 @@ public class AnalizadorLexico {
 		this.matAS[1][10] = new AddIdentificator(this);
 		this.matAS[1][11] = new AddIdentificator(this);
 		this.matAS[1][12] = new AddIdentificator(this);
-		this.matAS[1][13] = new Error(AnalizadorLexico.ERROR_IDENTIFICADOR_MAL_DECLARADO, this);
-		this.matAS[1][14] = new Error(AnalizadorLexico.ERROR_IDENTIFICADOR_MAL_DECLARADO, this);
-		this.matAS[1][15] = new Error(AnalizadorLexico.ERROR_IDENTIFICADOR_MAL_DECLARADO, this);
-		this.matAS[1][16] = new Error(AnalizadorLexico.ERROR_IDENTIFICADOR_MAL_DECLARADO, this);
+		this.matAS[1][13] = new Error(AnalizadorLexico.ERROR_IDENTIFICADOR_MAL_DECLARADO, this, getLine());
+		this.matAS[1][14] = new Error(AnalizadorLexico.ERROR_IDENTIFICADOR_MAL_DECLARADO, this, getLine());
+		this.matAS[1][15] = new Error(AnalizadorLexico.ERROR_IDENTIFICADOR_MAL_DECLARADO, this, getLine());
+		this.matAS[1][16] = new Error(AnalizadorLexico.ERROR_IDENTIFICADOR_MAL_DECLARADO, this, getLine());
 		this.matAS[1][17] = new AddIdentificator(this);
 		this.matAS[1][18] = new AddIdentificator(this);
 		this.matAS[1][19] = new AddIdentificator(this);
@@ -903,109 +908,109 @@ public class AnalizadorLexico {
 		this.matAS[1][22] = new AddBuffer(this);
 		this.matAS[1][23] = new AddBuffer(this);
 		this.matAS[1][24] = new AddBuffer(this);
-		this.matAS[1][25] = new Error(AnalizadorLexico.ERROR_IDENTIFICADOR_MAL_DECLARADO, this);
+		this.matAS[1][25] = new Error(AnalizadorLexico.ERROR_IDENTIFICADOR_MAL_DECLARADO, this, getLine());
 		this.matAS[1][26] = new AddIdentificator(this);
 		this.matAS[1][27] = new AddIdentificator(this);
 		this.matAS[1][28] = new AddIdentificator(this);
 
 		// Estado 2
-		this.matAS[2][0] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this);
-		this.matAS[2][1] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this);
+		this.matAS[2][0] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this, getLine());
+		this.matAS[2][1] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this, getLine());
 		this.matAS[2][2] = new AddBuffer(this);
 		this.matAS[2][3] = new AddBuffer(this);
 		this.matAS[2][4] = new AddBuffer(this);
-		this.matAS[2][5] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this);
-		this.matAS[2][6] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this);
-		this.matAS[2][7] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this);
-		this.matAS[2][8] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this);
-		this.matAS[2][9] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this);
-		this.matAS[2][10] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this);
-		this.matAS[2][11] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this);
-		this.matAS[2][12] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this);
-		this.matAS[2][13] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this);
-		this.matAS[2][14] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this);
-		this.matAS[2][15] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this);
-		this.matAS[2][16] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this);
-		this.matAS[2][17] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this);
-		this.matAS[2][18] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this);
-		this.matAS[2][19] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this);
-		this.matAS[2][20] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this);
-		this.matAS[2][21] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this);
-		this.matAS[2][22] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this);
-		this.matAS[2][23] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this);
-		this.matAS[2][24] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this);
-		this.matAS[2][25] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this);
-		this.matAS[2][26] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this);
-		this.matAS[2][27] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this);
-		this.matAS[2][28] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this);
+		this.matAS[2][5] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this, getLine());
+		this.matAS[2][6] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this, getLine());
+		this.matAS[2][7] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this, getLine());
+		this.matAS[2][8] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this, getLine());
+		this.matAS[2][9] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this, getLine());
+		this.matAS[2][10] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this, getLine());
+		this.matAS[2][11] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this, getLine());
+		this.matAS[2][12] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this, getLine());
+		this.matAS[2][13] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this, getLine());
+		this.matAS[2][14] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this, getLine());
+		this.matAS[2][15] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this, getLine());
+		this.matAS[2][16] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this, getLine());
+		this.matAS[2][17] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this, getLine());
+		this.matAS[2][18] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this, getLine());
+		this.matAS[2][19] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this, getLine());
+		this.matAS[2][20] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this, getLine());
+		this.matAS[2][21] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this, getLine());
+		this.matAS[2][22] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this, getLine());
+		this.matAS[2][23] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this, getLine());
+		this.matAS[2][24] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this, getLine());
+		this.matAS[2][25] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this, getLine());
+		this.matAS[2][26] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this, getLine());
+		this.matAS[2][27] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this, getLine());
+		this.matAS[2][28] = new Error(AnalizadorLexico.ERROR_CONSTANTE_MAL_DECLARADA, this, getLine());
 
 		// Estado 3
-		this.matAS[3][0] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[3][1] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[3][2] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[3][3] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[3][4] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[3][5] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[3][6] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[3][7] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[3][8] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[3][9] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[3][10] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[3][11] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[3][12] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[3][13] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[3][14] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[3][15] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[3][16] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[3][17] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[3][18] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[3][19] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[3][20] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[3][21] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[3][22] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
+		this.matAS[3][0] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[3][1] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[3][2] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[3][3] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[3][4] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[3][5] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[3][6] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[3][7] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[3][8] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[3][9] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[3][10] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[3][11] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[3][12] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[3][13] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[3][14] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[3][15] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[3][16] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[3][17] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[3][18] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[3][19] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[3][20] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[3][21] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[3][22] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
 		this.matAS[3][23] = new AddBuffer(this);
-		this.matAS[3][24] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[3][25] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[3][26] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[3][27] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[3][28] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
+		this.matAS[3][24] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[3][25] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[3][26] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[3][27] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[3][28] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
 		
 		// Estado 4
-		this.matAS[4][0] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[4][1] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[4][2] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[4][3] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[4][4] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[4][5] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[4][6] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[4][7] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[4][8] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[4][9] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[4][10] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[4][11] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[4][12] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[4][13] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[4][14] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[4][15] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[4][16] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[4][17] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[4][18] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[4][19] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[4][20] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[4][21] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[4][22] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[4][23] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
+		this.matAS[4][0] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[4][1] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[4][2] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[4][3] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[4][4] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[4][5] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[4][6] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[4][7] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[4][8] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[4][9] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[4][10] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[4][11] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[4][12] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[4][13] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[4][14] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[4][15] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[4][16] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[4][17] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[4][18] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[4][19] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[4][20] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[4][21] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[4][22] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[4][23] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
 		this.matAS[4][24] = new AddBuffer(this);
-		this.matAS[4][25] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[4][26] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[4][27] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[4][28] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
+		this.matAS[4][25] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[4][26] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[4][27] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[4][28] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
 		// Estado 5
-		this.matAS[5][0] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[5][1] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[5][2] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[5][3] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[5][4] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
+		this.matAS[5][0] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[5][1] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[5][2] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[5][3] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[5][4] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
 		this.matAS[5][5] = new AddConstant(this, 'U');
 		this.matAS[5][6] = new AddConstant(this, 'U');
 		this.matAS[5][7] = new AddConstant(this, 'U');
@@ -1014,114 +1019,115 @@ public class AnalizadorLexico {
 		this.matAS[5][10] = new AddConstant(this, 'U');
 		this.matAS[5][11] = new AddConstant(this, 'U');
 		this.matAS[5][12] = new AddConstant(this, 'U');
-		this.matAS[5][13] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[5][14] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[5][15] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[5][16] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
+		this.matAS[5][13] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[5][14] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[5][15] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[5][16] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
 		this.matAS[5][17] = new AddConstant(this, 'U');
 		this.matAS[5][18] = new AddConstant(this, 'U');
-		this.matAS[5][19] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[5][20] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
+		this.matAS[5][19] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[5][20] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
 		this.matAS[5][21] = new AddConstant(this, 'U');
-		this.matAS[5][22] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[5][23] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[5][24] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
-		this.matAS[5][25] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this);
+		this.matAS[5][22] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[5][23] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[5][24] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
+		this.matAS[5][25] = new Error(AnalizadorLexico.ERROR_CONSTANTE_ENTERA_MAL_DECLARADA, this, getLine());
 		this.matAS[5][26] = new AddConstant(this, 'U');
 		this.matAS[5][27] = new AddConstant(this, 'U');
 		this.matAS[5][28] = new AddConstant(this, 'U');
 		
+		
 		// Estado 6
-		this.matAS[6][0] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[6][1] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
+		this.matAS[6][0] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[6][1] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
 		this.matAS[6][2] = new AddBuffer(this);
-		this.matAS[6][3] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[6][4] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[6][5] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[6][6] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[6][7] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[6][8] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[6][9] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[6][10] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[6][11] =new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[6][12] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[6][13] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[6][14] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[6][15] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[6][16] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[6][17] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[6][18] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[6][19] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[6][20] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[6][21] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
+		this.matAS[6][3] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[6][4] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[6][5] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[6][6] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[6][7] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[6][8] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[6][9] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[6][10] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[6][11] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[6][12] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[6][13] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[6][14] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[6][15] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[6][16] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[6][17] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[6][18] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[6][19] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[6][20] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[6][21] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
 		this.matAS[6][22] = new AddBuffer(this);
-		this.matAS[6][23] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[6][24] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[6][25] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
+		this.matAS[6][23] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[6][24] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[6][25] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
 		this.matAS[6][26] = new AddOperators(this, false, (int) '.');
 		this.matAS[6][27] = new AddOperators(this, false, (int) '.');
 		this.matAS[6][28] = new AddOperators(this, false, (int) '.');
 
 		// Estado 7
-		this.matAS[7][0] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[7][1] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[7][2] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[7][3] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[7][4] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[7][5] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[7][6] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
+		this.matAS[7][0] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[7][1] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[7][2] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[7][3] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[7][4] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[7][5] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[7][6] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
 		this.matAS[7][7] = new AddBuffer(this);
 		this.matAS[7][8] = new AddBuffer(this);
-		this.matAS[7][9] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[7][10] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[7][11] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[7][12] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[7][13] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[7][14] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[7][15] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[7][16] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[7][17] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[7][18] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[7][19] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[7][20] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[7][21] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[7][22] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[7][23] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[7][24] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[7][25] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[7][26] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[7][27] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[7][28] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
+		this.matAS[7][9] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[7][10] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[7][11] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[7][12] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[7][13] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[7][14] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[7][15] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[7][16] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[7][17] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[7][18] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[7][19] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[7][20] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[7][21] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[7][22] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[7][23] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[7][24] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[7][25] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[7][26] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[7][27] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[7][28] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
 		// Estado 8
-		this.matAS[8][0] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[8][1] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
+		this.matAS[8][0] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[8][1] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
 		this.matAS[8][2] = new AddBuffer(this);
-		this.matAS[8][3] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[8][4] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[8][5] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[8][6] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[8][7] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[8][8] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[8][9] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[8][10] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[8][11] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[8][12] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[8][13] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[8][14] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[8][15] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[8][16] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[8][17] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[8][18] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[8][19] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[8][20] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[8][21] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[8][22] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[8][23] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[8][24] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[8][25] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[8][26] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[8][27] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[8][28] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
+		this.matAS[8][3] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[8][4] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[8][5] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[8][6] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[8][7] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[8][8] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[8][9] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[8][10] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[8][11] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[8][12] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[8][13] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[8][14] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[8][15] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[8][16] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[8][17] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[8][18] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[8][19] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[8][20] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[8][21] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[8][22] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[8][23] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[8][24] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[8][25] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[8][26] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[8][27] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[8][28] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
 		// Estado 9
 		this.matAS[9][0] = new AddOperators(this, true, '/');
 		this.matAS[9][1] = new AddOperators(this, true, '/');
@@ -1367,77 +1373,77 @@ public class AnalizadorLexico {
 		this.matAS[16][24] = new AddBuffer(this);
 		this.matAS[16][25] = new AddBuffer(this);
 		this.matAS[16][26] = new AddBuffer(this);
-		this.matAS[16][27] = new AddChain(this);
-		this.matAS[16][28] = new AddChain(this);
+		this.matAS[16][27] = new Error (ERROR_CADENA_MAL_DEFINIDA, this, getLine());
+		this.matAS[16][28] = new Error (ERROR_CADENA_MAL_DEFINIDA, this, getLine());
 		
 		// Estado 17
-		this.matAS[17][0] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
+		this.matAS[17][0] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
 		this.matAS[17][1] = new AddBuffer(this);
-		this.matAS[17][2] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
+		this.matAS[17][2] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
 		this.matAS[17][3] = new AddBuffer(this);
-		this.matAS[17][4] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[17][5] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[17][6] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[17][7] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[17][8] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[17][9] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[17][10] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[17][11] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[17][12] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[17][13] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[17][14] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
+		this.matAS[17][4] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[17][5] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[17][6] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[17][7] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[17][8] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[17][9] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[17][10] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[17][11] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[17][12] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[17][13] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[17][14] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
 		this.matAS[17][15] =  new AddPalabraReservada(this);
-		this.matAS[17][16] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[17][17] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[17][18] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[17][19] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
+		this.matAS[17][16] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[17][17] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[17][18] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[17][19] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
 		this.matAS[17][20] = new AddPalabraReservada(this);
 		this.matAS[17][21] = new AddPalabraReservada(this);
-		this.matAS[17][22] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[17][23] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[17][24] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[17][25] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
+		this.matAS[17][22] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[17][23] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[17][24] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[17][25] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
 		this.matAS[17][26] = new AddPalabraReservada(this);
 		this.matAS[17][27] = new AddPalabraReservada(this);
 		this.matAS[17][28] = new AddPalabraReservada(this);
 		
 		// Estado 18
-		this.matAS[18][0] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
+		this.matAS[18][0] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
 		this.matAS[18][1] = new AddBuffer(this);
-		this.matAS[18][2] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
+		this.matAS[18][2] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
 		this.matAS[18][3] = new AddBuffer(this);
-		this.matAS[18][4] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[18][5] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[18][6] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[18][7] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[18][8] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[18][9] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[18][10] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[18][11] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[18][12] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[18][13] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[18][14] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
+		this.matAS[18][4] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[18][5] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[18][6] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[18][7] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[18][8] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[18][9] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[18][10] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[18][11] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[18][12] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[18][13] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[18][14] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
 		this.matAS[18][15] =  new AddPalabraReservada(this);
-		this.matAS[18][16] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[18][17] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[18][18] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[18][19] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
+		this.matAS[18][16] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[18][17] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[18][18] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[18][19] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
 		this.matAS[18][20] = new AddPalabraReservada(this);
 		this.matAS[18][21] = new AddPalabraReservada(this);
-		this.matAS[18][22] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[18][23] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[18][24] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
-		this.matAS[18][25] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this);
+		this.matAS[18][22] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[18][23] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[18][24] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[18][25] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
 		this.matAS[18][26] = new AddPalabraReservada(this);
 		this.matAS[18][27] = new AddPalabraReservada(this);
 		this.matAS[18][28] = new AddPalabraReservada(this);
 		
 		// Estado 19
-		this.matAS[19][0] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[19][1] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
+		this.matAS[19][0] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[19][1] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
 		this.matAS[19][2] = new AddBuffer(this);
-		this.matAS[19][3] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[19][4] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
+		this.matAS[19][3] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[19][4] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
 		this.matAS[19][5] = new AddConstant(this, 'D');
 		this.matAS[19][6] = new AddConstant(this, 'D');
 		this.matAS[19][7] = new AddConstant(this, 'D');
@@ -1446,29 +1452,29 @@ public class AnalizadorLexico {
 		this.matAS[19][10] = new AddConstant(this, 'D');
 		this.matAS[19][11] = new AddConstant(this, 'D');
 		this.matAS[19][12] = new AddConstant(this, 'D');
-		this.matAS[19][13] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[19][14] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[19][15] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[19][16] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
+		this.matAS[19][13] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[19][14] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[19][15] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[19][16] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
 		this.matAS[19][17] = new AddConstant(this, 'D');
 		this.matAS[19][18] = new AddConstant(this, 'D');
-		this.matAS[19][19] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[19][20] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[19][21] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[19][22] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[19][23] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[19][24] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[19][25] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
+		this.matAS[19][19] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[19][20] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[19][21] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[19][22] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[19][23] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[19][24] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[19][25] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
 		this.matAS[19][26] = new AddConstant(this, 'D');
 		this.matAS[19][27] = new AddConstant(this, 'D');
 		this.matAS[19][28] = new AddConstant(this, 'D');
 		
 		// Estado 20
-		this.matAS[20][0] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[20][1] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
+		this.matAS[20][0] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[20][1] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
 		this.matAS[20][2] = new AddBuffer(this);
-		this.matAS[20][3] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[20][4] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
+		this.matAS[20][3] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[20][4] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
 		this.matAS[20][5] = new AddConstant(this, 'D');
 		this.matAS[20][6] = new AddConstant(this, 'D');
 		this.matAS[20][7] = new AddConstant(this, 'D');
@@ -1477,19 +1483,19 @@ public class AnalizadorLexico {
 		this.matAS[20][10] = new AddConstant(this, 'D');
 		this.matAS[20][11] = new AddConstant(this, 'D');
 		this.matAS[20][12] = new AddConstant(this, 'D');
-		this.matAS[20][13] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[20][14] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[20][15] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[20][16] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
+		this.matAS[20][13] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[20][14] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[20][15] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[20][16] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
 		this.matAS[20][17] = new AddConstant(this, 'D');
 		this.matAS[20][18] = new AddConstant(this, 'D');
-		this.matAS[20][19] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[20][20] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[20][21] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
+		this.matAS[20][19] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[20][20] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[20][21] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
 		this.matAS[20][22] = new AddBuffer(this);
-		this.matAS[20][23] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[20][24] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
-		this.matAS[20][25] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this);
+		this.matAS[20][23] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[20][24] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
+		this.matAS[20][25] = new Error(AnalizadorLexico.ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA, this, getLine());
 		this.matAS[20][26] = new AddConstant(this, 'D');
 		this.matAS[20][27] = new AddConstant(this, 'D');
 		this.matAS[20][28] = new AddConstant(this, 'D');
@@ -1517,7 +1523,7 @@ public class AnalizadorLexico {
 	}
 
 	/**
-	 * Realiza el anï¿½lisis lï¿½xico
+	 * Realiza el análisis léxico
 	 * @return
 	 */
 	public int yylex() {
@@ -1535,7 +1541,7 @@ public class AnalizadorLexico {
 			this.fh.forward();
 		}
 		
-		// Si llego a un estado final, se agrega el token encontrado.
+	
 		if (state == this.FINAL) 
 			state = 0;
 		
@@ -1546,7 +1552,7 @@ public class AnalizadorLexico {
 	}
 
 	/**
-	 * Devuelve a la entrada el ï¿½ltimo caracter leido
+	 * Devuelve a la entrada el último caracter leído
 	 */
 	public void unget() {
 		this.fh.goBack();
@@ -1570,7 +1576,7 @@ public class AnalizadorLexico {
 	}
 
 	/**
-	 * Devuelve las palabras reservadas reconocidas por el Analizador Lï¿½xico.
+	 * Devuelve las palabras reservadas reconocidas por el Analizador Léxico.
 	 * @return
 	 */
 	public PalabrasReservadas getPalabrasReservadas() {
@@ -1578,7 +1584,7 @@ public class AnalizadorLexico {
 	}
 
 	/**
-	 * Agrega un token a la tabla de sï¿½mbolos
+	 * Agrega un token a la tabla de símbolos
 	 * @param token
 	 * @param lexema
 	 */
@@ -1587,7 +1593,7 @@ public class AnalizadorLexico {
 	}
 	
 	/**
-	 * Devuelve la lï¿½nea actual del cï¿½digo.
+	 * Devuelve la línea actual del código.
 	 * @return
 	 */
 	public Integer getLine() {
@@ -1605,7 +1611,7 @@ public class AnalizadorLexico {
 	}
 
 	/**
-	 * Retorna el caracter ledo actualmente.
+	 * Retorna el caracter leído actualmente.
 	 * @return
 	 */
 	public Character currentCharacter() {
@@ -1617,8 +1623,9 @@ public class AnalizadorLexico {
 	 */
 	public void printTokens() {
 		System.out.println("\n");
-		System.out.println("TOKENS");
-		System.out.println("NUMERO " + "               NAME            " + "       TYPE");
+		System.out.println("					    TOKENS		" + "\n" );
+		System.out.println("NUMERO " + "        			NAME            " + "       	        TIPO     " +   
+				"			 USO");
 		for (Token t : this.tokens)
 			System.out.println(t.toString());
 	}
@@ -1650,7 +1657,7 @@ public class AnalizadorLexico {
 	
 	
 	/**
-	 * Imprime los errores lï¿½xicos encontrados
+	 * Imprime los errores léxicos encontrados
 	 */
 	public void printErrors() {
 		System.out.println("\n");
@@ -1665,20 +1672,21 @@ public class AnalizadorLexico {
 	}
 	
 	/**
-	 * Imprime el contenido de la tabla de sï¿½mbolos.
+	 * Imprime el contenido de la tabla de símbolos.
 	 */
 	public void printTablaSimbolos() {
 		System.out.println("\n");
-		System.out.println("---------------- TABLA DE SIMBOLOS ----------------" + "\n" );
-		System.out.println("TOKEN " + "               NAME            " + "       TYPE");
+		System.out.println("					TABLA DE SIMBOLOS					" + "\n" );
+		System.out.println("NUMERO " + "        			NAME            " + "       	        TIPO     " +   
+				"			 USO");
 		for (Token t : this.table.getTokens())
 			System.out.println("" + t.toString());
 	}
 
 	
 	/**
-	 * En los casos que haya errores lï¿½xicos, se ejecuta el modo pï¿½nico.
-	 * Descarta todos los caracteres hasta que se encuentra con un salto de lï¿½nea, tabulaciï¿½n
+	 * En los casos que haya errores léxicos, se ejecuta el modo pánico.
+	 * Descarta todos los caracteres hasta que se encuentra con un salto de línea, tabulación
 	 * o retorno de carro.
 	 */
 	public void panicMode() {
@@ -1710,5 +1718,13 @@ public class AnalizadorLexico {
 	
 	public TablaDeSimbolos getTS() {
 		return this.table;
+	}
+
+	public boolean warningExist(String valor) {
+		for (Error e : this.warnings) {
+			if (e.getReason().equals(valor))
+				return true;
+		}
+		return false;
 	}
 }

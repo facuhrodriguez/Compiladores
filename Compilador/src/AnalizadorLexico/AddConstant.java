@@ -42,9 +42,13 @@ public class AddConstant implements AccionSemantica {
 					number = MyDouble.checkNegativeRange(d, 0.0);
 			}
 				
-			if (MyDouble.truncate) 
-				this.l.addWarning(new Error(AnalizadorLexico.WARNING_CONSTANT_DOUBLE, this.l));
-			Token token = new Token(AnalizadorLexico.CONSTANTE, number, AnalizadorLexico.CONSTANTE_DOUBLE);
+			if (MyDouble.truncate) {
+				Error warning = new Error(AnalizadorLexico.WARNING_CONSTANT_DOUBLE, this.l, this.l.getLine());
+				warning.setReason(buffer);
+				this.l.addWarning(warning);
+				
+			}
+			Token token = new Token(AnalizadorLexico.CONSTANTE, number, AnalizadorLexico.TYPE_DOUBLE);
 			this.l.addToken(token);
 			this.l.addOnTablaDeSimbolos(token.getAttr("VALOR").toString(), token);	
 			this.l.setYylval(token.getAttr("VALOR").toString());
@@ -58,20 +62,20 @@ public class AddConstant implements AccionSemantica {
 				number = Integer.parseInt(this.l.getBuffer().substring(0, this.l.getBuffer().length() - 3));
 				if ((number < AnalizadorLexico.MIN_CONSTANT_UI)) {
 					number = AnalizadorLexico.MIN_CONSTANT_UI;
-					this.l.addWarning(new Error(AnalizadorLexico.WARNING_CONSTANT_UI, this.l));
+					this.l.addWarning(new Error(AnalizadorLexico.WARNING_CONSTANT_UI, this.l, this.l.getLine()));
 				} else {
 					if ((number > AnalizadorLexico.MAX_CONSTANT_UI)) {
 						number = AnalizadorLexico.MAX_CONSTANT_UI;
-						this.l.addWarning(new Error(AnalizadorLexico.WARNING_CONSTANT_UI, this.l));
+						this.l.addWarning(new Error(AnalizadorLexico.WARNING_CONSTANT_UI, this.l, this.l.getLine()));
 					}
 				}
 			}
 			catch(NumberFormatException n) {
-				this.l.addWarning(new Error(AnalizadorLexico.WARNING_CONSTANT_UI, this.l));
+				this.l.addWarning(new Error(AnalizadorLexico.WARNING_CONSTANT_UI, this.l, this.l.getLine()));
 				number = AnalizadorLexico.MAX_CONSTANT_UI;
 			}
 			
-			Token token = new Token(AnalizadorLexico.CONSTANTE, number, AnalizadorLexico.CONSTANTE_ENTERA_SIN_SIGNO);
+			Token token = new Token(AnalizadorLexico.CONSTANTE, number, AnalizadorLexico.TYPE_UINT);
 			this.l.addOnTablaDeSimbolos(token.getAttr("VALOR").toString(), token);
 			this.l.addToken(token);
 			this.l.setYylval(token.getAttr("VALOR").toString());

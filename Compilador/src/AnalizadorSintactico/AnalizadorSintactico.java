@@ -16,7 +16,7 @@ public class AnalizadorSintactico {
 	protected static final Integer maxProcPar = 3;
 	private CodigoIntermedio polaca;
 	
-	// Estructuras sintï¿½cticas
+	// Estructuras sintácticas
 	protected static final String principalStruct = "Programa principal";
 	protected static final String declarativeStruct = "Declaración de variables";
 	protected static final String procStruct = "Procedimiento";
@@ -29,7 +29,7 @@ public class AnalizadorSintactico {
 	protected static final String conditionStructure = "Condición";
 
 	
-	// Errores sintï¿½cticos
+	// Errores sintácticos
 	public static final String errorPrincipal = "Error en la generación del programa principal";
 	protected static final String errorProc = "Error en la declaración de procedimiento en línea ";
 	protected static final String errorMaxProcPar = "Cantidad de parámetros excedida (Max: 3) en línea " ;
@@ -101,7 +101,7 @@ public class AnalizadorSintactico {
 			}
 		}
 		else 
-			System.out.println("No hay errores sintï¿½cticos");
+			System.out.println("No hay errores sintácticos");
 	}
 	
 	public void setCodigoIntermedio (CodigoIntermedio i) {

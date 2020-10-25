@@ -782,13 +782,13 @@ break;
 case 39:
 //#line 140 ".\parser.y"
 { String valor = yylval.sval;
-	if (this.ts.getToken(valor).getAttr("TIPO") == AnalizadorLexico.CONSTANTE_ENTERA_SIN_SIGNO) {
+	if (this.ts.getToken(valor).getAttr("TIPO") == AnalizadorLexico.TYPE_UINT) {
 		this.l.addWarning(new Error(AnalizadorLexico.WARNING_CONSTANT_UI, this.l, this.l.getLine()));
 		Token t = new Token(AnalizadorLexico.CONSTANTE, 0, AnalizadorLexico.CONSTANTE_ENTERA_SIN_SIGNO);
 		this.ts.addToken(valor, t);
 		yyval = new ParserVal(valor);
 	} else 
-		if (this.ts.getToken(valor).getAttr("TIPO") == AnalizadorLexico.CONSTANTE_DOUBLE) {
+		if (this.ts.getToken(valor).getAttr("TIPO") == AnalizadorLexico.TYPE_DOUBLE) {
 			Double number = MyDouble.check(this.l);
 			if (MyDouble.truncate) { 
 				if (!this.l.warningExist(this.l.getBuffer()))

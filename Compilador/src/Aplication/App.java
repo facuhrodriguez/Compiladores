@@ -24,16 +24,16 @@ public class App {
 		analizadorSintactico.setCodigoIntermedio(code);
 		parser.run();
 
-		System.out.println("Analizador Sintï¿½ctico");
+		System.out.println("Analizador Sintáctico");
 		analizadorSintactico.printErrors();
 		analizadorSintactico.printStructures();
 		System.out.println('\n');
-//		System.err.println('\n');
-//		System.out.println("Analizador Lï¿½xico");
-//		analizadorLexico.printTokens();
+		System.err.println('\n');
+		System.out.println("Analizador Léxico");
+		analizadorLexico.printTokens();
 		analizadorLexico.printTablaSimbolos();		
-//		analizadorLexico.printErrors();	
-//		analizadorLexico.printWarnings();
+		analizadorLexico.printErrors();	
+		analizadorLexico.printWarnings();
 		//code.printPolaca();
 
 	}

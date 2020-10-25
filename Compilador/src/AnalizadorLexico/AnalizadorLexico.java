@@ -82,18 +82,18 @@ public class AnalizadorLexico {
 	public static final Integer MIN_EXPONENT_DOUBLE = -308;
 
 	// Warnings
-	public static final String WARNING_IDENTIFICADOR = "Warning - Identificador muy largo en lï¿½nea ";
-	public static final String WARNING_CONSTANT_UI = "Warning - Constante entera sin signo fuera de rango en lï¿½nea ";
-	public static final String WARNING_CONSTANT_DOUBLE = "Warning - Constante double fuera de rango en lï¿½nea ";
+	public static final String WARNING_IDENTIFICADOR = "Warning - Identificador muy largo en línea ";
+	public static final String WARNING_CONSTANT_UI = "Warning - Constante entera sin signo fuera de rango en línea ";
+	public static final String WARNING_CONSTANT_DOUBLE = "Warning - Constante double fuera de rango en línea ";
 
 	// Errores
-	public static final String ERROR_CARACTER_NO_RECONOCIDO = "Error - Caracter no reconocido en lï¿½nea ";
-	public static final String ERROR_CONSTANTE_MAL_DECLARADA = "Error - Constante mal declarada en lï¿½nea ";
-	public static final String ERROR_CONSTANTE_ENTERA_MAL_DECLARADA = "Error - Constante entera sin signo mal declarada en lï¿½nea ";
-	public static final String ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA = "Error - Constante double mal declarada en lï¿½nea ";
-	public static final String ERROR_IDENTIFICADOR_MAL_DECLARADO = "Error - Identificador mal declarado en lï¿½nea ";
-	public static final String ERROR_PALABRA_RESERVADA_MAL_DEFINIDA = "Error - Palabra reservada mal definida en lï¿½nea ";
-	public static final String ERROR_CADENA_MAL_DEFINIDA = "Error- Cadena mal definida en lÃ­nea ";
+	public static final String ERROR_CARACTER_NO_RECONOCIDO = "Error - Caracter no reconocido en línea ";
+	public static final String ERROR_CONSTANTE_MAL_DECLARADA = "Error - Constante mal declarada en línea ";
+	public static final String ERROR_CONSTANTE_ENTERA_MAL_DECLARADA = "Error - Constante entera sin signo mal declarada en línea ";
+	public static final String ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA = "Error - Constante double mal declarada en línea ";
+	public static final String ERROR_IDENTIFICADOR_MAL_DECLARADO = "Error - Identificador mal declarado en línea ";
+	public static final String ERROR_PALABRA_RESERVADA_MAL_DEFINIDA = "Error - Palabra reservada mal definida en línea ";
+	public static final String ERROR_CADENA_MAL_DEFINIDA = "Error- Cadena mal definida en línea ";
 	
 	public static final String TYPE_UINT = "UINT";
 	public static final String TYPE_DOUBLE = "DOUBLE";
@@ -1523,7 +1523,7 @@ public class AnalizadorLexico {
 	}
 
 	/**
-	 * Realiza el anï¿½lisis lï¿½xico
+	 * Realiza el análisis léxico
 	 * @return
 	 */
 	public int yylex() {
@@ -1541,7 +1541,7 @@ public class AnalizadorLexico {
 			this.fh.forward();
 		}
 		
-		// Si llego a un estado final, se agrega el token encontrado.
+	
 		if (state == this.FINAL) 
 			state = 0;
 		
@@ -1552,7 +1552,7 @@ public class AnalizadorLexico {
 	}
 
 	/**
-	 * Devuelve a la entrada el ï¿½ltimo caracter leido
+	 * Devuelve a la entrada el último caracter leído
 	 */
 	public void unget() {
 		this.fh.goBack();
@@ -1576,7 +1576,7 @@ public class AnalizadorLexico {
 	}
 
 	/**
-	 * Devuelve las palabras reservadas reconocidas por el Analizador Lï¿½xico.
+	 * Devuelve las palabras reservadas reconocidas por el Analizador Léxico.
 	 * @return
 	 */
 	public PalabrasReservadas getPalabrasReservadas() {
@@ -1584,7 +1584,7 @@ public class AnalizadorLexico {
 	}
 
 	/**
-	 * Agrega un token a la tabla de sï¿½mbolos
+	 * Agrega un token a la tabla de símbolos
 	 * @param token
 	 * @param lexema
 	 */
@@ -1593,7 +1593,7 @@ public class AnalizadorLexico {
 	}
 	
 	/**
-	 * Devuelve la lï¿½nea actual del cï¿½digo.
+	 * Devuelve la línea actual del código.
 	 * @return
 	 */
 	public Integer getLine() {
@@ -1611,7 +1611,7 @@ public class AnalizadorLexico {
 	}
 
 	/**
-	 * Retorna el caracter ledo actualmente.
+	 * Retorna el caracter leído actualmente.
 	 * @return
 	 */
 	public Character currentCharacter() {
@@ -1623,8 +1623,9 @@ public class AnalizadorLexico {
 	 */
 	public void printTokens() {
 		System.out.println("\n");
-		System.out.println("TOKENS");
-		System.out.println("NUMERO " + "               NAME            " + "       TYPE");
+		System.out.println("---------------------------------- TOKENS ---------------------------------------------------------" + "\n" );
+		System.out.println("NUMERO " + "        			NAME            " + "       	        TIPO     " +   
+				"			 USO");
 		for (Token t : this.tokens)
 			System.out.println(t.toString());
 	}
@@ -1651,12 +1652,12 @@ public class AnalizadorLexico {
 			}
 		}
 		else 
-			System.out.println("No hay warnings lï¿½xicos");
+			System.out.println("No hay warnings léxicos");
 	}
 	
 	
 	/**
-	 * Imprime los errores lï¿½xicos encontrados
+	 * Imprime los errores léxicos encontrados
 	 */
 	public void printErrors() {
 		System.out.println("\n");
@@ -1667,24 +1668,25 @@ public class AnalizadorLexico {
 			}
 		}
 		else 
-			System.out.println("No hay errores lï¿½xicos");
+			System.out.println("No hay errores léxicos");
 	}
 	
 	/**
-	 * Imprime el contenido de la tabla de sï¿½mbolos.
+	 * Imprime el contenido de la tabla de símbolos.
 	 */
 	public void printTablaSimbolos() {
 		System.out.println("\n");
-		System.out.println("---------------- TABLA DE SIMBOLOS ----------------" + "\n" );
-		System.out.println("TOKEN   " + "    NAME     " + "	     TIPO" + "		USO");
+		System.out.println("---------------------------------- TABLA DE SIMBOLOS ----------------------------------------------" + "\n" );
+		System.out.println("NUMERO " + "        			NAME            " + "       	        TIPO     " +   
+				"			 USO");
 		for (Token t : this.table.getTokens())
 			System.out.println("" + t.toString());
 	}
 
 	
 	/**
-	 * En los casos que haya errores lï¿½xicos, se ejecuta el modo pï¿½nico.
-	 * Descarta todos los caracteres hasta que se encuentra con un salto de lï¿½nea, tabulaciï¿½n
+	 * En los casos que haya errores léxicos, se ejecuta el modo pánico.
+	 * Descarta todos los caracteres hasta que se encuentra con un salto de línea, tabulación
 	 * o retorno de carro.
 	 */
 	public void panicMode() {

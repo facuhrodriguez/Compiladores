@@ -1,5 +1,6 @@
 package AnalizadorLexico;
 
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 
@@ -36,16 +37,14 @@ public class Token {
 
 	@Override
 	public String toString() {
-		while (i.hasNext()) {
-			String key = (String) i.next();
-			Object value = (Object) attr.get(key);
-			return  " " +value + "  	    " + this.toString() + "                 ";
+		String t = "";
+		for (String key : attr.keySet()) {
+			t = t + attr.get(key) + "				";
 		}
-		i = (Iterator<String>) attr.keys();
-		return " " ;
+		return t;
 	}
 	
-	
-	
-	
 }
+	
+	
+	

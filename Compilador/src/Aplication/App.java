@@ -31,7 +31,7 @@ public class App {
 //			analizadorLexico.yylex();
 		System.out.println('\n');
 //		System.err.println('\n');
-//		System.out.println("Analizador Léxico");
+//		System.out.println("Analizador Lï¿½xico");
 //		analizadorLexico.printTokens();
 		analizadorLexico.printTablaSimbolos();		
 //		analizadorLexico.printErrors();	

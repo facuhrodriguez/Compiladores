@@ -82,17 +82,18 @@ public class AnalizadorLexico {
 	public static final Integer MIN_EXPONENT_DOUBLE = -308;
 
 	// Warnings
-	public static final String WARNING_IDENTIFICADOR = "Warning - Identificador muy largo en línea ";
-	public static final String WARNING_CONSTANT_UI = "Warning - Constante entera sin signo fuera de rango en línea ";
-	public static final String WARNING_CONSTANT_DOUBLE = "Warning - Constante double fuera de rango en línea ";
+	public static final String WARNING_IDENTIFICADOR = "Warning - Identificador muy largo en lï¿½nea ";
+	public static final String WARNING_CONSTANT_UI = "Warning - Constante entera sin signo fuera de rango en lï¿½nea ";
+	public static final String WARNING_CONSTANT_DOUBLE = "Warning - Constante double fuera de rango en lï¿½nea ";
 
 	// Errores
-	public static final String ERROR_CARACTER_NO_RECONOCIDO = "Error - Caracter no reconocido en línea ";
-	public static final String ERROR_CONSTANTE_MAL_DECLARADA = "Error - Constante mal declarada en línea ";
-	public static final String ERROR_CONSTANTE_ENTERA_MAL_DECLARADA = "Error - Constante entera sin signo mal declarada en línea ";
-	public static final String ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA = "Error - Constante double mal declarada en línea ";
-	public static final String ERROR_IDENTIFICADOR_MAL_DECLARADO = "Error - Identificador mal declarado en línea ";
-	public static final String ERROR_PALABRA_RESERVADA_MAL_DEFINIDA = "Error - Palabra reservada mal definida en línea ";
+	public static final String ERROR_CARACTER_NO_RECONOCIDO = "Error - Caracter no reconocido en lï¿½nea ";
+	public static final String ERROR_CONSTANTE_MAL_DECLARADA = "Error - Constante mal declarada en lï¿½nea ";
+	public static final String ERROR_CONSTANTE_ENTERA_MAL_DECLARADA = "Error - Constante entera sin signo mal declarada en lï¿½nea ";
+	public static final String ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA = "Error - Constante double mal declarada en lï¿½nea ";
+	public static final String ERROR_IDENTIFICADOR_MAL_DECLARADO = "Error - Identificador mal declarado en lï¿½nea ";
+	public static final String ERROR_PALABRA_RESERVADA_MAL_DEFINIDA = "Error - Palabra reservada mal definida en lï¿½nea ";
+	public static final String ERROR_CADENA_MAL_DEFINIDA = "Error- Cadena mal definida en lÃ­nea ";
 	
 	public static final String TYPE_UINT = "UINT";
 	public static final String TYPE_DOUBLE = "DOUBLE";
@@ -1372,8 +1373,8 @@ public class AnalizadorLexico {
 		this.matAS[16][24] = new AddBuffer(this);
 		this.matAS[16][25] = new AddBuffer(this);
 		this.matAS[16][26] = new AddBuffer(this);
-		this.matAS[16][27] = new AddChain(this);
-		this.matAS[16][28] = new AddChain(this);
+		this.matAS[16][27] = new Error (ERROR_CADENA_MAL_DEFINIDA, this, getLine());
+		this.matAS[16][28] = new Error (ERROR_CADENA_MAL_DEFINIDA, this, getLine());
 		
 		// Estado 17
 		this.matAS[17][0] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
@@ -1522,7 +1523,7 @@ public class AnalizadorLexico {
 	}
 
 	/**
-	 * Realiza el análisis léxico
+	 * Realiza el anï¿½lisis lï¿½xico
 	 * @return
 	 */
 	public int yylex() {
@@ -1551,7 +1552,7 @@ public class AnalizadorLexico {
 	}
 
 	/**
-	 * Devuelve a la entrada el último caracter leido
+	 * Devuelve a la entrada el ï¿½ltimo caracter leido
 	 */
 	public void unget() {
 		this.fh.goBack();
@@ -1583,7 +1584,7 @@ public class AnalizadorLexico {
 	}
 
 	/**
-	 * Agrega un token a la tabla de símbolos
+	 * Agrega un token a la tabla de sï¿½mbolos
 	 * @param token
 	 * @param lexema
 	 */
@@ -1592,7 +1593,7 @@ public class AnalizadorLexico {
 	}
 	
 	/**
-	 * Devuelve la línea actual del código.
+	 * Devuelve la lï¿½nea actual del cï¿½digo.
 	 * @return
 	 */
 	public Integer getLine() {
@@ -1650,7 +1651,7 @@ public class AnalizadorLexico {
 			}
 		}
 		else 
-			System.out.println("No hay warnings léxicos");
+			System.out.println("No hay warnings lï¿½xicos");
 	}
 	
 	
@@ -1666,7 +1667,7 @@ public class AnalizadorLexico {
 			}
 		}
 		else 
-			System.out.println("No hay errores léxicos");
+			System.out.println("No hay errores lï¿½xicos");
 	}
 	
 	/**

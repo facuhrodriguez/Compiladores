@@ -1,13 +1,21 @@
 package CodigoIntermedio;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Stack;
+import AnalizadorLexico.Error;
 
 public class CodigoIntermedio {
 	
 	private HashMap<Integer, String> polaca;
 	public static Integer polacaNumber;
 	private Stack<Integer> stack;
+	private List<Error> errors = new ArrayList<Error>();
+	
+	// Errores semánticos
+	public static final String VAR_NO_DECLARADA = "Error - Variable no declarada en línea ";
+	public static final String VAR_RE_DECLARADA = "Error - Variable re-declarada en línea ";
 	
 	public CodigoIntermedio() {
 		this.polaca = new HashMap<Integer, String>();
@@ -78,6 +86,22 @@ public class CodigoIntermedio {
 		for (Integer polaca : this.polaca.keySet()) {
 			System.out.println("paso " + polaca + " " + this.polaca.get(polaca));
 		}
+	}
+	
+	/**
+	 * Agrega los errores semánticos encontrados
+	 * @param e
+	 */
+	public void addSemanticError(Error e) {
+		this.errors.add(e);
+	}
+
+	public void printErrors() {
+		System.out.println("\n");
+		for (Error e : this.errors) {
+			System.out.println(e.toString());
+		}
+		
 	}
 	
 }

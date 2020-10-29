@@ -5,8 +5,6 @@ import CodigoIntermedio.CodigoIntermedio;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
 
 public class AnalizadorSintactico {
 	
@@ -15,6 +13,7 @@ public class AnalizadorSintactico {
 	private int count;
 	protected static final Integer maxProcPar = 3;
 	private CodigoIntermedio polaca;
+	private String nameProc; 
 	
 	// Estructuras sintácticas
 	protected static final String principalStruct = "Programa principal";
@@ -58,6 +57,7 @@ public class AnalizadorSintactico {
 		this.syntaxErrors = new ArrayList<Error>();
 		this.count = 0;
 		polaca = new CodigoIntermedio();
+		this.nameProc = "main";
 	}
 	
 	public AnalizadorSintactico(AnalizadorLexico l) {
@@ -112,5 +112,19 @@ public class AnalizadorSintactico {
 	
 	public void setCodigoIntermedio (CodigoIntermedio i) {
 		this.polaca = i;
+	}
+	
+	public void setNombreProcedimiento(String a) {
+		this.nameProc = this.nameProc.concat("@");
+		this.nameProc = this.nameProc.concat(a);
+	}
+	
+	public void removeNombreProcedimiento(String a) {
+		this.nameProc = this.nameProc.replace(a, "");
+		this.nameProc = this.nameProc.replaceFirst("@", "");
+	}
+	
+	public String getNombreProcedimiento() {
+		return this.nameProc;
 	}
 }

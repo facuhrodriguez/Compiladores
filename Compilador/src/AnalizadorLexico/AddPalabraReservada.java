@@ -73,7 +73,7 @@ public class AddPalabraReservada implements AccionSemantica {
 		
 		Token token = new Token (tokenNumber, buffer, "PALABRA RESERVADA");
 		this.l.addToken(token);
-		this.l.addOnTablaDeSimbolos(buffer, token);
+		//this.l.addOnTablaDeSimbolos(buffer, token);
 		return tokenNumber;
 	}
 

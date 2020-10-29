@@ -50,7 +50,7 @@ sentencias_ejecutables : sentencia_ejecutable
 					   | error sentencia_ejecutable {this.s.addSyntaxError(new Error(AnalizadorSintactico.errorSentenciaEjecutable, this.l, this.l.getLine()));}
 					   ;
 
-sentencia_declarativa : declaraciones_id
+sentencia_declarativa : declaraciones_id { }
 					  | declaraciones_procedimiento
 					  ;
 
@@ -62,8 +62,10 @@ declaraciones_id : declaracion_id ';' { this.s.addSyntaxStruct( AnalizadorSintac
 
 declaracion_id : tipo IDENTIFICADOR { String lexema = $2.sval;
 									  Token t = this.ts.getToken(lexema);
+									  t.addAttr("NOMBRE", lexema.concat("@").concat(this.s.getNombreProcedimiento()));
 									  t.addAttr("TIPO", $1.sval);
 									  t.addAttr("USO", AnalizadorSintactico.VARIABLE);
+									  t.addAttr("AMBITO", this.s.getNombreProcedimiento());
 									  this.ts.addToken(lexema, t);
 									 }
 			   ;
@@ -72,36 +74,59 @@ tipo : UINT { $$ = new ParserVal(AnalizadorLexico.TYPE_UINT);}
 	 | DOUBLE { $$ = new ParserVal( AnalizadorLexico.TYPE_DOUBLE); }
 	 ;
 
-declaraciones_procedimiento : encabezado_procedimiento '{' sentencias '}' { this.s.addSyntaxStruct( AnalizadorSintactico.procStruct ); };
+declaraciones_procedimiento : encabezado_procedimiento '{' sentencias '}' { String lexema = $1.sval;
+																			Token t = this.ts.getToken(lexema);
+																			t.addAttr("USO", AnalizadorSintactico.NOMBREPROC);
+																			this.ts.addToken(lexema, t);
+																			this.s.removeNombreProcedimiento(lexema);}
 							;
 
-encabezado_procedimiento : PROC IDENTIFICADOR '(' parametros ')' NI '=' CONSTANTE { String lexema = $2.sval; }
-						 | PROC IDENTIFICADOR '(' ')' NI '=' CONSTANTE  { String lexema = $2.sval; 
+encabezado_procedimiento : PROC IDENTIFICADOR '(' parametros ')' NI '=' CONSTANTE { this.s.addSyntaxStruct( AnalizadorSintactico.procStruct );
+																					this.count = 0;
+																					String lexema = $2.sval;
+																					Token t = this.ts.getToken(lexema);
+																					t.addAttr("AMBITO", this.s.getNombreProcedimiento());
+																					t.addAttr("NOMBRE", lexema.concat("@").concat(this.s.getNombreProcedimiento()));
+																					this.s.setNombreProcedimiento(lexema);
+																					$$.sval = $2.sval;
+																					}
+						 | PROC IDENTIFICADOR '(' ')' NI '=' CONSTANTE  { this.s.addSyntaxStruct( AnalizadorSintactico.procStruct ); 
+																		  $$.sval = $2.sval;
+																		  String lexema = $2.sval;
 																		  Token t = this.ts.getToken(lexema);
-																		  t.addAttr("USO", AnalizadorSintactico.NOMBREPROC);
-																		  this.ts.addToken(lexema, t);}
+																		  t.addAttr("NOMBRE", lexema.concat("@").concat(this.s.getNombreProcedimiento()));
+																		  this.s.setNombreProcedimiento($2.sval);
+																	     }
 																		
 						 | PROC '(' { this.s.addSyntaxError( new Error(AnalizadorSintactico.errorProcedure, this.l, this.l.getLine()));}
 						 ;
 
-parametros : declaracion_id { this.count++;
+parametros : declaracion_par { this.count++;
 							  if (this.count > AnalizadorSintactico.maxProcPar){ 
 								this.s.addSyntaxError( new Error(AnalizadorSintactico.errorMaxProcPar, this.l, this.l.getLine()));
 								this.count = 0;
 							  }
-							  String lexema = $1.sval;
 							}
-		   | parametros ',' declaracion_id { this.count++;
+		   | parametros ',' declaracion_par { this.count++;
 											 if (this.count > AnalizadorSintactico.maxProcPar) 
 												this.s.addSyntaxError( new Error(AnalizadorSintactico.errorMaxProcPar, this.l, this.l.getLine()));
 											}
-		   | REF declaracion_id {  this.count++;
+		   | REF declaracion_par {  this.count++;
 								   if (this.count > AnalizadorSintactico.maxProcPar){ 
 										this.s.addSyntaxError( new Error(AnalizadorSintactico.errorMaxProcPar, this.l, this.l.getLine()));
 										this.count = 0;
 									}
+									
 								}
 		   ;
+
+declaracion_par : tipo IDENTIFICADOR { String lexema = $2.sval;
+									  Token t = this.ts.getToken(lexema);
+									  t.addAttr("TIPO", $1.sval);
+									  t.addAttr("USO", AnalizadorSintactico.NOMBREPAR);
+									  this.ts.addToken(lexema, t);
+									 }
+
 
 sentencia_ejecutable : asignaciones ';' { this.s.addSyntaxStruct( AnalizadorSintactico.asigStruct ); 
 										  }
@@ -121,8 +146,12 @@ lado_izquierdo : IDENTIFICADOR { $$ = $1;
 								String lexema = $1.sval;
 								Token t = this.ts.getToken(lexema);
 							    t.addAttr("USO", AnalizadorSintactico.VARIABLE);
-							    this.ts.addToken(lexema, t);
-								 }
+								
+								if (!this.existe_en_ambito(t))
+									this.polaca.addSemanticError(new Error(CodigoIntermedio.VAR_NO_DECLARADA, this.l, this.l.getLine()));
+								else 
+									this.ts.addToken(lexema, t);
+								}
 			   ;
 
 expresion_aritmetica : termino
@@ -140,7 +169,7 @@ termino : factor {  // termino : factor
 factor : '-' CONSTANTE { String valor = yylval.sval;
 	if (this.ts.getToken(valor).getAttr("TIPO") == AnalizadorLexico.TYPE_UINT) {
 		this.l.addWarning(new Error(AnalizadorLexico.WARNING_CONSTANT_UI, this.l, this.l.getLine()));
-		Token t = new Token(AnalizadorLexico.CONSTANTE, 0, AnalizadorLexico.CONSTANTE_ENTERA_SIN_SIGNO);
+		Token t = new Token(AnalizadorLexico.CONSTANTE, 0, AnalizadorLexico.TYPE_UINT);
 		this.ts.addToken(valor, t);
 		$$ = new ParserVal(valor);
 	} else 
@@ -151,7 +180,7 @@ factor : '-' CONSTANTE { String valor = yylval.sval;
 					this.l.addWarning(new Error(AnalizadorLexico.WARNING_CONSTANT_DOUBLE, this.l, this.l.getLine()));
 			}
 				
-			Token t = new Token(AnalizadorLexico.CONSTANTE, number, AnalizadorLexico.CONSTANTE_DOUBLE);
+			Token t = new Token(AnalizadorLexico.CONSTANTE, number, AnalizadorLexico.TYPE_DOUBLE);
 			this.ts.addToken(valor, t);
 			$$ = new ParserVal(valor);
 	} 
@@ -201,15 +230,15 @@ sentencia_seleccion : IF '(' condicion ')' cuerpo_if_bien_definido END_IF {
 					;
 
 
-cuerpo_if_bien_definido: '{' sentencias_ejecutables '}' 
+cuerpo_if_bien_definido: '{' sentencias '}' 
 					   ;
-cuerpo_if_mal_definido : sentencias_ejecutables 
+cuerpo_if_mal_definido : sentencias 
 					   ;
 		  
-cuerpo_else_bien_definido : '{' sentencias_ejecutables '}' 
+cuerpo_else_bien_definido : '{' sentencias '}' 
 						  ;
 
-cuerpo_else_mal_definido:  sentencias_ejecutables 
+cuerpo_else_mal_definido:  sentencias 
 						;
 
 
@@ -252,6 +281,7 @@ operador : '<' { $$ = $1; }
 		 | DISTINTO { $$ = $1; }
 		 | COMPARACION { $$ = $1; }
 		 ;
+
 %%
 
 AnalizadorLexico l;
@@ -286,6 +316,17 @@ public int yylex() {
 public void yyerror(String s) {
 	if(s.contains("under"))
 		System.out.println("par:"+s);
+}
+
+public boolean existe_en_ambito(Token var) {
+	String ambitoVar = (String) var.getAttr("AMBITO");
+	String nombreVar = (String) var.getAttr("NOMBRE");
+	for (Token t : this.ts.getTokens()){
+		if ( ((String) t.getAttr("AMBITO")).contains(ambitoVar) && 
+			((String) t.getAttr("NOMBRE")).equals(nombreVar) )
+			return true;
+	}
+	return false;
 }
 
 

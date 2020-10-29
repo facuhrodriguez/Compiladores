@@ -30,11 +30,12 @@ public class App {
 		System.out.println('\n');
 		System.err.println('\n');
 		System.out.println("------------------------- ANALIZADOR LEXICO ------------------------------");
-		analizadorLexico.printTokens();
+//		analizadorLexico.printTokens();
 		analizadorLexico.printTablaSimbolos();		
-		analizadorLexico.printErrors();	
-		analizadorLexico.printWarnings();
+//		analizadorLexico.printErrors();	
+//		analizadorLexico.printWarnings();
 		//code.printPolaca();
+		code.printErrors();
 
 	}
 

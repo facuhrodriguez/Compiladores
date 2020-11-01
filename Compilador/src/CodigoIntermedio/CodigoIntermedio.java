@@ -19,7 +19,7 @@ public class CodigoIntermedio {
 	
 	public CodigoIntermedio() {
 		this.polaca = new HashMap<Integer, String>();
-		CodigoIntermedio.polacaNumber = 0;
+		CodigoIntermedio.polacaNumber = 1;
 		this.stack = new Stack<Integer>();
 	}
 	
@@ -67,7 +67,9 @@ public class CodigoIntermedio {
 	 * @return
 	 */
 	public Integer getTop() {
-		return this.stack.pop();
+		if (!this.stack.isEmpty())
+			return this.stack.pop();
+		return null;
 	}
 	
 	
@@ -82,9 +84,9 @@ public class CodigoIntermedio {
 	}
 	
 	public void printPolaca () {
-		System.out.println("Llego " + this.polaca.keySet());
+		System.out.println("\n");
 		for (Integer polaca : this.polaca.keySet()) {
-			System.out.println("paso " + polaca + " " + this.polaca.get(polaca));
+			System.out.println(polaca + " " + this.polaca.get(polaca));
 		}
 	}
 	

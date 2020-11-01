@@ -36,20 +36,30 @@ public class TablaDeSimbolos {
 	}
 	
 	
+	public boolean exist(String l) {
+		return this.simbolos.containsKey(l);
+	}
+	
 	public void print() {
 		for (Token t : this.getTokens()) {
-		if ( t.getAttr("TIPO") == null || t.getAttr("TIPO") == "") 
-			t.addAttr("TIPO", "-");
-		if (t.getAttr("USO") == null)
-			t.addAttr("USO", "-");
-		if (t.getAttr("AMBITO") == null)
-			t.addAttr("AMBITO", "-");
-		System.out.println("-----------------------------------------------------------------------------------------------"
-				+ "--------------------------------------------------------------------------------------------------------");
-		System.out.println(t.getAttr("NUMERO DE TOKEN") + "|		|" + t.getAttr("NOMBRE") + "|				|"
-				+	t.getAttr("TIPO") +  "|				|" + t.getAttr("USO") + "|				|" + t.getAttr("AMBITO"));
+			if ( t.getAttr("TIPO") == null || t.getAttr("TIPO") == "") 
+				t.addAttr("TIPO", "-");
+			if (t.getAttr("USO") == null)
+				t.addAttr("USO", "-");
+			if (t.getAttr("AMBITO") == null)
+				t.addAttr("AMBITO", "-");
+			System.out.println("-----------------------------------------------------------------------------------------------"
+					+ "--------------------------------------------------------------------------------------------------------");
+			System.out.println(t.getAttr("NUMERO DE TOKEN") + "|		|" + t.getAttr("NOMBRE") + "|				|"
+					+	t.getAttr("TIPO") +  "|				|" + t.getAttr("USO") + "|				|" + t.getAttr("AMBITO"));
+			
+			}
+	}
+
+
+	public void removeToken(String lexema) {
+		this.simbolos.remove(lexema);
 		
-		}
 	}
 	
 }

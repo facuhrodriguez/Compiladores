@@ -62,11 +62,13 @@ declaraciones_id : declaracion_id ';' { this.s.addSyntaxStruct( AnalizadorSintac
 
 declaracion_id : tipo IDENTIFICADOR { String lexema = $2.sval;
 									  Token t = this.ts.getToken(lexema);
+									  t.addAttr("NOMBRE_ANT", lexema);
 									  t.addAttr("NOMBRE", lexema.concat("@").concat(this.s.getNombreProcedimiento()));
 									  t.addAttr("TIPO", $1.sval);
 									  t.addAttr("USO", AnalizadorSintactico.VARIABLE);
 									  t.addAttr("AMBITO", this.s.getNombreProcedimiento());
-									  this.ts.addToken(lexema, t);
+									  this.ts.removeToken(lexema);
+									  this.ts.addToken((String) t.getAttr("NOMBRE"), t);
 									 }
 			   ;
 
@@ -77,26 +79,34 @@ tipo : UINT { $$ = new ParserVal(AnalizadorLexico.TYPE_UINT);}
 declaraciones_procedimiento : encabezado_procedimiento '{' sentencias '}' { String lexema = $1.sval;
 																			Token t = this.ts.getToken(lexema);
 																			t.addAttr("USO", AnalizadorSintactico.NOMBREPROC);
-																			this.ts.addToken(lexema, t);
-																			this.s.removeNombreProcedimiento(lexema);}
+																			this.ts.addToken((String) t.getAttr("NOMBRE"), t);
+																			this.s.removeNombreProcedimiento((String) t.getAttr("NOMBRE"));}
 							;
 
 encabezado_procedimiento : PROC IDENTIFICADOR '(' parametros ')' NI '=' CONSTANTE { this.s.addSyntaxStruct( AnalizadorSintactico.procStruct );
 																					this.count = 0;
 																					String lexema = $2.sval;
 																					Token t = this.ts.getToken(lexema);
+																					t.addAttr("NOMBRE_ANT", lexema);
 																					t.addAttr("AMBITO", this.s.getNombreProcedimiento());
 																					t.addAttr("NOMBRE", lexema.concat("@").concat(this.s.getNombreProcedimiento()));
 																					this.s.setNombreProcedimiento(lexema);
-																					$$.sval = $2.sval;
+																					this.ts.removeToken(lexema);
+																					this.ts.addToken((String) t.getAttr("NOMBRE"), t);
+																					$$.sval = (String) t.getAttr("NOMBRE");
 																					}
 						 | PROC IDENTIFICADOR '(' ')' NI '=' CONSTANTE  { this.s.addSyntaxStruct( AnalizadorSintactico.procStruct ); 
 																		  $$.sval = $2.sval;
 																		  String lexema = $2.sval;
 																		  Token t = this.ts.getToken(lexema);
+																		  t.addAttr("NOMBRE_ANT", lexema);
+																		  t.addAttr("AMBITO", this.s.getNombreProcedimiento());
 																		  t.addAttr("NOMBRE", lexema.concat("@").concat(this.s.getNombreProcedimiento()));
-																		  this.s.setNombreProcedimiento($2.sval);
-																	     }
+																		  this.s.setNombreProcedimiento(lexema);
+																		  this.ts.removeToken(lexema);
+																		  this.ts.addToken((String) t.getAttr("NOMBRE"), t);
+																		  $$.sval = (String) t.getAttr("NOMBRE");
+																	    }
 																		
 						 | PROC '(' { this.s.addSyntaxError( new Error(AnalizadorSintactico.errorProcedure, this.l, this.l.getLine()));}
 						 ;
@@ -137,33 +147,38 @@ sentencia_ejecutable : asignaciones ';' { this.s.addSyntaxStruct( AnalizadorSint
 					 ;
 
 asignaciones : lado_izquierdo '=' expresion_aritmetica {  polaca.addOperando($1.sval);
-													      polaca.addOperador($2.sval);
+													      polaca.addOperador("=");
 													   }
 			 | lado_izquierdo COMPARACION expresion_aritmetica { this.s.addSyntaxError(new Error(AnalizadorSintactico.errorOperatorComp, this.l, this.l.getLine()));}
 			 ;
 
 lado_izquierdo : IDENTIFICADOR { $$ = $1;
 								String lexema = $1.sval;
+								lexema = lexema.concat("@").concat(this.s.getNombreProcedimiento());
 								Token t = this.ts.getToken(lexema);
-							    t.addAttr("USO", AnalizadorSintactico.VARIABLE);
-								
-								if (!this.existe_en_ambito(t))
+								if (t == null) 
 									this.polaca.addSemanticError(new Error(CodigoIntermedio.VAR_NO_DECLARADA, this.l, this.l.getLine()));
-								else 
-									this.ts.addToken(lexema, t);
+							    else {
+									if (!this.existe_en_ambito(t))
+										this.polaca.addSemanticError(new Error(CodigoIntermedio.VAR_NO_DECLARADA, this.l, this.l.getLine()));
+									else {
+										t.addAttr("USO", AnalizadorSintactico.VARIABLE);
+										this.ts.addToken(lexema, t);
+									}
 								}
+							}
 			   ;
 
 expresion_aritmetica : termino
-					 | expresion_aritmetica '+' termino {  polaca.addOperador($2.sval); }
-					 | expresion_aritmetica '-' termino {  polaca.addOperador($2.sval); }
+					 | expresion_aritmetica '+' termino {  polaca.addOperador("+"); }
+					 | expresion_aritmetica '-' termino {  polaca.addOperador("-"); }
 					 ;
 					 
 termino : factor {  // termino : factor 
 					$$ = $1; }
 		| '(' DOUBLE ')' factor 
-		| termino '*' factor 
-		| termino '/' factor
+		| termino '*' factor { polaca.addOperador("*");} 
+		| termino '/' factor { polaca.addOperador("/");}
 		;
 
 factor : '-' CONSTANTE { String valor = yylval.sval;
@@ -187,7 +202,7 @@ factor : '-' CONSTANTE { String valor = yylval.sval;
 	   polaca.addOperando($$.sval);
 	 }
 
-		| lado_izquierdo { // factor : IDENTIFICADOR
+		| IDENTIFICADOR { // factor : IDENTIFICADOR
 						 $$ = $1;
 						 polaca.addOperando($$.sval);
 						}
@@ -203,22 +218,20 @@ factor : '-' CONSTANTE { String valor = yylval.sval;
 	   
 sentencia_seleccion : IF '(' condicion ')' cuerpo_if_bien_definido END_IF { 
 															  this.s.addSyntaxStruct( AnalizadorSintactico.ifStructure );
-															  //Desapila dirección incompleta
-															  //Integer pasoIncompleto = // polaca.getTop(); 	
-															  // Completa el destino de la BF
-															  // polaca.addDirection(pasoIncompleto, CodigoIntermedio.// polacaNumber+2);
-															  // Crea paso incompleto
-															  // polaca.addOperador('');
-															  // Apila el número del paso incompleto
-															  // polaca.stackUp(CodigoIntermedio.// polacaNumber);
-															  // Se crea el paso BI
-															  // polaca.addOperador('BI');
-															 
+															  // Desapila dirección incompleta 
+															  Integer pasoIncompleto = polaca.getTop(); 	
+															  // Completo el destino de BI
+															  polaca.addDirection(pasoIncompleto, CodigoIntermedio.polacaNumber);
 															 } 
 					| IF '(' ')' cuerpo_if_bien_definido END_IF { this.s.addSyntaxError( new Error(AnalizadorSintactico.errorCondition, this.l, this.l.getLine()));} 
 					| IF '(' condicion cuerpo_if_bien_definido END_IF { this.s.addSyntaxError(new Error(AnalizadorSintactico.parFinal, this.l, this.l.getLine()));}
 					| IF '(' condicion ')' cuerpo_if_bien_definido ELSE cuerpo_else_bien_definido END_IF { 
 																			this.s.addSyntaxStruct( AnalizadorSintactico.ifStructure );
+																			this.s.addSyntaxStruct( AnalizadorSintactico.ifStructure );
+																			// Desapila dirección incompleta 
+																		    //Integer pasoIncompleto = polaca.getTop(); 	
+																		    // Completo el destino de BI
+																		    //polaca.addDirection(pasoIncompleto, CodigoIntermedio.polacaNumber);
 																			}
 					| IF '(' ')' cuerpo_if_bien_definido ELSE cuerpo_else_bien_definido END_IF { this.s.addSyntaxError( new Error(AnalizadorSintactico.errorCondition, this.l, this.l.getLine()));} 																
 					| IF condicion cuerpo_if_bien_definido END_IF { this.s.addSyntaxError(new Error(AnalizadorSintactico.sinPar, this.l, this.l.getLine()));}											
@@ -230,23 +243,39 @@ sentencia_seleccion : IF '(' condicion ')' cuerpo_if_bien_definido END_IF {
 					;
 
 
-cuerpo_if_bien_definido: '{' sentencias '}' 
+cuerpo_if_bien_definido: '{' sentencias '}' { // Desapila dirección incompleta 
+											  Integer pasoIncompleto = polaca.getTop();
+											  // Completa el destino de la BF
+											  polaca.addDirection(pasoIncompleto, CodigoIntermedio.polacaNumber+2);
+											  // Apilo paso incompleto
+											  polaca.stackUp(CodigoIntermedio.polacaNumber);
+											  // Crea paso incompleto
+											  polaca.addOperador("");
+											  // Agrego etiqueta BI
+											  polaca.addOperador("BI");
+											  
+											  } 
 					   ;
 cuerpo_if_mal_definido : sentencias 
 					   ;
 		  
-cuerpo_else_bien_definido : '{' sentencias '}' 
+cuerpo_else_bien_definido : '{' sentencias '}'  {	this.s.addSyntaxStruct( AnalizadorSintactico.ifStructure );
+													// Desapila dirección incompleta 
+													Integer pasoIncompleto = polaca.getTop(); 	
+													// Completo el destino de BI
+													polaca.addDirection(pasoIncompleto, CodigoIntermedio.polacaNumber); }
 						  ;
 
 cuerpo_else_mal_definido:  sentencias 
 						;
 
 
-condicion : expresion_aritmetica operador expresion_aritmetica { polaca.addOperando("");
-																 // Apilo paso incompleto
+condicion : expresion_aritmetica operador expresion_aritmetica { polaca.addOperador($2.sval);
+																// Apilo paso incompleto
 																 polaca.stackUp(CodigoIntermedio.polacaNumber);
+																 polaca.addOperando("");
 																 // Creo el paso BF
-																 polaca.addOperando("BF");
+																polaca.addOperando("BF");
 																this.s.addSyntaxStruct( AnalizadorSintactico.conditionStructure ); 
 																}
 		  | condicion operador expresion_aritmetica
@@ -274,12 +303,12 @@ cuerpo_while_mal_definido :  sentencia_ejecutable
 
 			
 
-operador : '<' { $$ = $1; }
-		 | '>' { $$ = $1; }
-		 | MAYORIGUAL { $$ = $1; }
-		 | MENORIGUAL { $$ = $1; }
-		 | DISTINTO { $$ = $1; }
-		 | COMPARACION { $$ = $1; }
+operador : '<' { $$.sval = "<"; }
+		 | '>' { $$.sval = ">"; }
+		 | MAYORIGUAL { $$.sval = $1.sval; }
+		 | MENORIGUAL { $$.sval = $1.sval;}
+		 | DISTINTO { $$.sval = $1.sval; }
+		 | COMPARACION { $$.sval = $1.sval;}
 		 ;
 
 %%
@@ -320,10 +349,13 @@ public void yyerror(String s) {
 
 public boolean existe_en_ambito(Token var) {
 	String ambitoVar = (String) var.getAttr("AMBITO");
-	String nombreVar = (String) var.getAttr("NOMBRE");
+	String nombreVar = (String) var.getAttr("NOMBRE_ANT");
+	if (ambitoVar == null)
+		return false;
 	for (Token t : this.ts.getTokens()){
+		if (t.getAttr("AMBITO") != null && t.getAttr("NOMBRE_ANT") != null)
 		if ( ((String) t.getAttr("AMBITO")).contains(ambitoVar) && 
-			((String) t.getAttr("NOMBRE")).equals(nombreVar) )
+			((String) t.getAttr("NOMBRE_ANT")).equals(nombreVar) )
 			return true;
 	}
 	return false;

@@ -121,6 +121,8 @@ public class AnalizadorSintactico {
 	
 	public void removeNombreProcedimiento(String a) {
 		this.nameProc = this.nameProc.replace(a, "");
+		if ( !this.nameProc.contains("main"))
+			this.nameProc = "main" + "@" + this.nameProc;
 		this.nameProc = this.nameProc.replaceFirst("@", "");
 	}
 	

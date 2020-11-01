@@ -1,21 +1,5 @@
-UINT j;
-PROC suma (UINT g, UINT h, UINT i) NI = 3_ui {
-    UINT d;
-    IF ( a < b ){
-	UINT l;
-        b = -4.d-3;
-    }ELSE {
-        a = 3.d+4;
-    }END_IF
-    WHILE (a <= b) LOOP{
-        a = a + 1_ui; 
-    }
+UINT a;
 
-    PROC suma3(UINT op1, UINT op2) NI = 4_ui {
-	UINT asfaf;
-    }
-}
-
-PROC suma4() NI = 4_ui {
-	UINT nuevo;
-}
+IF (a < 0_ui) {
+	k = k * 5_ui;
+} END_IF

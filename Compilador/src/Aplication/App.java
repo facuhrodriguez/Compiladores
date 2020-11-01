@@ -34,7 +34,7 @@ public class App {
 		analizadorLexico.printTablaSimbolos();		
 //		analizadorLexico.printErrors();	
 //		analizadorLexico.printWarnings();
-		//code.printPolaca();
+		code.printPolaca();
 		code.printErrors();
 
 	}

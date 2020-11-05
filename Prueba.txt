@@ -3,3 +3,7 @@ UINT a;
 IF (a < 0_ui) {
 	k = k * 5_ui;
 } END_IF
+
+WHILE ( a < 0_ui) LOOP {
+	z = z + 1_ui;
+}

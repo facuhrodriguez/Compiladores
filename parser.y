@@ -291,12 +291,23 @@ invocaciones_procedimiento : IDENTIFICADOR '(' parametros_invocacion')'
 parametros_invocacion : IDENTIFICADOR ':' IDENTIFICADOR
 					  ;
 
-sentencia_control : WHILE '(' condicion ')' LOOP cuerpo_while_bien_definido { this.s.addSyntaxStruct( AnalizadorSintactico.whileStructure ) ; } 
-				  | WHILE '(' ')' LOOP cuerpo_while_bien_definido { this.s.addSyntaxError( new Error(AnalizadorSintactico.errorCondition, this.l, this.l.getLine()));} 				
-				  | WHILE condicion LOOP cuerpo_while_bien_definido { this.s.addSyntaxError( new Error(AnalizadorSintactico.sinPar, this.l, this.l.getLine()));}
-				  | WHILE '(' condicion ')' LOOP cuerpo_while_mal_definido { this.s.addSyntaxError( new Error(AnalizadorSintactico.sinLlaves, this.l, this.l.getLine())); }
+sentencia_control : inicio_while '(' condicion ')' LOOP cuerpo_while_bien_definido { this.s.addSyntaxStruct( AnalizadorSintactico.whileStructure ) ; 
+																					  // Desapilo el tope de la pila 
+																					  Integer paso = polaca.getTop();
+																					  Integer pasoInicio = polaca.getTop();
+																					  polaca.addDirection(paso, CodigoIntermedio.polacaNumber + 2);
+																					  polaca.addOperando("");
+																					  polaca.addDirection(CodigoIntermedio.polacaNumber - 1, pasoInicio);
+																					  polaca.addOperando("BI");
+																					  } 
+				  | inicio_while '(' ')' LOOP cuerpo_while_bien_definido { this.s.addSyntaxError( new Error(AnalizadorSintactico.errorCondition, this.l, this.l.getLine()));} 				
+				  | inicio_while condicion LOOP cuerpo_while_bien_definido { this.s.addSyntaxError( new Error(AnalizadorSintactico.sinPar, this.l, this.l.getLine()));}
+				  | inicio_while '(' condicion ')' LOOP cuerpo_while_mal_definido { this.s.addSyntaxError( new Error(AnalizadorSintactico.sinLlaves, this.l, this.l.getLine())); }
 				  ;
 				  
+inicio_while : WHILE { // Apilamos el número de paso donde comienza la condición
+						polaca.stackUp(CodigoIntermedio.polacaNumber);}
+						
 cuerpo_while_bien_definido : '{' sentencias_ejecutables '}' 
 
 cuerpo_while_mal_definido :  sentencia_ejecutable 

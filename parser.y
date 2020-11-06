@@ -116,16 +116,32 @@ parametros : declaracion_par { this.count++;
 								this.s.addSyntaxError( new Error(AnalizadorSintactico.errorMaxProcPar, this.l, this.l.getLine()));
 								this.count = 0;
 							  }
+							  Token t = this.ts.getToken($1.sval);
+							  t.addAttr("FORMA DE PASAJE", "COPIA VALOR");
+							  this.ts.addToken($1.sval, t);
 							}
 		   | parametros ',' declaracion_par { this.count++;
 											 if (this.count > AnalizadorSintactico.maxProcPar) 
 												this.s.addSyntaxError( new Error(AnalizadorSintactico.errorMaxProcPar, this.l, this.l.getLine()));
+											  Token t = this.ts.getToken($3.sval);
+											  t.addAttr("FORMA DE PASAJE", "COPIA VALOR");
+											  this.ts.addToken($3.sval, t);
+											}
+		   | parametros ',' REF declaracion_par { this.count++;
+											 if (this.count > AnalizadorSintactico.maxProcPar) 
+												this.s.addSyntaxError( new Error(AnalizadorSintactico.errorMaxProcPar, this.l, this.l.getLine()));
+											  Token t = this.ts.getToken($4.sval);
+											  t.addAttr("FORMA DE PASAJE", "REFERENCIA");
+											  this.ts.addToken($4.sval, t);
 											}
 		   | REF declaracion_par {  this.count++;
 								   if (this.count > AnalizadorSintactico.maxProcPar){ 
 										this.s.addSyntaxError( new Error(AnalizadorSintactico.errorMaxProcPar, this.l, this.l.getLine()));
 										this.count = 0;
 									}
+									Token t = this.ts.getToken($2.sval);
+									t.addAttr("FORMA DE PASAJE", "REFERENCIA");
+									this.ts.addToken($2.sval, t);
 									
 								}
 		   ;
@@ -135,6 +151,7 @@ declaracion_par : tipo IDENTIFICADOR { String lexema = $2.sval;
 									  t.addAttr("TIPO", $1.sval);
 									  t.addAttr("USO", AnalizadorSintactico.NOMBREPAR);
 									  this.ts.addToken(lexema, t);
+									  $$.sval = $2.sval;
 									 }
 
 

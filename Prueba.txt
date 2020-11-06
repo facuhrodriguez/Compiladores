@@ -7,3 +7,10 @@ IF (a < 0_ui) {
 WHILE ( a < 0_ui) LOOP {
 	z = z + 1_ui;
 }
+
+PROC a(UINT j, REF UINT l) NI=4_ui {
+	j = j + 1_ui;
+	WHILE ( zl > 12_ui ) LOOP {
+		asf = 88.3;
+	}
+}

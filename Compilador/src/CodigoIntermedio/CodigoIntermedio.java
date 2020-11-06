@@ -86,7 +86,8 @@ public class CodigoIntermedio {
 	public void printPolaca () {
 		System.out.println("\n");
 		for (Integer polaca : this.polaca.keySet()) {
-			System.out.println(polaca + " " + this.polaca.get(polaca));
+			System.out.print(" 	");
+			System.out.println(polaca + " 	|	" + this.polaca.get(polaca));
 		}
 	}
 	

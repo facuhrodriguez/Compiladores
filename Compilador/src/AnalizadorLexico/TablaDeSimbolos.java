@@ -48,10 +48,13 @@ public class TablaDeSimbolos {
 				t.addAttr("USO", "-");
 			if (t.getAttr("AMBITO") == null)
 				t.addAttr("AMBITO", "-");
+			if (t.getAttr("FORMA DE PASAJE") == null)
+				t.addAttr("FORMA DE PASAJE", "-");
 			System.out.println("-----------------------------------------------------------------------------------------------"
 					+ "--------------------------------------------------------------------------------------------------------");
 			System.out.println(t.getAttr("NUMERO DE TOKEN") + "|		|" + t.getAttr("NOMBRE") + "|				|"
-					+	t.getAttr("TIPO") +  "|				|" + t.getAttr("USO") + "|				|" + t.getAttr("AMBITO"));
+					+	t.getAttr("TIPO") +  "|				|" + t.getAttr("USO") + "|				|" + t.getAttr("AMBITO") + "|      |" +
+					t.getAttr("FORMA DE PASAJE"));
 			
 			}
 	}

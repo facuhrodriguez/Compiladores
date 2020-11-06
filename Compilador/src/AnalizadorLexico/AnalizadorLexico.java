@@ -1678,7 +1678,7 @@ public class AnalizadorLexico {
 		System.out.println("\n");
 		System.out.println("					TABLA DE SIMBOLOS					" + "\n" );
 		System.out.println("NUMERO " + "     	NAME            " + "       	        	TIPO     " +   
-		"			 USO" + "          		AMBITO");
+		"			 USO" + "          		AMBITO" + " 			FORMA DE PASAJE");
 		this.table.print();
 	}
 

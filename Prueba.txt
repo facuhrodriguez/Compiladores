@@ -1,16 +1,14 @@
-UINT a;
+UINT s;
 
-IF (a < 0_ui) {
-	k = k * 5_ui;
+IF ( u < s ) {
+	OUT('cadena');
 } END_IF
-
-WHILE ( a < 0_ui) LOOP {
-	z = z + 1_ui;
-}
 
 PROC a(UINT j, REF UINT l) NI=4_ui {
 	j = j + 1_ui;
 	WHILE ( zl > 12_ui ) LOOP {
-		asf = 88.3;
+		asf = 1_ui;
 	}
 }
+
+a(j:2);

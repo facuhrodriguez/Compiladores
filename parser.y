@@ -79,7 +79,6 @@ tipo : UINT { $$ = new ParserVal(AnalizadorLexico.TYPE_UINT);}
 declaraciones_procedimiento : encabezado_procedimiento '{' sentencias '}' { String lexema = $1.sval;
 																			Token t = this.ts.getToken(lexema);
 																			t.addAttr("USO", AnalizadorSintactico.NOMBREPROC);
-																			this.ts.addToken((String) t.getAttr("NOMBRE"), t);
 																			this.s.removeNombreProcedimiento((String) t.getAttr("NOMBRE"));}
 							;
 
@@ -90,10 +89,15 @@ encabezado_procedimiento : PROC IDENTIFICADOR '(' parametros ')' NI '=' CONSTANT
 																					t.addAttr("NOMBRE_ANT", lexema);
 																					t.addAttr("AMBITO", this.s.getNombreProcedimiento());
 																					t.addAttr("NOMBRE", lexema.concat("@").concat(this.s.getNombreProcedimiento()));
+																					t.addAttr("CANT. INVOCACIONES", $8.sval);
 																					this.s.setNombreProcedimiento(lexema);
 																					this.ts.removeToken(lexema);
 																					this.ts.addToken((String) t.getAttr("NOMBRE"), t);
 																					$$.sval = (String) t.getAttr("NOMBRE");
+																					// Completo paso incompleto
+																					Integer paso = polaca.getTopProcedure();
+																					polaca.addDirection(paso, CodigoIntermedio.polacaNumber);
+																					this.ts.addToken((String) t.getAttr("NOMBRE"), t);
 																					}
 						 | PROC IDENTIFICADOR '(' ')' NI '=' CONSTANTE  { this.s.addSyntaxStruct( AnalizadorSintactico.procStruct ); 
 																		  $$.sval = $2.sval;
@@ -102,9 +106,12 @@ encabezado_procedimiento : PROC IDENTIFICADOR '(' parametros ')' NI '=' CONSTANT
 																		  t.addAttr("NOMBRE_ANT", lexema);
 																		  t.addAttr("AMBITO", this.s.getNombreProcedimiento());
 																		  t.addAttr("NOMBRE", lexema.concat("@").concat(this.s.getNombreProcedimiento()));
+																		  t.addAttr("CANT. INVOCACIONES", $7.sval);
 																		  this.s.setNombreProcedimiento(lexema);
 																		  this.ts.removeToken(lexema);
 																		  this.ts.addToken((String) t.getAttr("NOMBRE"), t);
+																		  Integer paso = polaca.getTopProcedure();
+																		  polaca.addDirection(paso, CodigoIntermedio.polacaNumber);
 																		  $$.sval = (String) t.getAttr("NOMBRE");
 																	    }
 																		
@@ -301,11 +308,21 @@ condicion : expresion_aritmetica operador expresion_aritmetica { polaca.addOpera
 sentencia_salida : OUT '(' CADENA ')'
 				 ;
 
-invocaciones_procedimiento : IDENTIFICADOR '(' parametros_invocacion')'
-						   | IDENTIFICADOR '(' ')'
+invocaciones_procedimiento : IDENTIFICADOR '(' parametros_invocacion')' { // Apilo paso incompleto
+																		  polaca.stackUpProcedure(CodigoIntermedio.polacaNumber);
+																		  polaca.addOperador("");
+																		  polaca.addOperador("BI");
+																		 }
+																		  
+						   | IDENTIFICADOR '(' ')' {// Apilo paso incompleto
+						   							polaca.stackUpProcedure(CodigoIntermedio.polacaNumber);
+													polaca.addOperador("");
+													polaca.addOperador("BI");
+													}
 				           ;
 
 parametros_invocacion : IDENTIFICADOR ':' IDENTIFICADOR
+					  | parametros_invocacion ',' IDENTIFICADOR ':' IDENTIFICADOR
 					  ;
 
 sentencia_control : inicio_while '(' condicion ')' LOOP cuerpo_while_bien_definido { this.s.addSyntaxStruct( AnalizadorSintactico.whileStructure ) ; 

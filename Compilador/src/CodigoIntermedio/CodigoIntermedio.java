@@ -11,6 +11,7 @@ public class CodigoIntermedio {
 	private HashMap<Integer, String> polaca;
 	public static Integer polacaNumber;
 	private Stack<Integer> stack;
+	private Stack<Integer> stackProcedure;
 	private List<Error> errors = new ArrayList<Error>();
 	
 	// Errores semánticos
@@ -21,6 +22,7 @@ public class CodigoIntermedio {
 		this.polaca = new HashMap<Integer, String>();
 		CodigoIntermedio.polacaNumber = 1;
 		this.stack = new Stack<Integer>();
+		this.stackProcedure = new Stack<Integer>();
 	}
 	
 	/**
@@ -63,6 +65,14 @@ public class CodigoIntermedio {
 	}
 	
 	/**
+	 * Agrega el elemento p a la pila de procedimientos
+	 * @param p
+	 */
+	public void stackUpProcedure(Integer p) {
+		this.stackProcedure.push(p);
+	}
+	
+	/**
 	 * Obtiene el tope de la pila y lo desapila
 	 * @return
 	 */
@@ -72,9 +82,14 @@ public class CodigoIntermedio {
 		return null;
 	}
 	
+	public Integer getTopProcedure() {
+		if (!this.stackProcedure.isEmpty())
+			return this.stackProcedure.pop();
+		return null;
+	}
 	
 	/**
-	 * Agrega la direcciï¿½n de memoria al paso correspondiente
+	 * Agrega la dirección de memoria al paso correspondiente
 	 * @param paso
 	 * @param op
 	 */

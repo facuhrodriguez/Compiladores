@@ -1386,7 +1386,7 @@ public class AnalizadorLexico {
 		this.matAS[17][6] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
 		this.matAS[17][7] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
 		this.matAS[17][8] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
-		this.matAS[17][9] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[17][9] =  new AddPalabraReservada(this);
 		this.matAS[17][10] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
 		this.matAS[17][11] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
 		this.matAS[17][12] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
@@ -1417,7 +1417,7 @@ public class AnalizadorLexico {
 		this.matAS[18][6] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
 		this.matAS[18][7] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
 		this.matAS[18][8] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
-		this.matAS[18][9] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[18][9] = new AddPalabraReservada(this);
 		this.matAS[18][10] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
 		this.matAS[18][11] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
 		this.matAS[18][12] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
@@ -1678,7 +1678,7 @@ public class AnalizadorLexico {
 		System.out.println("\n");
 		System.out.println("					TABLA DE SIMBOLOS					" + "\n" );
 		System.out.println("NUMERO " + "     	NAME            " + "       	        	TIPO     " +   
-		"			 USO" + "          		AMBITO" + " 			FORMA DE PASAJE");
+		"			 USO" + "          		AMBITO" + " 			FORMA DE PASAJE"  + "        	CANT. INVOCACIONES");
 		this.table.print();
 	}
 

@@ -50,11 +50,13 @@ public class TablaDeSimbolos {
 				t.addAttr("AMBITO", "-");
 			if (t.getAttr("FORMA DE PASAJE") == null)
 				t.addAttr("FORMA DE PASAJE", "-");
+			if (t.getAttr("CANT. INVOCACIONES") == null) 
+				t.addAttr("CANT. INVOCACIONES", "-");
 			System.out.println("-----------------------------------------------------------------------------------------------"
 					+ "--------------------------------------------------------------------------------------------------------");
 			System.out.println(t.getAttr("NUMERO DE TOKEN") + "|		|" + t.getAttr("NOMBRE") + "|				|"
 					+	t.getAttr("TIPO") +  "|				|" + t.getAttr("USO") + "|				|" + t.getAttr("AMBITO") + "|      |" +
-					t.getAttr("FORMA DE PASAJE"));
+					t.getAttr("FORMA DE PASAJE") + "| 			|" + t.getAttr("CANT. INVOCACIONES"));
 			
 			}
 	}

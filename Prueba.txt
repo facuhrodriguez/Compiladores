@@ -1,14 +1,24 @@
 UINT s;
 
-IF ( u < s ) {
+IF ( a < 0_ui ) {
 	OUT('cadena');
+} ELSE {
+	OUT('otra cadena');
 } END_IF
 
+
 PROC a(UINT j, REF UINT l) NI=4_ui {
+	UINT p;
 	j = j + 1_ui;
 	WHILE ( zl > 12_ui ) LOOP {
 		asf = 1_ui;
 	}
+	PROC b() NI = 3_ui {
+		UINT jaja;
+		jaja = jaja + kk;
+		kk = jaja;
+	}
 }
 UINT x;
 a(j:x, l:s);
+x = x + s;

@@ -79,7 +79,7 @@ tipo : UINT { $$ = new ParserVal(AnalizadorLexico.TYPE_UINT);}
 declaraciones_procedimiento : encabezado_procedimiento '{' sentencias '}' { String lexema = $1.sval;
 																			Token t = this.ts.getToken(lexema);
 																			t.addAttr("USO", AnalizadorSintactico.NOMBREPROC);
-																			this.s.removeNombreProcedimiento((String) t.getAttr("NOMBRE"));}
+																			this.s.removeNombreProcedimiento((String) t.getAttr("NOMBRE_ANT"));}
 							;
 
 encabezado_procedimiento : PROC IDENTIFICADOR '(' parametros ')' NI '=' CONSTANTE { 
@@ -101,7 +101,6 @@ encabezado_procedimiento : PROC IDENTIFICADOR '(' parametros ')' NI '=' CONSTANT
 																						$$.sval = (String) t.getAttr("NOMBRE");
 																						// Apilar paso incompleto
 																						polaca.stackUpProcedure(CodigoIntermedio.polacaNumber);
-																						this.ts.addToken((String) t.getAttr("NOMBRE"), t);
 																					} else 
 																						polaca.addSemanticError(new Error(CodigoIntermedio.CONSTANTE_NI, this.l, this.l.getLine()));
 																						this.count = 0;
@@ -215,7 +214,7 @@ termino : factor {  // termino : factor
 		| '(' DOUBLE ')' factor { String lexema = $4.sval;
 								  Token t = this.ts.getToken(lexema);
 								  if (t.getAttr("TIPO").equals(AnalizadorLexico.TYPE_UINT)) {
-									Double d = Double.parseDouble( (String) t.getAttr("NOMBRE"));
+									Double d = Double.parseDouble( t.getAttr("NOMBRE").toString());
 									t.addAttr("NOMBRE", d.toString());
 									t.addAttr("TIPO", AnalizadorLexico.TYPE_DOUBLE);
 									this.ts.addToken(lexema, t);
@@ -249,6 +248,19 @@ factor : '-' CONSTANTE { String valor = yylval.sval;
 
 		| IDENTIFICADOR { // factor : IDENTIFICADOR
 						 $$ = $1;
+						 String lexema = $1.sval;
+						lexema = lexema.concat("@").concat(this.s.getNombreProcedimiento());
+						Token t = this.ts.getToken(lexema);
+						if (t == null) 
+							this.polaca.addSemanticError(new Error(CodigoIntermedio.VAR_NO_DECLARADA, this.l, this.l.getLine()));
+						else {
+							if (!this.existe_en_ambito(t))
+								this.polaca.addSemanticError(new Error(CodigoIntermedio.VAR_NO_DECLARADA, this.l, this.l.getLine()));
+							else {
+								t.addAttr("USO", AnalizadorSintactico.VARIABLE);
+								this.ts.addToken(lexema, t);
+							}
+						}
 						 polaca.addOperando($$.sval);
 						}
 		| CONSTANTE { 	// factor : CONSTANTE 
@@ -258,7 +270,7 @@ factor : '-' CONSTANTE { String valor = yylval.sval;
 		
 	   | CADENA { // factor : cadena
 					$$ = $1; 
-					polaca.addOperando($$.sval); }
+					 }
 	   ;
 	   
 sentencia_seleccion : IF '(' condicion ')' cuerpo_if_bien_definido END_IF { 
@@ -273,10 +285,6 @@ sentencia_seleccion : IF '(' condicion ')' cuerpo_if_bien_definido END_IF {
 					| IF '(' condicion ')' cuerpo_if_bien_definido ELSE cuerpo_else_bien_definido END_IF { 
 																			this.s.addSyntaxStruct( AnalizadorSintactico.ifStructure );
 																			this.s.addSyntaxStruct( AnalizadorSintactico.ifStructure );
-																			// Desapila dirección incompleta 
-																		    //Integer pasoIncompleto = polaca.getTop(); 	
-																		    // Completo el destino de BI
-																		    //polaca.addDirection(pasoIncompleto, CodigoIntermedio.polacaNumber);
 																			}
 					| IF '(' ')' cuerpo_if_bien_definido ELSE cuerpo_else_bien_definido END_IF { this.s.addSyntaxError( new Error(AnalizadorSintactico.errorCondition, this.l, this.l.getLine()));} 																
 					| IF condicion cuerpo_if_bien_definido END_IF { this.s.addSyntaxError(new Error(AnalizadorSintactico.sinPar, this.l, this.l.getLine()));}											
@@ -326,7 +334,8 @@ condicion : expresion_aritmetica operador expresion_aritmetica { polaca.addOpera
 		  | condicion operador expresion_aritmetica
 		  ;
 
-sentencia_salida : OUT '(' CADENA ')'
+sentencia_salida : OUT '(' CADENA ')' { polaca.addOperando($3.sval);
+										polaca.addOperador("OUT");}
 				 ;
 
 invocaciones_procedimiento : IDENTIFICADOR '(' parametros_invocacion')' {   String id = $1.sval;

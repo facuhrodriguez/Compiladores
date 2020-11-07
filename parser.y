@@ -82,39 +82,50 @@ declaraciones_procedimiento : encabezado_procedimiento '{' sentencias '}' { Stri
 																			this.s.removeNombreProcedimiento((String) t.getAttr("NOMBRE"));}
 							;
 
-encabezado_procedimiento : PROC IDENTIFICADOR '(' parametros ')' NI '=' CONSTANTE { this.s.addSyntaxStruct( AnalizadorSintactico.procStruct );
-																					this.count = 0;
-																					String lexema = $2.sval;
-																					Token t = this.ts.getToken(lexema);
-																					t.addAttr("NOMBRE_ANT", lexema);
-																					t.addAttr("AMBITO", this.s.getNombreProcedimiento());
-																					t.addAttr("NOMBRE", lexema.concat("@").concat(this.s.getNombreProcedimiento()));
-																					t.addAttr("CANT. INVOCACIONES", $8.sval);
-																					this.s.setNombreProcedimiento(lexema);
-																					this.ts.removeToken(lexema);
-																					this.ts.addToken((String) t.getAttr("NOMBRE"), t);
-																					$$.sval = (String) t.getAttr("NOMBRE");
-																					// Completo paso incompleto
-																					Integer paso = polaca.getTopProcedure();
-																					polaca.addDirection(paso, CodigoIntermedio.polacaNumber);
-																					this.ts.addToken((String) t.getAttr("NOMBRE"), t);
+encabezado_procedimiento : PROC IDENTIFICADOR '(' parametros ')' NI '=' CONSTANTE { 
+																					this.s.addSyntaxStruct( AnalizadorSintactico.procStruct );
+																					
+																					String invoc = $8.sval;
+																					Token tInvoc = this.ts.getToken(invoc);
+																					if (tInvoc.getAttr("TIPO").equals(AnalizadorLexico.TYPE_UINT)){
+																						String lexema = $2.sval;
+																						Token t = this.ts.getToken(lexema);
+																						t.addAttr("NOMBRE_ANT", lexema);
+																						t.addAttr("AMBITO", this.s.getNombreProcedimiento());
+																						t.addAttr("NOMBRE", lexema.concat("@").concat(this.s.getNombreProcedimiento()));
+																						t.addAttr("CANT. INVOCACIONES", $8.sval);
+																						t.addAttr("CANT. PARAMETROS", this.count);
+																						this.s.setNombreProcedimiento(lexema);
+																						this.ts.removeToken(lexema);
+																						this.ts.addToken((String) t.getAttr("NOMBRE"), t);
+																						$$.sval = (String) t.getAttr("NOMBRE");
+																						// Apilar paso incompleto
+																						polaca.stackUpProcedure(CodigoIntermedio.polacaNumber);
+																						this.ts.addToken((String) t.getAttr("NOMBRE"), t);
+																					} else 
+																						polaca.addSemanticError(new Error(CodigoIntermedio.CONSTANTE_NI, this.l, this.l.getLine()));
+																						this.count = 0;
 																					}
 						 | PROC IDENTIFICADOR '(' ')' NI '=' CONSTANTE  { this.s.addSyntaxStruct( AnalizadorSintactico.procStruct ); 
 																		  $$.sval = $2.sval;
 																		  String lexema = $2.sval;
+																		  String invoc = $7.sval;
+																		  Token tInvoc = this.ts.getToken(invoc);
 																		  Token t = this.ts.getToken(lexema);
-																		  t.addAttr("NOMBRE_ANT", lexema);
-																		  t.addAttr("AMBITO", this.s.getNombreProcedimiento());
-																		  t.addAttr("NOMBRE", lexema.concat("@").concat(this.s.getNombreProcedimiento()));
-																		  t.addAttr("CANT. INVOCACIONES", $7.sval);
-																		  this.s.setNombreProcedimiento(lexema);
-																		  this.ts.removeToken(lexema);
-																		  this.ts.addToken((String) t.getAttr("NOMBRE"), t);
-																		  Integer paso = polaca.getTopProcedure();
-																		  polaca.addDirection(paso, CodigoIntermedio.polacaNumber);
-																		  $$.sval = (String) t.getAttr("NOMBRE");
-																	    }
-																		
+																		  if (tInvoc.getAttr("TIPO").equals(AnalizadorLexico.TYPE_UINT)){
+																			  t.addAttr("NOMBRE_ANT", lexema);
+																			  t.addAttr("AMBITO", this.s.getNombreProcedimiento());
+																			  t.addAttr("NOMBRE", lexema.concat("@").concat(this.s.getNombreProcedimiento()));
+																			  t.addAttr("CANT. INVOCACIONES", $7.sval);
+																			  this.s.setNombreProcedimiento(lexema);
+																			  this.ts.removeToken(lexema);
+																			  this.ts.addToken((String) t.getAttr("NOMBRE"), t);
+																			  // Apilar paso incompleto
+																			  polaca.stackUpProcedure(CodigoIntermedio.polacaNumber);
+																			  $$.sval = (String) t.getAttr("NOMBRE");
+																	    } else 
+																			polaca.addSemanticError(new Error(CodigoIntermedio.CONSTANTE_NI, this.l, this.l.getLine()));
+																		}
 						 | PROC '(' { this.s.addSyntaxError( new Error(AnalizadorSintactico.errorProcedure, this.l, this.l.getLine()));}
 						 ;
 
@@ -172,11 +183,12 @@ sentencia_ejecutable : asignaciones ';' { this.s.addSyntaxStruct( AnalizadorSint
 
 asignaciones : lado_izquierdo '=' expresion_aritmetica {  polaca.addOperando($1.sval);
 													      polaca.addOperador("=");
+														  
 													   }
 			 | lado_izquierdo COMPARACION expresion_aritmetica { this.s.addSyntaxError(new Error(AnalizadorSintactico.errorOperatorComp, this.l, this.l.getLine()));}
 			 ;
 
-lado_izquierdo : IDENTIFICADOR { $$ = $1;
+lado_izquierdo : IDENTIFICADOR { $$.sval = $1.sval;
 								String lexema = $1.sval;
 								lexema = lexema.concat("@").concat(this.s.getNombreProcedimiento());
 								Token t = this.ts.getToken(lexema);
@@ -193,14 +205,23 @@ lado_izquierdo : IDENTIFICADOR { $$ = $1;
 							}
 			   ;
 
-expresion_aritmetica : termino
+expresion_aritmetica : termino { $$.sval = $1.sval; }
 					 | expresion_aritmetica '+' termino {  polaca.addOperador("+"); }
 					 | expresion_aritmetica '-' termino {  polaca.addOperador("-"); }
 					 ;
 					 
 termino : factor {  // termino : factor 
 					$$ = $1; }
-		| '(' DOUBLE ')' factor 
+		| '(' DOUBLE ')' factor { String lexema = $4.sval;
+								  Token t = this.ts.getToken(lexema);
+								  if (t.getAttr("TIPO").equals(AnalizadorLexico.TYPE_UINT)) {
+									Double d = Double.parseDouble( (String) t.getAttr("NOMBRE"));
+									t.addAttr("NOMBRE", d.toString());
+									t.addAttr("TIPO", AnalizadorLexico.TYPE_DOUBLE);
+									this.ts.addToken(lexema, t);
+								} else 
+									this.polaca.addSemanticError(new Error(CodigoIntermedio.ERROR_CONVERSION, this.l, this.l.getLine()));
+								}
 		| termino '*' factor { polaca.addOperador("*");} 
 		| termino '/' factor { polaca.addOperador("/");}
 		;
@@ -308,21 +329,56 @@ condicion : expresion_aritmetica operador expresion_aritmetica { polaca.addOpera
 sentencia_salida : OUT '(' CADENA ')'
 				 ;
 
-invocaciones_procedimiento : IDENTIFICADOR '(' parametros_invocacion')' { // Apilo paso incompleto
-																		  polaca.stackUpProcedure(CodigoIntermedio.polacaNumber);
+invocaciones_procedimiento : IDENTIFICADOR '(' parametros_invocacion')' {   String id = $1.sval;
+																		  Token t = this.ts.getToken(id);
+																		  if ( (Integer) t.getAttr("CANT. PARAMETROS") != this.countParameter ) {
+																			this.polaca.addSemanticError(new Error(CodigoIntermedio.ERROR_CANT_PARAM, this.l, this.l.getLine()));
+																			this.countParameter = 0;
+ 																		 } else {
+																		  // Apilo paso incompleto
+																		  Integer paso = polaca.getTopProcedure();
 																		  polaca.addOperador("");
+																		  polaca.addDirection(CodigoIntermedio.polacaNumber - 1, paso);
 																		  polaca.addOperador("BI");
-																		 }
+																		}
+																		}
 																		  
-						   | IDENTIFICADOR '(' ')' {// Apilo paso incompleto
-						   							polaca.stackUpProcedure(CodigoIntermedio.polacaNumber);
-													polaca.addOperador("");
-													polaca.addOperador("BI");
+						   | IDENTIFICADOR '(' ')' {
+													 String id = $1.sval;
+													  Token t = this.ts.getToken(id);
+													  if ( (Integer) t.getAttr("CANT. PARAMETROS") > 0 ) {
+														this.polaca.addSemanticError(new Error(CodigoIntermedio.ERROR_CANT_PARAM, this.l, this.l.getLine()));
+														this.countParameter = 0;
+													 } else {
+													 // Apilo paso incompleto
+						   							Integer paso = polaca.getTopProcedure();
+												      polaca.addOperador("");
+													  polaca.addDirection(CodigoIntermedio.polacaNumber - 1, paso);
+													  polaca.addOperador("BI");
+													 } 
 													}
 				           ;
 
-parametros_invocacion : IDENTIFICADOR ':' IDENTIFICADOR
-					  | parametros_invocacion ',' IDENTIFICADOR ':' IDENTIFICADOR
+parametros_invocacion : IDENTIFICADOR ':' IDENTIFICADOR { this.countParameter++;
+														  String lexemaProc = $1.sval;
+														  String lexemaPar = $3.sval;
+														  Token t = this.ts.getToken(lexemaProc);
+														  Token t1 = this.ts.getToken(lexemaPar);
+														  if (t.getAttr("TIPO") == null || !t.getAttr("TIPO").equals(t1.getAttr("TIPO"))) {
+															polaca.addSemanticError(new Error(CodigoIntermedio.ERROR_INVOCACION_PAR, this.l, this.l.getLine()));
+															}
+														}
+															
+					  | parametros_invocacion ',' IDENTIFICADOR ':' IDENTIFICADOR {
+														this.countParameter++;
+														String lexemaProc = $3.sval;
+														  String lexemaPar = $5.sval;
+														  Token t = this.ts.getToken(lexemaProc);
+														  Token t1 = this.ts.getToken(lexemaPar);
+														  if (t.getAttr("TIPO") == null || !t.getAttr("TIPO").equals(t1.getAttr("TIPO"))) {
+															polaca.addSemanticError(new Error(CodigoIntermedio.ERROR_INVOCACION_PAR, this.l, this.l.getLine()));
+														}
+					  }
 					  ;
 
 sentencia_control : inicio_while '(' condicion ')' LOOP cuerpo_while_bien_definido { this.s.addSyntaxStruct( AnalizadorSintactico.whileStructure ) ; 
@@ -363,7 +419,7 @@ AnalizadorSintactico s;
 TablaDeSimbolos ts;
 Integer count = 0;
 CodigoIntermedio polaca;
-
+Integer countParameter = 0;
 
 public void setLexico(AnalizadorLexico l) {
 	this.l = l;

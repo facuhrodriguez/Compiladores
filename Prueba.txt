@@ -10,5 +10,5 @@ PROC a(UINT j, REF UINT l) NI=4_ui {
 		asf = 1_ui;
 	}
 }
-
-a(j:2);
+UINT x;
+a(j:x, l:s);

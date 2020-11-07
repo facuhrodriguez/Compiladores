@@ -17,6 +17,11 @@ public class CodigoIntermedio {
 	// Errores semánticos
 	public static final String VAR_NO_DECLARADA = "Error - Variable no declarada en línea ";
 	public static final String VAR_RE_DECLARADA = "Error - Variable re-declarada en línea ";
+	public static final String CONSTANTE_NI = "Error - La constante que indica el número de invocaciones debe ser entera - En línea ";
+	public static final String ERROR_CONVERSION = "Error - No se puede hacer la conversión a tipo DOUBLE en línea";
+	public static final String ERROR_INVOCACION_PAR = "Error - El tipo del parámetro no coincide con los utilizados en la invocación en línea ";
+	public static final String ERROR_CANT_PARAM = "Error - La cantidad de parámetros de la invocación no coincide con la declaración del procedimiento en línea ";
+	
 	
 	public CodigoIntermedio() {
 		this.polaca = new HashMap<Integer, String>();
@@ -94,7 +99,7 @@ public class CodigoIntermedio {
 	 * @param op
 	 */
 	public void addDirection(Integer paso, Integer direction) {
-		if (this.polaca.containsKey(paso))
+		if (paso != null && this.polaca.containsKey(paso) && direction != null)
 			this.polaca.put(paso, direction.toString());
 	}
 	

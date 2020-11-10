@@ -35,6 +35,12 @@ public class TablaDeSimbolos {
 		return values;
 	}
 	
+	public Token getTokenByName(String name) {
+		for (Token t : this.simbolos.values())
+			if (t.getAttr("NOMBRE_ANT") != null && t.getAttr("NOMBRE_ANT").equals(name))
+				return t;
+		return null;
+	}
 	
 	public boolean exist(String l) {
 		return this.simbolos.containsKey(l);
@@ -63,7 +69,8 @@ public class TablaDeSimbolos {
 
 
 	public void removeToken(String lexema) {
-		this.simbolos.remove(lexema);
+		if (lexema != null)
+			this.simbolos.remove(lexema);
 		
 	}
 	

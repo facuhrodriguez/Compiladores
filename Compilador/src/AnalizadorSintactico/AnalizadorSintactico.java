@@ -49,7 +49,7 @@ public class AnalizadorSintactico {
 	// Chequeos semánticos
 	public static final String VARIABLE = "Variable";
 	public static final String NOMBREPROC = "Nombre de procedimiento";
-	public static final String NOMBREPAR = "Nombre de parámetro";
+	public static final String NOMBREPAR = "Nombre de parametro";
 	
 	private ArrayList<Error> syntaxErrors;
 	

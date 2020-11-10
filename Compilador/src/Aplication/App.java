@@ -32,8 +32,8 @@ public class App {
 		System.out.println("------------------------- ANALIZADOR LEXICO ------------------------------");
 //		analizadorLexico.printTokens();
 		analizadorLexico.printTablaSimbolos();		
-//		analizadorLexico.printErrors();	
-//		analizadorLexico.printWarnings();
+		analizadorLexico.printErrors();	
+		analizadorLexico.printWarnings();
 		
 		System.out.println("\n" + "\n" + "Estructura de Código Intermedio (Polaca Inversa)");
 		code.printPolaca();

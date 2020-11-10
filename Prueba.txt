@@ -1,24 +1,17 @@
-UINT s;
+UINT a;
 
-IF ( a < 0_ui ) {
-	OUT('cadena');
-} ELSE {
-	OUT('otra cadena');
-} END_IF
-
-
-PROC a(UINT j, REF UINT l) NI=4_ui {
-	UINT p;
+PROC ab(UINT l) NI = 2_ui {
+	UINT a;
+	DOUBLE b;
+	b = b + 4.2;
+	PROC proc1() NI = 1_ui {
+		UINT a;
+		UINT j;
+		b = b + 4.1;
+	}
 	j = j + 1_ui;
-	WHILE ( zl > 12_ui ) LOOP {
-		asf = 1_ui;
-	}
-	PROC b() NI = 3_ui {
-		UINT jaja;
-		jaja = jaja + kk;
-		kk = jaja;
-	}
 }
-UINT x;
-a(j:x, l:s);
-x = x + s;
+
+DOUBLE z;
+j = j+3_ui;
+ab(l:z);

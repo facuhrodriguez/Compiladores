@@ -1392,10 +1392,10 @@ public class AnalizadorLexico {
 		this.matAS[17][12] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
 		this.matAS[17][13] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
 		this.matAS[17][14] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
-		this.matAS[17][15] =  new AddPalabraReservada(this);
+		this.matAS[17][15] = new AddPalabraReservada(this);
 		this.matAS[17][16] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
 		this.matAS[17][17] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
-		this.matAS[17][18] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[17][18] = new AddPalabraReservada(this);
 		this.matAS[17][19] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
 		this.matAS[17][20] = new AddPalabraReservada(this);
 		this.matAS[17][21] = new AddPalabraReservada(this);
@@ -1426,7 +1426,7 @@ public class AnalizadorLexico {
 		this.matAS[18][15] =  new AddPalabraReservada(this);
 		this.matAS[18][16] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
 		this.matAS[18][17] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
-		this.matAS[18][18] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[18][18] = new AddPalabraReservada(this);
 		this.matAS[18][19] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
 		this.matAS[18][20] = new AddPalabraReservada(this);
 		this.matAS[18][21] = new AddPalabraReservada(this);

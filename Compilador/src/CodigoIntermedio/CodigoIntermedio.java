@@ -21,8 +21,9 @@ public class CodigoIntermedio {
 	public static final String ERROR_CONVERSION = "Error - No se puede hacer la conversión a tipo DOUBLE en línea";
 	public static final String ERROR_INVOCACION_PAR = "Error - El tipo del parámetro no coincide con los utilizados en la invocación en línea ";
 	public static final String ERROR_CANT_PARAM = "Error - La cantidad de parámetros de la invocación no coincide con la declaración del procedimiento en línea ";
-	
-	
+	public static final String PROC_NO_DECLARADO = "Error - El procedimiento no existe en línea ";
+	public static final String ERROR_INVOCACIONES_PROC = "Error - Cantidad de invocaciones a procedimiento excedida en línea ";
+	public static final String ERROR_PARAM_PROC = "Error - El parámetro no existe en la declaración del procedimiento en línea ";
 	public CodigoIntermedio() {
 		this.polaca = new HashMap<Integer, String>();
 		CodigoIntermedio.polacaNumber = 1;

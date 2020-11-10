@@ -30,11 +30,15 @@ public class App {
 		System.out.println('\n');
 		System.err.println('\n');
 		System.out.println("------------------------- ANALIZADOR LEXICO ------------------------------");
-		analizadorLexico.printTokens();
+//		analizadorLexico.printTokens();
 		analizadorLexico.printTablaSimbolos();		
 		analizadorLexico.printErrors();	
 		analizadorLexico.printWarnings();
-		//code.printPolaca();
+		
+		System.out.println("\n" + "\n" + "Estructura de Código Intermedio (Polaca Inversa)");
+		code.printPolaca();
+		System.out.println("\n" + "Errores Semánticos");
+		code.printErrors();
 
 	}
 

@@ -49,9 +49,10 @@ public class AddConstant implements AccionSemantica {
 				
 			}
 			Token token = new Token(AnalizadorLexico.CONSTANTE, number, AnalizadorLexico.TYPE_DOUBLE);
+			token.addAttr("USO", "Constante");
 			this.l.addToken(token);
-			this.l.addOnTablaDeSimbolos(token.getAttr("VALOR").toString(), token);	
-			this.l.setYylval(token.getAttr("VALOR").toString());
+			this.l.addOnTablaDeSimbolos(token.getAttr("NOMBRE").toString(), token);	
+			this.l.setYylval(token.getAttr("NOMBRE").toString());
 			return AnalizadorLexico.CONSTANTE;
 		}
 		
@@ -76,9 +77,10 @@ public class AddConstant implements AccionSemantica {
 			}
 			
 			Token token = new Token(AnalizadorLexico.CONSTANTE, number, AnalizadorLexico.TYPE_UINT);
-			this.l.addOnTablaDeSimbolos(token.getAttr("VALOR").toString(), token);
+			token.addAttr("USO", "Constante");
+			this.l.addOnTablaDeSimbolos(token.getAttr("NOMBRE").toString(), token);
 			this.l.addToken(token);
-			this.l.setYylval(token.getAttr("VALOR").toString());
+			this.l.setYylval(token.getAttr("NOMBRE").toString());
 			return AnalizadorLexico.CONSTANTE;
 		}
 		

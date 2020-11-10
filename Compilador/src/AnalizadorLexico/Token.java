@@ -1,4 +1,4 @@
-package AnalizadorLexico;
+				package AnalizadorLexico;
 
 import java.util.Hashtable;
 
@@ -13,7 +13,7 @@ public class Token {
 	public Token(short identificador, Object value, String type) {
 		this.attr = new Hashtable<String, Object>();
 		this.addAttr("NUMERO DE TOKEN", identificador);
-		this.addAttr("VALOR", value);
+		this.addAttr("NOMBRE", value);
 		this.addAttr("TIPO", type);
 		
 	}
@@ -36,7 +36,10 @@ public class Token {
 	public String toString() {
 		String t = "";
 		for (String key : attr.keySet()) {
-			t = t + attr.get(key) + "				";
+			if (key.equals("NUMERO DE TOKEN"))
+				t = t + attr.get(key) + "      ";
+			else
+				t = t + attr.get(key) + "				";
 		}
 		return t;
 	}

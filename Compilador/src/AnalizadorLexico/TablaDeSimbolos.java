@@ -35,5 +35,43 @@ public class TablaDeSimbolos {
 		return values;
 	}
 	
+	public Token getTokenByName(String name) {
+		for (Token t : this.simbolos.values())
+			if (t.getAttr("NOMBRE_ANT") != null && t.getAttr("NOMBRE_ANT").equals(name))
+				return t;
+		return null;
+	}
+	
+	public boolean exist(String l) {
+		return this.simbolos.containsKey(l);
+	}
+	
+	public void print() {
+		for (Token t : this.getTokens()) {
+			if ( t.getAttr("TIPO") == null || t.getAttr("TIPO") == "") 
+				t.addAttr("TIPO", "-");
+			if (t.getAttr("USO") == null)
+				t.addAttr("USO", "-");
+			if (t.getAttr("AMBITO") == null)
+				t.addAttr("AMBITO", "-");
+			if (t.getAttr("FORMA DE PASAJE") == null)
+				t.addAttr("FORMA DE PASAJE", "-");
+			if (t.getAttr("CANT. INVOCACIONES") == null) 
+				t.addAttr("CANT. INVOCACIONES", "-");
+			System.out.println("-----------------------------------------------------------------------------------------------"
+					+ "--------------------------------------------------------------------------------------------------------");
+			System.out.println(t.getAttr("NUMERO DE TOKEN") + "|		|" + t.getAttr("NOMBRE") + "|				|"
+					+	t.getAttr("TIPO") +  "|				|" + t.getAttr("USO") + "|				|" + t.getAttr("AMBITO") + "|      |" +
+					t.getAttr("FORMA DE PASAJE") + "| 			|" + t.getAttr("CANT. INVOCACIONES"));
+			
+			}
+	}
+
+
+	public void removeToken(String lexema) {
+		if (lexema != null)
+			this.simbolos.remove(lexema);
+		
+	}
 	
 }

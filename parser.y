@@ -341,12 +341,14 @@ sentencia_seleccion : IF '(' condicion ')' cuerpo_if_bien_definido END_IF {
 															  Integer pasoIncompleto = polaca.getTop(); 	
 															  // Completo el destino de BI
 															  polaca.addDirection(pasoIncompleto, CodigoIntermedio.polacaNumber);
+															  polaca.addOperador("L".concat(CodigoIntermedio.polacaNumber.toString()));
 															 } 
 					| IF '(' ')' cuerpo_if_bien_definido END_IF { this.s.addSyntaxError( new Error(AnalizadorSintactico.errorCondition, this.l, this.l.getLine()));} 
 					| IF '(' condicion cuerpo_if_bien_definido END_IF { this.s.addSyntaxError(new Error(AnalizadorSintactico.parFinal, this.l, this.l.getLine()));}
 					| IF '(' condicion ')' cuerpo_if_bien_definido ELSE cuerpo_else_bien_definido END_IF { 
 																			this.s.addSyntaxStruct( AnalizadorSintactico.ifStructure );
 																			this.s.addSyntaxStruct( AnalizadorSintactico.ifStructure );
+																			polaca.addOperador("L".concat(CodigoIntermedio.polacaNumber.toString()));
 																			}
 					| IF '(' ')' cuerpo_if_bien_definido ELSE cuerpo_else_bien_definido END_IF { this.s.addSyntaxError( new Error(AnalizadorSintactico.errorCondition, this.l, this.l.getLine()));} 																
 					| IF condicion cuerpo_if_bien_definido END_IF { this.s.addSyntaxError(new Error(AnalizadorSintactico.sinPar, this.l, this.l.getLine()));}											
@@ -368,6 +370,8 @@ cuerpo_if_bien_definido: '{' sentencias '}' { // Desapila dirección incompleta
 											  polaca.addOperador("");
 											  // Agrego etiqueta BI
 											  polaca.addOperador("BI");
+											  // Agrego Etiqueta L-NUMEROPOLACA
+											  polaca.addOperador(("L").concat((CodigoIntermedio.polacaNumber).toString()));
 											  
 											  } 
 					   ;
@@ -422,6 +426,7 @@ invocaciones_procedimiento : IDENTIFICADOR '(' parametros_invocacion')' {   Stri
 																			  polaca.addOperador("");
 																			  polaca.addDirection(CodigoIntermedio.polacaNumber - 1, paso);
 																			  polaca.addOperador("BI");
+																			  polaca.addOperador(("L").concat((CodigoIntermedio.polacaNumber).toString()));
 																			  }
 																			}
 																		}
@@ -449,6 +454,7 @@ invocaciones_procedimiento : IDENTIFICADOR '(' parametros_invocacion')' {   Stri
 															  polaca.addOperador("");
 															  polaca.addDirection(CodigoIntermedio.polacaNumber - 1, paso);
 															  polaca.addOperador("BI");
+															  polaca.addOperador(("L").concat((CodigoIntermedio.polacaNumber).toString()));
 															  }
 														  }
 														  
@@ -459,8 +465,8 @@ invocaciones_procedimiento : IDENTIFICADOR '(' parametros_invocacion')' {   Stri
 parametros_invocacion : IDENTIFICADOR ':' IDENTIFICADOR { this.countParameter++;
 														  String lexemaProc = $1.sval;
 														  String lexemaPar = $3.sval;
-														  Token t = this.ts.checkAmbitoUso(lexemaProc);
-														  Token t1 = this.ts.checkAmbitoUso(lexemaPar);
+														  Token t = this.checkAmbitoUso(lexemaProc, this.s.getNombreProcedimiento());
+														  Token t1 = this.checkAmbitoUso(lexemaPar, this.s.getNombreProcedimiento());
 														   if ( t == null || t1 == null || t.getAttr("USO")== null ||  !( t.getAttr("USO").toString().equals(AnalizadorSintactico.NOMBREPAR)))
 															polaca.addSemanticError(new Error(CodigoIntermedio.ERROR_PARAM_PROC, this.l, this.l.getLine()));
 														  else {
@@ -475,8 +481,8 @@ parametros_invocacion : IDENTIFICADOR ':' IDENTIFICADOR { this.countParameter++;
 														this.countParameter++;
 														String lexemaProc = $3.sval;
 														  String lexemaPar = $5.sval;
-														  Token t = this.ts.checkAmbitoUso(lexemaProc);
-														  Token t1 = this.ts.checkAmbitoUso(lexemaPar);
+														  Token t = this.checkAmbitoUso(lexemaProc, this.s.getNombreProcedimiento());
+														  Token t1 = this.checkAmbitoUso(lexemaPar, this.s.getNombreProcedimiento());
 														   if ( t == null || t1 == null || t.getAttr("USO")== null ||  !( t.getAttr("USO").toString().equals(AnalizadorSintactico.NOMBREPAR)))
 															polaca.addSemanticError(new Error(CodigoIntermedio.ERROR_PARAM_PROC, this.l, this.l.getLine()));
 														  else {
@@ -497,6 +503,7 @@ sentencia_control : inicio_while '(' condicion ')' LOOP cuerpo_while_bien_defini
 																					  polaca.addOperando("");
 																					  polaca.addDirection(CodigoIntermedio.polacaNumber - 1, pasoInicio);
 																					  polaca.addOperando("BI");
+																					  polaca.addOperador(("L").concat((CodigoIntermedio.polacaNumber).toString()));
 																					  } 
 				  | inicio_while '(' ')' LOOP cuerpo_while_bien_definido { this.s.addSyntaxError( new Error(AnalizadorSintactico.errorCondition, this.l, this.l.getLine()));} 				
 				  | inicio_while condicion LOOP cuerpo_while_bien_definido { this.s.addSyntaxError( new Error(AnalizadorSintactico.sinPar, this.l, this.l.getLine()));}
@@ -504,7 +511,9 @@ sentencia_control : inicio_while '(' condicion ')' LOOP cuerpo_while_bien_defini
 				  ;
 				  
 inicio_while : WHILE { // Apilamos el número de paso donde comienza la condición
-						polaca.stackUp(CodigoIntermedio.polacaNumber);}
+						polaca.stackUp(CodigoIntermedio.polacaNumber);
+						polaca.addOperando(("L").concat(CodigoIntermedio.polacaNumber.toString())));
+						}
 						
 cuerpo_while_bien_definido : '{' sentencias_ejecutables '}' 
 

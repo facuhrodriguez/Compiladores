@@ -13,7 +13,9 @@ public class CodigoIntermedio {
 	private Stack<Integer> stack;
 	private Stack<Integer> stackProcedure;
 	private List<Error> errors = new ArrayList<Error>();
-	
+	private List<String> operadoresBinarios = new ArrayList<String>();
+	private List<String> operadoresUnarios = new ArrayList<String>();
+	private List<String> operadores = new ArrayList<String>();
 	// Errores semánticos
 	public static final String VAR_NO_DECLARADA = "Error - Variable no declarada en línea ";
 	public static final String VAR_RE_DECLARADA = "Error - Variable re-declarada en línea ";
@@ -29,6 +31,9 @@ public class CodigoIntermedio {
 		CodigoIntermedio.polacaNumber = 1;
 		this.stack = new Stack<Integer>();
 		this.stackProcedure = new Stack<Integer>();
+		this.setOperadoresBinarios();
+		this.setOperadoresUnarios();
+		this.setOperadores();
 	}
 	
 	/**
@@ -126,6 +131,81 @@ public class CodigoIntermedio {
 			System.out.println(e.toString());
 		}
 		
+	}
+	
+	public ArrayList<String> getStructure() {
+		return (ArrayList<String>) this.polaca.values();
+	}
+	
+	/**
+	 * Establece todos los operadores binarios posibles
+	 */
+	public void setOperadoresBinarios() {
+		this.operadoresBinarios.add("+");
+		this.operadoresBinarios.add("-");
+		this.operadoresBinarios.add("*");
+		this.operadoresBinarios.add("/");
+		this.operadoresBinarios.add("<");
+		this.operadoresBinarios.add(">");
+		this.operadoresBinarios.add("<=");
+		this.operadoresBinarios.add(">=");
+		this.operadoresBinarios.add("==");
+		this.operadoresBinarios.add("!=");
+		this.operadoresBinarios.add("=");
+	}
+	
+	/**
+	 * Establece todos los operadores unarios posibles
+	 */
+	public void setOperadoresUnarios() {
+		this.operadoresUnarios.add("OUT");
+	}
+	
+	/**
+	 * Indica si el operador es binario
+	 * @param b
+	 * @return
+	 */
+	public boolean isBinary(String b) {
+		return this.operadoresBinarios.contains(b);
+	}
+	
+
+	/**
+	 * Indica si el operador es unario
+	 * @param b
+	 * @return
+	 */
+	public boolean isUnary(String b) {
+		return this.operadoresUnarios.contains(b);
+	}
+	
+
+	/**
+	 * Indica si el String b es operador
+	 * @param b
+	 * @return
+	 */
+	public boolean isOperator(String b) {
+		return this.operadores.contains(b);
+	}
+	
+	/**
+	 * Establece todos los operadores
+	 */
+	public void setOperadores() {
+		this.operadores.add("+");
+		this.operadores.add("-");
+		this.operadores.add("*");
+		this.operadores.add("/");
+		this.operadores.add("<");
+		this.operadores.add(">");
+		this.operadores.add("<=");
+		this.operadores.add(">=");
+		this.operadores.add("==");
+		this.operadores.add("!=");
+		this.operadores.add("=");
+		this.operadores.add("OUT");
 	}
 	
 }

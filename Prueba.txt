@@ -1,9 +1,15 @@
 UINT a;
-UINT b;
-UINT c;
-UINT d;
+OUT('cadena');
 
-WHILE (a + b < c - d) LOOP {
-	a = b + c;
-	c = d - 3_ui;
+PROC aa() NI = 3_ui {
+	UINT b;
+	a = b + 1_ui;
+	PROC c(UINT j) NI = 2_ui {
+		UINT n;
+		n = 2_ui + j;
+	}
 }
+
+UINT b;
+aa();
+n = 2_ui;

@@ -3,6 +3,8 @@ package AnalizadorLexico;
 import java.util.Collection;
 import java.util.Hashtable;
 
+import AnalizadorSintactico.AnalizadorSintactico;
+
 public class TablaDeSimbolos {
 	private Hashtable <String, Token > simbolos;
 	
@@ -72,6 +74,33 @@ public class TablaDeSimbolos {
 		if (lexema != null)
 			this.simbolos.remove(lexema);
 		
+	}
+	
+	
+	public String generarAssembler() {
+		StringBuilder assembler = new StringBuilder();
+		for (Token t : this.getTokens()) {
+			if ((t.getAttr("USO") != null) && (t.getAttr("USO").toString() == AnalizadorSintactico.VARIABLE)){
+				// Constante entera sin signo
+				if (t.getAttr("TIPO") == AnalizadorLexico.TYPE_UINT) 
+					assembler.append("_" + t.getAttr("NOMBRE")+ " DW ? " + System.lineSeparator());
+				else 
+					// Constante Double
+					assembler.append("_" + t.getAttr("NOMBRE") + " DQ ? " + System.lineSeparator());
+			}
+			else {
+				if (((Integer) t.getAttr("NUMERO DE TOKEN") == AnalizadorLexico.CONSTANTE) && 
+					(t.getAttr("TIPO").toString() == AnalizadorLexico.TYPE_UINT )) 
+					assembler.append("@aux" + t.getAttr("NOMBRE") + " DW ? " + System.lineSeparator());
+				if (((Integer) t.getAttr("NUMERO DE TOKEN") == AnalizadorLexico.CONSTANTE) && 
+					(t.getAttr("TIPO").toString() == AnalizadorLexico.TYPE_DOUBLE ))
+					assembler.append("@aux" + t.getAttr("NOMBRE") + " DQ ? " + System.lineSeparator());
+				if (((Integer) t.getAttr("NUMERO DE TOKEN") == AnalizadorLexico.CONSTANTE) && 
+						(t.getAttr("TIPO").toString() == AnalizadorLexico.TYPE_CADENA ))
+					assembler.append("@aux" + t.getAttr("NOMBRE") + " DB ? " + System.lineSeparator());
+			}			
+		}
+		return assembler.toString();
 	}
 	
 }

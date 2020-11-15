@@ -97,6 +97,7 @@ public class AnalizadorLexico {
 	
 	public static final String TYPE_UINT = "UINT";
 	public static final String TYPE_DOUBLE = "DOUBLE";
+	public static final String TYPE_CADENA = "CADENA";
 	
 
 	// Estructuras

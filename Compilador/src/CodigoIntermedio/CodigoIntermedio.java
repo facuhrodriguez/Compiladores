@@ -159,6 +159,8 @@ public class CodigoIntermedio {
 	 */
 	public void setOperadoresUnarios() {
 		this.operadoresUnarios.add("OUT");
+		this.operadoresUnarios.add("BI");
+		this.operadoresUnarios.add("BF");
 	}
 	
 	/**
@@ -206,6 +208,8 @@ public class CodigoIntermedio {
 		this.operadores.add("!=");
 		this.operadores.add("=");
 		this.operadores.add("OUT");
+		this.operadores.add("BI");
+		this.operadores.add("BF");
 	}
 	
 }

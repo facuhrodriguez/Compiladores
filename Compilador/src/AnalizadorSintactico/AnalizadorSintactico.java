@@ -50,6 +50,7 @@ public class AnalizadorSintactico {
 	public static final String VARIABLE = "Variable";
 	public static final String NOMBREPROC = "Nombre de procedimiento";
 	public static final String NOMBREPAR = "Nombre de parametro";
+	public static final String CONSTANTE = "Constante";
 	
 	private ArrayList<Error> syntaxErrors;
 	

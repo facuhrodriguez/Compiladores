@@ -90,7 +90,6 @@ declaraciones_procedimiento : encabezado_procedimiento '{' sentencias '}' { Stri
 
 encabezado_procedimiento : PROC IDENTIFICADOR '(' parametros ')' NI '=' CONSTANTE { 
 																					this.s.addSyntaxStruct( AnalizadorSintactico.procStruct );
-																					
 																					String invoc = $8.sval;
 																					Token tInvoc = this.ts.getToken(invoc);
 																					if (tInvoc.getAttr("TIPO").equals(AnalizadorLexico.TYPE_UINT)){
@@ -108,6 +107,7 @@ encabezado_procedimiento : PROC IDENTIFICADOR '(' parametros ')' NI '=' CONSTANT
 																						$$.sval = (String) t.getAttr("NOMBRE");
 																						// Apilar paso incompleto
 																						polaca.stackUpProcedure(CodigoIntermedio.polacaNumber);
+																						polaca.addOperador(("L:").concat(t.getAttr("NOMBRE").toString()));
 																					} else 
 																						polaca.addSemanticError(new Error(CodigoIntermedio.CONSTANTE_NI, this.l, this.l.getLine()));
 																						this.count = 0;
@@ -131,6 +131,7 @@ encabezado_procedimiento : PROC IDENTIFICADOR '(' parametros ')' NI '=' CONSTANT
 																			  // Apilar paso incompleto
 																			  polaca.stackUpProcedure(CodigoIntermedio.polacaNumber);
 																			  $$.sval = (String) t.getAttr("NOMBRE");
+																			  polaca.addOperador(("L:").concat(t.getAttr("NOMBRE").toString()));
 																	    } else 
 																			polaca.addSemanticError(new Error(CodigoIntermedio.CONSTANTE_NI, this.l, this.l.getLine()));
 																		}
@@ -216,36 +217,39 @@ asignaciones : lado_izquierdo '=' expresion_aritmetica {  polaca.addOperando($1.
 			 | lado_izquierdo COMPARACION expresion_aritmetica { this.s.addSyntaxError(new Error(AnalizadorSintactico.errorOperatorComp, this.l, this.l.getLine()));}
 			 ;
 
-lado_izquierdo : IDENTIFICADOR { $$.sval = $1.sval;
+lado_izquierdo : IDENTIFICADOR { 
 								String lexema = $1.sval;
 								this.ts.removeToken(lexema);
-								lexema = lexema.concat("@").concat(this.s.getNombreProcedimiento());
-								Token t = this.ts.getToken(lexema);
+								// lexema = lexema.concat("@").concat(this.s.getNombreProcedimiento());
+								Token t = this.checkAmbitoUso($1.sval, this.s.getNombreProcedimiento());
+								//this.ts.removeToken(lexema);
 								if (t == null) {
-									Token t2 = this.ts.getTokenByName($1.sval);
-									if (t2 == null || this.checkAmbitoUso($1.sval, this.s.getNombreProcedimiento() ) == null)
-										this.polaca.addSemanticError(new Error(CodigoIntermedio.VAR_NO_DECLARADA, this.l, this.l.getLine()));
-									else {
-										String ambito = this.s.getNombreProcedimiento();
-										String nombreVar = $1.sval;
-										if (this.checkAmbitoUso(nombreVar, ambito) != null) {
-											this.ts.removeToken((String) t2.getAttr("NOMBRE"));
-											t2.addAttr("USO", AnalizadorSintactico.VARIABLE);
-											this.ts.addToken((String) t2.getAttr("NOMBRE"), t2);
-										} else {
+									
+									// Token t2 = this.ts.getTokenByName($1.sval);
+									//if (t2 == null || this.checkAmbitoUso($1.sval, this.s.getNombreProcedimiento() ) == null)
+										//this.polaca.addSemanticError(new Error(CodigoIntermedio.VAR_NO_DECLARADA, this.l, this.l.getLine()));
+									//else {
+									//	String ambito = this.s.getNombreProcedimiento();
+									//	String nombreVar = $1.sval;
+									//	if (this.checkAmbitoUso(nombreVar, ambito) != null) {
+									//		this.ts.removeToken((String) t2.getAttr("NOMBRE"));
+									//		t2.addAttr("USO", AnalizadorSintactico.VARIABLE);
+									//		this.ts.addToken((String) t2.getAttr("NOMBRE"), t2);
+									//	} else {
+											this.ts.removeToken(lexema);
 											this.polaca.addSemanticError(new Error(CodigoIntermedio.VAR_NO_DECLARADA, this.l, this.l.getLine()));
-										}
-									}
+										//}
+									//}
 								} else {
-									if ( !this.checkAmbitoUso(t, this.s.getNombreProcedimiento(), $1.sval)){ 
-										this.ts.removeToken(lexema);
-										this.polaca.addSemanticError(new Error(CodigoIntermedio.VAR_NO_DECLARADA, this.l, this.l.getLine()));
-									}else {
-										Token tAux = this.checkAmbitoUso($1.sval, this.s.getNombreProcedimiento());
-										this.ts.removeToken((String) tAux.getAttr("NOMBRE"));
+								//	if ( !this.checkAmbitoUso(t, this.s.getNombreProcedimiento(), $1.sval)){ 
+								//		this.ts.removeToken(lexema);
+								//		this.polaca.addSemanticError(new Error(CodigoIntermedio.VAR_NO_DECLARADA, this.l, this.l.getLine()));
+								//	}else {
+								//		Token tAux = this.checkAmbitoUso($1.sval, this.s.getNombreProcedimiento());
+								//		this.ts.removeToken((String) tAux.getAttr("NOMBRE"));
 										t.addAttr("USO", AnalizadorSintactico.VARIABLE);
-										this.ts.addToken((String) tAux.getAttr("NOMBRE"), tAux);
-									}
+										$$.sval = t.getAttr("NOMBRE").toString();
+									//}
 								}
 							}
 			   ;
@@ -302,8 +306,9 @@ factor : '-' CONSTANTE { String valor = yylval.sval;
 						// Busca en las variable que están en el mismo ambiente
 						if (t == null)  {
 							Token t1 = this.ts.getTokenByName($1.sval);
+							this.ts.removeToken($1.sval);
 							if (t1 == null || this.checkAmbitoUso($1.sval, this.s.getNombreProcedimiento()) == null ) {
-								this.ts.removeToken($1.sval);
+								
 								this.polaca.addSemanticError(new Error(CodigoIntermedio.VAR_NO_DECLARADA, this.l, this.l.getLine()));
 							} else {
 								Token tAux = this.checkAmbitoUso($1.sval, this.s.getNombreProcedimiento());
@@ -323,7 +328,7 @@ factor : '-' CONSTANTE { String valor = yylval.sval;
 								this.ts.addToken((String) tAux.getAttr("NOMBRE"), tAux);
 							}
 						}
-						 polaca.addOperando($$.sval);
+						 polaca.addOperando(lexema);
 						}
 		| CONSTANTE { 	// factor : CONSTANTE 
 						$$ = $1;
@@ -405,12 +410,13 @@ sentencia_salida : OUT '(' CADENA ')' { polaca.addOperando($3.sval);
 				 ;
 
 invocaciones_procedimiento : IDENTIFICADOR '(' parametros_invocacion')' {   String id = $1.sval;
-																		  Token t = this.ts.getTokenByName(id);
-																		  if ( checkAmbitoUso($1.sval, this.s.getNombreProcedimiento()) == null) {
+																		  Token t = this.checkAmbitoUso($1.sval, this.s.getNombreProcedimiento());
+																		  this.ts.removeToken(id);
+																		  if ( t == null) {
 																			this.polaca.addSemanticError(new Error(CodigoIntermedio.PROC_NO_DECLARADO, this.l, this.l.getLine()));
 																		  }
 																		  else {
-																			
+																			  t = this.ts.getToken((String) t.getAttr("NOMBRE"));
 																			  if ( (Integer) t.getAttr("CANT. PARAMETROS") != this.countParameter ) {
 																				this.polaca.addSemanticError(new Error(CodigoIntermedio.ERROR_CANT_PARAM, this.l, this.l.getLine()));
 																				this.countParameter = 0;
@@ -426,7 +432,7 @@ invocaciones_procedimiento : IDENTIFICADOR '(' parametros_invocacion')' {   Stri
 																			  polaca.addOperador("");
 																			  polaca.addDirection(CodigoIntermedio.polacaNumber - 1, paso);
 																			  polaca.addOperador("BI");
-																			  polaca.addOperador(("L").concat((CodigoIntermedio.polacaNumber).toString()));
+																			  
 																			  }
 																			}
 																		}
@@ -434,12 +440,13 @@ invocaciones_procedimiento : IDENTIFICADOR '(' parametros_invocacion')' {   Stri
 																		  
 						   | IDENTIFICADOR '(' ')' {
 													 String id = $1.sval;
-													   Token t = this.ts.getTokenByName(id);
-													 if ( checkAmbitoUso($1.sval, this.s.getNombreProcedimiento()) == null) {
+													 Token t = this.checkAmbitoUso($1.sval, this.s.getNombreProcedimiento());
+													 this.ts.removeToken(id);
+													 if ( t == null) {
 														this.polaca.addSemanticError(new Error(CodigoIntermedio.PROC_NO_DECLARADO, this.l, this.l.getLine()));
 													  }
 													  else {
-														
+														 t = this.ts.getToken((String) t.getAttr("NOMBRE"));
 														  if ( (Integer) t.getAttr("CANT. PARAMETROS")  > 0) {
 															this.polaca.addSemanticError(new Error(CodigoIntermedio.ERROR_CANT_PARAM, this.l, this.l.getLine()));
 															this.countParameter = 0;
@@ -449,12 +456,12 @@ invocaciones_procedimiento : IDENTIFICADOR '(' parametros_invocacion')' {   Stri
 														  if (previousCount <= 0)
 															polaca.addSemanticError(new Error(CodigoIntermedio.ERROR_INVOCACIONES_PROC, this.l, this.l.getLine()));
 														  else {
-															t.addAttr("INVOCACIONES DISPONIBLES", (previousCount-1));
+															  t.addAttr("INVOCACIONES DISPONIBLES", (previousCount-1));
 															  Integer paso = polaca.getTopProcedure();
 															  polaca.addOperador("");
 															  polaca.addDirection(CodigoIntermedio.polacaNumber - 1, paso);
 															  polaca.addOperador("BI");
-															  polaca.addOperador(("L").concat((CodigoIntermedio.polacaNumber).toString()));
+															
 															  }
 														  }
 														  
@@ -512,7 +519,7 @@ sentencia_control : inicio_while '(' condicion ')' LOOP cuerpo_while_bien_defini
 				  
 inicio_while : WHILE { // Apilamos el número de paso donde comienza la condición
 						polaca.stackUp(CodigoIntermedio.polacaNumber);
-						polaca.addOperando(("L").concat(CodigoIntermedio.polacaNumber.toString())));
+						polaca.addOperando(("L").concat(CodigoIntermedio.polacaNumber.toString()));
 						}
 						
 cuerpo_while_bien_definido : '{' sentencias_ejecutables '}' 
@@ -523,10 +530,10 @@ cuerpo_while_mal_definido :  sentencia_ejecutable
 
 operador : '<' { $$.sval = "<"; }
 		 | '>' { $$.sval = ">"; }
-		 | MAYORIGUAL { $$.sval = $1.sval; }
-		 | MENORIGUAL { $$.sval = $1.sval;}
-		 | DISTINTO { $$.sval = $1.sval; }
-		 | COMPARACION { $$.sval = $1.sval;}
+		 | MAYORIGUAL { $$.sval = ">="; }
+		 | MENORIGUAL { $$.sval = "<=";}
+		 | DISTINTO { $$.sval = "!="; }
+		 | COMPARACION { $$.sval = "==";}
 		 ;
 
 %%

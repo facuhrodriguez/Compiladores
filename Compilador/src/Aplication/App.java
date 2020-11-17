@@ -1,5 +1,7 @@
 package Aplication;
 
+import java.io.IOException;
+
 import AnalizadorLexico.AnalizadorLexico;
 import AnalizadorLexico.FileHandler;
 import AnalizadorSintactico.AnalizadorSintactico;
@@ -13,7 +15,7 @@ public class App {
 	static AnalizadorSintactico analizadorSintactico = new AnalizadorSintactico();
 	static GeneradorAssembler assembler;
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		file = new FileHandler(args[0]);
 		analizadorLexico = new AnalizadorLexico(file);
 		Parser parser = new Parser();
@@ -43,8 +45,7 @@ public class App {
 		//code.printErrors();
 		
 		assembler = new GeneradorAssembler(code, analizadorLexico.getTS());
-		
-		assembler.generarAssembler();
+		assembler.generarArchivoAssembler();
 		
 	}
 

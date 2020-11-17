@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Stack;
@@ -54,16 +53,21 @@ public class GeneradorAssembler {
         bw.write(".code" + System.lineSeparator());
         bw.write("start: " + System.lineSeparator() );
         // Escribir código para todo el programa
-        //bw.write()
+        bw.write(this.generarAssembler());
+        bw.write("DivisionCero db \"Error al intentar dividir por 0\", 0" + System.lineSeparator());
+        bw.write("RestaNegativa db \"Ocurrió overflow(resta negativa) en la resta\", 0" + System.lineSeparator());
         bw.write("end start");
+        bw.close();
         
 	}
 	
 	
-	public void generarAssembler() {
+	public String generarAssembler() {
 		StringBuilder assembler = new StringBuilder();
+		Integer count = 0;
 		Collection<String> polaca = this.polaca.getStructure();
 		for (String op : polaca) {
+			count++;
 			if (! this.polaca.isOperator(op)) 
 				this.stack.push(op);
 			else {
@@ -89,7 +93,7 @@ public class GeneradorAssembler {
 								assembler.append("MOV " + regResta + "," + "_" + var1 + System.lineSeparator());
 								assembler.append("SUB " + regResta + "," + "_" + var2 + System.lineSeparator());
 								// TODO: Crear labels de chequeos en tiempo de ejecución
-								assembler.append("JS " + "label" );
+								assembler.append("JS " + "label" + System.lineSeparator());
 								this.stack.push(regResta);
 								break;
 							case "*":
@@ -104,7 +108,7 @@ public class GeneradorAssembler {
 								this.setEstadoRegistro(regDiv, true);
 								assembler.append("MOV " + regDiv + "," + "_" + var1 + System.lineSeparator());
 								assembler.append("IDIV " + regDiv + "," + "_" + var2 + System.lineSeparator());
-								assembler.append("CMP " + regDiv + 0 + System.lineSeparator());
+								assembler.append("CMP " + regDiv + "," + 0 + System.lineSeparator());
 								// TODO: Crear labels de chequeos de div por cero
 								assembler.append("JE " + "label" + System.lineSeparator());
 								this.stack.push(regDiv);
@@ -161,7 +165,7 @@ public class GeneradorAssembler {
 							default:
 								break;
 							}
-						}
+						} 
 					} 
 					else {
 						// Situación 2
@@ -176,7 +180,7 @@ public class GeneradorAssembler {
 								case "-":
 									assembler.append("SUB " + var1 + "," + "_" + var2 + System.lineSeparator());
 									// TODO: Crear labels de chequeos en tiempo de ejecución
-									assembler.append("JS " + "label" + System.lineSeparator());
+								//	assembler.append("JS " + "label" + System.lineSeparator());
 									this.stack.push(var1);
 									break;
 								case "*":
@@ -185,9 +189,9 @@ public class GeneradorAssembler {
 									break;
 								case "/":
 									assembler.append("IDIV " + var1 + "," + "_" + var2 + System.lineSeparator());
-									assembler.append("CMP " + var1 + 0 + System.lineSeparator());
+									assembler.append("CMP " + var1 + "," +  0 + System.lineSeparator());
 									// TODO: Crear labels de chequeos de div por cero
-									assembler.append("JE " + "label" + System.lineSeparator());
+								//	assembler.append("JE " + "label" + System.lineSeparator());
 									this.stack.push(var1);
 									break;
 								case "=":
@@ -200,23 +204,23 @@ public class GeneradorAssembler {
 									this.stack.push(var1);
 									break;
 								case "!=":
-									assembler.append("CMP " + var1 + "," + var2 + System.lineSeparator());
+									assembler.append("CMP " + var1 + "," + "_" + var2 + System.lineSeparator());
 									this.stack.push(var1);
 									break;
 								case "<=": 
-									assembler.append("CMP " + var1 + "," + var2 + System.lineSeparator());
+									assembler.append("CMP " + var1 + "," + "_" + var2 + System.lineSeparator());
 									this.stack.push(var1);
 									break;
 								case ">=":
-									assembler.append("CMP " + var1 + "," + var2 + System.lineSeparator());
+									assembler.append("CMP " + var1 + "," + "_" + var2 + System.lineSeparator());
 									this.stack.push(var1);
 									break;
 								case "<":
-									assembler.append("CMP " + var1 + "," + var2 + System.lineSeparator());
+									assembler.append("CMP " + var1 + "," + "_" + var2 + System.lineSeparator());
 									this.stack.push(var1);
 									break;
 								case ">":
-									assembler.append("CMP " + var1 + "," + var2 + System.lineSeparator());
+									assembler.append("CMP " + var1 + "," + "_" + var2 + System.lineSeparator());
 									this.stack.push(var1);
 									break;
 								default:
@@ -236,7 +240,7 @@ public class GeneradorAssembler {
 								case "-":
 									assembler.append("SUB " + var1 + "," + var2 + System.lineSeparator());
 									// TODO: Crear labels de chequeos en tiempo de ejecución
-									assembler.append("JS " + "label" );
+									assembler.append("JS " + "label" + System.lineSeparator());
 									setEstadoRegistro(var2, false);
 									this.stack.push(var1);
 									break;
@@ -247,9 +251,9 @@ public class GeneradorAssembler {
 									break;
 								case "/":
 									assembler.append("IDIV " + var1 + "," + var2 + System.lineSeparator());
-									assembler.append("CMP " + var1 + 0 + System.lineSeparator());
+									assembler.append("CMP " + var1 + "," +  0 + System.lineSeparator());
 									// TODO: Crear labels de chequeos de div por cero
-									assembler.append("JE " + "label" + System.lineSeparator());
+								//	assembler.append("JE " + "label" + System.lineSeparator());
 									setEstadoRegistro(var2, false);
 									this.stack.push(var1);
 									break;
@@ -302,7 +306,7 @@ public class GeneradorAssembler {
 										assembler.append("MOV " + regRes + "_" + var1 + System.lineSeparator());
 										assembler.append("SUB " + regRes + "," + "_" + var2 + System.lineSeparator());
 										// TODO: Crear labels de chequeos en tiempo de ejecución
-										assembler.append("JS " + "label" + System.lineSeparator());
+								//		assembler.append("JS " + "label" + System.lineSeparator());
 										setEstadoRegistro(var2, false);
 										this.stack.push(var1);
 										break;
@@ -315,34 +319,34 @@ public class GeneradorAssembler {
 										setEstadoRegistro(regDiv, true);
 										assembler.append("MOV " + regDiv + "_" + var1 + System.lineSeparator());
 										assembler.append("IDIV " + regDiv + "," + "_" + var2 + System.lineSeparator());
-										assembler.append("CMP " + var1 + 0 + System.lineSeparator());
+										assembler.append("CMP " + var1 + "," +  0 + System.lineSeparator());
 										// TODO: Crear labels de chequeos de div por cero
-										assembler.append("JE " + "label" + System.lineSeparator());
+									//	assembler.append("JE " + "label" + System.lineSeparator());
 										setEstadoRegistro(var2, false);
 										this.stack.push(var1);
 										break;
 									case "==":
-										assembler.append("CMP " + var1 + "," + var2 + System.lineSeparator());
+										assembler.append("CMP " + "_" + var1 + "," + var2 + System.lineSeparator());
 										this.stack.push(var2);
 										break;
 									case "!=":
-										assembler.append("CMP " + var1 + "," + var2 + System.lineSeparator());
+										assembler.append("CMP " + "_" + var1 + "," + var2 + System.lineSeparator());
 										this.stack.push(var2);
 										break;
 									case "<=": 
-										assembler.append("CMP " + var1 + "," + var2 + System.lineSeparator());
+										assembler.append("CMP " + "_" + var1 + "," + var2 + System.lineSeparator());
 										this.stack.push(var2);
 										break;
 									case ">=":
-										assembler.append("CMP " + var1 + "," + var2 + System.lineSeparator());
+										assembler.append("CMP " + "_" + var1 + "," + var2 + System.lineSeparator());
 										this.stack.push(var2);
 										break;
 									case "<":
-										assembler.append("CMP " + var1 + "," + var2 + System.lineSeparator());
+										assembler.append("CMP " + "_" + var1 + "," + var2 + System.lineSeparator());
 										this.stack.push(var2);
 										break;
 									case ">":
-										assembler.append("CMP " + var1 + "," + var2 + System.lineSeparator());
+										assembler.append("CMP " + "_" + var1 + "," + var2 + System.lineSeparator());
 										this.stack.push(var2);
 										break;
 									default:
@@ -355,12 +359,12 @@ public class GeneradorAssembler {
 						
 				} else {
 					if (this.polaca.isUnary(op)) {
-						String var1 = this.stack.pop();
+						//String var1 = this.stack.pop();
 					}
 				}
 			}
 			}
-			System.out.println(assembler.toString());
+			return assembler.toString();
 		}
 
 	
@@ -374,7 +378,7 @@ public class GeneradorAssembler {
 	public String getRegistroLibre() {
 		Collection<String> reg = this.registros.keySet();
 		for (String r : reg) {
-			if (!this.registros.get(r) && r != "AX" )
+			if (!this.registros.get(r) && r != "AX" && r!= "DX" )
 				return r;
 		}
 		return "AX";
@@ -383,6 +387,8 @@ public class GeneradorAssembler {
 	public String getRegistroLibreMultDiv() {
 		if (!this.registros.get("AX"))
 			return "AX";
+		if (!this.registros.get("DX"))
+			return "DX";
 		return null;
 	}
 	
@@ -393,5 +399,100 @@ public class GeneradorAssembler {
 	
 	public boolean esRegistro(String reg) {
 		return this.registros.containsKey(reg);
+	}
+	
+	public void assemblerTS() {
+		System.out.println(this.ts.generarAssembler());
+	}
+	
+	public String getAssemblerDouble(Stack<String> s, String op, String var1, String var2, Integer c) {
+		StringBuilder assembler = new StringBuilder();
+
+		switch (op) {
+			case "+":
+				assembler.append("FLD " + var1 + System.lineSeparator());
+				assembler.append("FLD " + var2 + System.lineSeparator());
+				assembler.append("FADD " + System.lineSeparator());
+				assembler.append("FSTP " + "@aux" + c + System.lineSeparator());
+				s.push("@aux"+c);
+				break;  
+			case "-":
+				assembler.append("FLD " + var1 + System.lineSeparator());
+				assembler.append("FLD " + var2 + System.lineSeparator());
+				assembler.append("FSUB " + System.lineSeparator());
+				assembler.append("FSTP " + "@aux" + c + System.lineSeparator());
+				s.push("@aux" + c);
+				break;
+			case "*":
+				assembler.append("FLD " + var1 + System.lineSeparator());
+				assembler.append("FLD " + var2 + System.lineSeparator());
+				assembler.append("FMUL " + System.lineSeparator());
+				assembler.append("FSTP " + "@aux" + c + System.lineSeparator());
+				s.push("@aux" + c);
+				break;
+			case "/":
+				assembler.append("FLD " + var1 + System.lineSeparator());
+				assembler.append("FLD " + var2 + System.lineSeparator());
+				assembler.append("FTST "+System.lineSeparator());
+				assembler.append("FSTSW estado "+System.lineSeparator());
+				assembler.append("MOV AX,estado "+System.lineSeparator());
+				assembler.append("SAHF "+System.lineSeparator());
+				assembler.append("JE "+"Label" +System.lineSeparator());
+				assembler.append("FDIV "+System.lineSeparator());
+				assembler.append("FSTP "+"@aux"+ c +System.lineSeparator());
+				// TODO: Crear labels de chequeos de div por cero
+				assembler.append("JE " + "label" + System.lineSeparator());
+				this.stack.push("@aux"+c);
+				break;
+			case "=":
+				assembler.append("FLD " + var2 + System.lineSeparator());
+				assembler.append("FSTP " + var1 + System.lineSeparator());
+				break;
+			case "==":
+				String regCompIgual = getRegistroLibre();
+				this.setEstadoRegistro(regCompIgual, true);
+				assembler.append("MOV " + regCompIgual + "," + var1 + System.lineSeparator());
+				assembler.append("CMP " + regCompIgual + "," + var2 + System.lineSeparator());
+				this.stack.push(regCompIgual);
+				break;
+			case "!=":
+				String regCompDist = getRegistroLibre();
+				this.setEstadoRegistro(regCompDist, true);
+				assembler.append("MOV " + regCompDist + "," + var1 + System.lineSeparator());
+				assembler.append("CMP " + regCompDist + "," + var2 + System.lineSeparator());
+				this.stack.push(regCompDist);
+				break;
+			case "<=": 
+				String regCompMenorI = getRegistroLibre();
+				this.setEstadoRegistro(regCompMenorI, true);
+				assembler.append("MOV " + regCompMenorI + "," + var1 + System.lineSeparator());
+				assembler.append("CMP " + regCompMenorI + "," + var2 + System.lineSeparator());
+				this.stack.push(regCompMenorI);
+				break;
+			case ">=":
+				String regComMayorI = getRegistroLibre();
+				this.setEstadoRegistro(regComMayorI, true);
+				assembler.append("MOV " + regComMayorI + "," + var1 + System.lineSeparator());
+				assembler.append("CMP " + regComMayorI + "," + var2 + System.lineSeparator());
+				this.stack.push(regComMayorI);
+				break;
+			case "<":
+				String regCompMen = getRegistroLibre();
+				this.setEstadoRegistro(regCompMen, true);
+				assembler.append("MOV " + regCompMen + "," + var1 + System.lineSeparator());
+				assembler.append("CMP " + regCompMen + "," + var2 + System.lineSeparator());
+				this.stack.push(regCompMen);
+				break;
+			case ">":
+				String regCompMay = getRegistroLibre();
+				this.setEstadoRegistro(regCompMay, true);
+				assembler.append("MOV " + regCompMay + "," + var1 + System.lineSeparator());
+				assembler.append("CMP " + regCompMay + "," + var2 + System.lineSeparator());
+				this.stack.push(regCompMay);
+				break;
+			default:
+				break;
+		}
+		return assembler.toString();
 	}
 }

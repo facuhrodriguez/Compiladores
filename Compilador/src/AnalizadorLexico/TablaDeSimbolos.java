@@ -89,13 +89,13 @@ public class TablaDeSimbolos {
 					assembler.append("_" + t.getAttr("NOMBRE") + " DQ ? " + System.lineSeparator());
 			}
 			else {
-				if (((Integer) t.getAttr("NUMERO DE TOKEN") == AnalizadorLexico.CONSTANTE) && 
+				if (((Short) t.getAttr("NUMERO DE TOKEN") == AnalizadorLexico.CONSTANTE) && 
 					(t.getAttr("TIPO").toString() == AnalizadorLexico.TYPE_UINT )) 
 					assembler.append("@aux" + t.getAttr("NOMBRE") + " DW ? " + System.lineSeparator());
-				if (((Integer) t.getAttr("NUMERO DE TOKEN") == AnalizadorLexico.CONSTANTE) && 
+				if (((Short) t.getAttr("NUMERO DE TOKEN") == AnalizadorLexico.CONSTANTE) && 
 					(t.getAttr("TIPO").toString() == AnalizadorLexico.TYPE_DOUBLE ))
 					assembler.append("@aux" + t.getAttr("NOMBRE") + " DQ ? " + System.lineSeparator());
-				if (((Integer) t.getAttr("NUMERO DE TOKEN") == AnalizadorLexico.CONSTANTE) && 
+				if (((Short) t.getAttr("NUMERO DE TOKEN") == AnalizadorLexico.CONSTANTE) && 
 						(t.getAttr("TIPO").toString() == AnalizadorLexico.TYPE_CADENA ))
 					assembler.append("@aux" + t.getAttr("NOMBRE") + " DB ? " + System.lineSeparator());
 			}			

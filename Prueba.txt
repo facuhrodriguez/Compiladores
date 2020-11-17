@@ -1,15 +1,10 @@
 UINT a;
-OUT('cadena');
-
-PROC aa() NI = 3_ui {
-	UINT b;
-	a = b + 1_ui;
-	PROC c(UINT j) NI = 2_ui {
-		UINT n;
-		n = 2_ui + j;
-	}
-}
-
 UINT b;
-aa();
-n = 2_ui;
+UINT c;
+UINT d;
+UINT z;
+UINT e;
+UINT f;
+f = 1_ui;
+
+/% z = a + b * c - d / e + f + 20_ui; %/

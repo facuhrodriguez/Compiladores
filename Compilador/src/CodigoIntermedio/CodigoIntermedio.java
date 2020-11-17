@@ -1,6 +1,7 @@
 package CodigoIntermedio;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
@@ -133,8 +134,8 @@ public class CodigoIntermedio {
 		
 	}
 	
-	public ArrayList<String> getStructure() {
-		return (ArrayList<String>) this.polaca.values();
+	public Collection<String> getStructure() {
+		return this.polaca.values();
 	}
 	
 	/**

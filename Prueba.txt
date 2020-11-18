@@ -1,10 +1,12 @@
 UINT a;
 UINT b;
 UINT c;
-UINT d;
-UINT z;
-UINT e;
-UINT f;
-f = 1_ui;
 
-/% z = a + b * c - d / e + f + 20_ui; %/
+IF (a - b > c + 1_ui) {
+	UINT j;
+	a = b + c;
+} ELSE {
+	a = b - c;
+} END_IF
+
+OUT('cadena');

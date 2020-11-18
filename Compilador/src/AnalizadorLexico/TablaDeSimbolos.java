@@ -95,9 +95,9 @@ public class TablaDeSimbolos {
 				if (((Short) t.getAttr("NUMERO DE TOKEN") == AnalizadorLexico.CONSTANTE) && 
 					(t.getAttr("TIPO").toString() == AnalizadorLexico.TYPE_DOUBLE ))
 					assembler.append("@aux" + t.getAttr("NOMBRE") + " DQ ? " + System.lineSeparator());
-				if (((Short) t.getAttr("NUMERO DE TOKEN") == AnalizadorLexico.CONSTANTE) && 
-						(t.getAttr("TIPO").toString() == AnalizadorLexico.TYPE_CADENA ))
-					assembler.append("@aux" + t.getAttr("NOMBRE") + " DB ? " + System.lineSeparator());
+				if (((Short) t.getAttr("NUMERO DE TOKEN") == AnalizadorLexico.CADENA) && 
+						(t.getAttr("TIPO").toString().toUpperCase() == AnalizadorLexico.TYPE_CADENA ))
+					assembler.append(t.getAttr("NOMBRE") + " DB " + "\"" + t.getAttr("NOMBRE") + "\"" + ", 0" + System.lineSeparator());
 			}			
 		}
 		return assembler.toString();

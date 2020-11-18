@@ -217,4 +217,12 @@ public class CodigoIntermedio {
 	public boolean isLabel(String l) {
 		return (l.matches("L.*\\d"));
 	}
+	
+	public boolean endProc(String l) {
+		return (l.matches(":end.*"));
+	}
+	
+	public boolean isProc(String l) {
+		return (l.matches("L:.*"));
+	}
 }

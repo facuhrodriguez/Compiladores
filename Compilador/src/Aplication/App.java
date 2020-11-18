@@ -27,23 +27,23 @@ public class App {
 		parser.setCodigoIntermedio(code);
 		analizadorSintactico.setCodigoIntermedio(code);
 		parser.run();
-//
-//		System.out.println(" ----------------------------------------- ANALIZADOR SINTACTICO -----------------------------------------");
-//		analizadorSintactico.printErrors();
-//		analizadorSintactico.printStructures();
-//		System.out.println('\n');
-//		System.err.println('\n');
-//		System.out.println("------------------------- ANALIZADOR LEXICO ------------------------------");
-////		analizadorLexico.printTokens();
-//		analizadorLexico.printTablaSimbolos();		
-//		analizadorLexico.printErrors();	
-//		analizadorLexico.printWarnings();
+
+		System.out.println(" ----------------------------------------- ANALIZADOR SINTACTICO -----------------------------------------");
+		analizadorSintactico.printErrors();
+		analizadorSintactico.printStructures();
+		System.out.println('\n');
+		System.err.println('\n');
+		System.out.println("------------------------- ANALIZADOR LEXICO ------------------------------");
+//		analizadorLexico.printTokens();
+		analizadorLexico.printTablaSimbolos();		
+		analizadorLexico.printErrors();	
+		analizadorLexico.printWarnings();
 //		
 		System.out.println("\n" + "\n" + "Estructura de Código Intermedio (Polaca Inversa)");
 		code.printPolaca();
 		
 //		System.out.println("\n" + "Errores Semánticos");
-		//code.printErrors();
+		code.printErrors();
 		
 		assembler = new GeneradorAssembler(code, analizadorLexico.getTS());
 		assembler.generarArchivoAssembler();

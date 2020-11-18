@@ -39,8 +39,9 @@ public class App {
 //		analizadorLexico.printErrors();	
 //		analizadorLexico.printWarnings();
 //		
-//		System.out.println("\n" + "\n" + "Estructura de Código Intermedio (Polaca Inversa)");
-//		code.printPolaca();
+		System.out.println("\n" + "\n" + "Estructura de Código Intermedio (Polaca Inversa)");
+		code.printPolaca();
+		
 //		System.out.println("\n" + "Errores Semánticos");
 		//code.printErrors();
 		

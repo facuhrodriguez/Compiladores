@@ -213,4 +213,8 @@ public class CodigoIntermedio {
 		this.operadores.add("BF");
 	}
 	
+	
+	public boolean isLabel(String l) {
+		return (l.matches("L.*\\d"));
+	}
 }

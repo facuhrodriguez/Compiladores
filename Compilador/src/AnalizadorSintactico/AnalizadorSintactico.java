@@ -49,7 +49,8 @@ public class AnalizadorSintactico {
 	// Chequeos semánticos
 	public static final String VARIABLE = "Variable";
 	public static final String NOMBREPROC = "Nombre de procedimiento";
-	public static final String NOMBREPAR = "Nombre de parámetro";
+	public static final String NOMBREPAR = "Nombre de parametro";
+	public static final String CONSTANTE = "Constante";
 	
 	private ArrayList<Error> syntaxErrors;
 	
@@ -115,18 +116,21 @@ public class AnalizadorSintactico {
 	}
 	
 	public void setNombreProcedimiento(String a) {
-		this.nameProc = this.nameProc.concat("@");
-		this.nameProc = this.nameProc.concat(a);
+		//this.nameProc = this.nameProc.concat("@");
+		this.nameProc = a.concat("@").concat(this.nameProc);
 	}
 	
 	public void removeNombreProcedimiento(String a) {
-		this.nameProc = this.nameProc.replace(a, "");
-		if ( !this.nameProc.contains("main"))
-			this.nameProc = "main" + "@" + this.nameProc;
+		String aux = this.nameProc.substring(0, nameProc.indexOf("@"));
+		this.nameProc = aux.replace(a, "").concat(this.nameProc.substring(nameProc.indexOf("@"), nameProc.length()));
 		this.nameProc = this.nameProc.replaceFirst("@", "");
 	}
 	
 	public String getNombreProcedimiento() {
 		return this.nameProc;
+	}
+	
+	public boolean hayErrores() {
+		return (this.syntaxErrors.size() > 0);
 	}
 }

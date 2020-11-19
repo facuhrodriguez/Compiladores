@@ -12,7 +12,7 @@ public class AnalizadorLexico {
 	public static final Integer MAX_CAR_ID = 20;
 	private HashMap<Integer, Integer> input;
 	private AnalizadorSintactico as;
-
+	private int vAuxDouble = 0;
 	// Caracteres ASCII
 	private static final Integer LETRAMINUSCULA = 97;
 	private static final Integer LETRAMAYUSCULA = 65;
@@ -97,6 +97,7 @@ public class AnalizadorLexico {
 	
 	public static final String TYPE_UINT = "UINT";
 	public static final String TYPE_DOUBLE = "DOUBLE";
+	public static final String TYPE_CADENA = "CADENA";
 	
 
 	// Estructuras
@@ -1392,10 +1393,10 @@ public class AnalizadorLexico {
 		this.matAS[17][12] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
 		this.matAS[17][13] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
 		this.matAS[17][14] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
-		this.matAS[17][15] =  new AddPalabraReservada(this);
+		this.matAS[17][15] = new AddPalabraReservada(this);
 		this.matAS[17][16] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
 		this.matAS[17][17] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
-		this.matAS[17][18] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[17][18] = new AddPalabraReservada(this);
 		this.matAS[17][19] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
 		this.matAS[17][20] = new AddPalabraReservada(this);
 		this.matAS[17][21] = new AddPalabraReservada(this);
@@ -1426,7 +1427,7 @@ public class AnalizadorLexico {
 		this.matAS[18][15] =  new AddPalabraReservada(this);
 		this.matAS[18][16] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
 		this.matAS[18][17] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
-		this.matAS[18][18] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
+		this.matAS[18][18] = new AddPalabraReservada(this);
 		this.matAS[18][19] = new Error(ERROR_PALABRA_RESERVADA_MAL_DEFINIDA, this, getLine());
 		this.matAS[18][20] = new AddPalabraReservada(this);
 		this.matAS[18][21] = new AddPalabraReservada(this);
@@ -1724,4 +1725,10 @@ public class AnalizadorLexico {
 		}
 		return false;
 	}
+	
+	public boolean hayErrores() {
+		return (this.errors.size() > 0);
+	}
+	
+	
 }

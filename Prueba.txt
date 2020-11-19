@@ -1,14 +1,17 @@
-UINT s;
+UINT z;
+UINT a;
+UINT b;
+UINT c;
+UINT d;
+UINT e;
+UINT f;
 
-IF ( u < s ) {
-	OUT('cadena');
+PROC aa() NI = 3_ui {
+IF (a < b) {
+	a = 4_ui;
+} ELSE {
+	a = 1_ui;
 } END_IF
-
-PROC a(UINT j, REF UINT l) NI=4_ui {
-	j = j + 1_ui;
-	WHILE ( zl > 12_ui ) LOOP {
-		asf = 1_ui;
-	}
 }
-UINT x;
-a(j:x, l:s);
+
+aa();

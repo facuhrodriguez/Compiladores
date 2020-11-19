@@ -5,9 +5,11 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Hashtable;
 
+import AnalizadorSintactico.AnalizadorSintactico;
+
 public class TablaDeSimbolos {
 	private Hashtable <String, Token > simbolos;
-	
+	private Integer count = 0;
 	public TablaDeSimbolos () {
 		simbolos = new Hashtable<String,Token>();		
 	}
@@ -37,6 +39,12 @@ public class TablaDeSimbolos {
 		return values;
 	}
 	
+	public Token getTokenByName(String name) {
+		for (Token t : this.simbolos.values())
+			if (t.getAttr("NOMBRE_ANT") != null && t.getAttr("NOMBRE_ANT").equals(name))
+				return t;
+		return null;
+	}
 	
 	public boolean exist(String l) {
 		return this.simbolos.containsKey(l);
@@ -86,8 +94,40 @@ public class TablaDeSimbolos {
 
 
 	public void removeToken(String lexema) {
-		this.simbolos.remove(lexema);
+		if (lexema != null)
+			this.simbolos.remove(lexema);
 		
 	}
 	
+	
+	public String generarAssembler() {
+		StringBuilder assembler = new StringBuilder();
+		for (Token t : this.getTokens()) {
+			if ((t.getAttr("USO") != null) && (t.getAttr("USO").toString() == AnalizadorSintactico.VARIABLE)){
+				// Constante entera sin signo
+				if (t.getAttr("TIPO") == AnalizadorLexico.TYPE_UINT) 
+					assembler.append("_" + t.getAttr("NOMBRE")+ " DW ? " + System.lineSeparator());
+				else 
+					// Constante Double
+					assembler.append("_" + t.getAttr("NOMBRE") + " QWORD ? " + System.lineSeparator());
+			}
+			else {
+				if (((Short) t.getAttr("NUMERO DE TOKEN") == AnalizadorLexico.CONSTANTE) && 
+					(t.getAttr("TIPO").toString() == AnalizadorLexico.TYPE_UINT )) 
+					assembler.append("_" + t.getAttr("NOMBRE") + " DW " + t.getAttr("NOMBRE") + System.lineSeparator());
+				if (((Short) t.getAttr("NUMERO DE TOKEN") == AnalizadorLexico.CONSTANTE) && 
+					(t.getAttr("TIPO").toString() == AnalizadorLexico.TYPE_DOUBLE ))
+					assembler.append("@" + this.getCount() + " QWORD " + t.getAttr("NOMBRE") + System.lineSeparator());
+				if (((Short) t.getAttr("NUMERO DE TOKEN") == AnalizadorLexico.CADENA) && 
+						(t.getAttr("TIPO").toString().toUpperCase() == AnalizadorLexico.TYPE_CADENA ))
+					assembler.append(t.getAttr("NOMBRE") + " DB " + "\"" + t.getAttr("NOMBRE") + "\"" + ", 0" + System.lineSeparator());
+			}			
+		}
+		return assembler.toString();
+	}
+	
+	public Integer getCount() {
+		this.count++;
+		return this.count;
+	}
 }

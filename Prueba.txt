@@ -1,17 +1,14 @@
-UINT z;
-UINT a;
-UINT b;
-UINT c;
-UINT d;
-UINT e;
-UINT f;
-
-PROC aa() NI = 3_ui {
-IF (a < b) {
+PROC ejemplo(UINT cc, REF UINT k) NI = 3_ui {
+	UINT a;
 	a = 4_ui;
-} ELSE {
-	a = 1_ui;
-} END_IF
+	UINT b;
+	UINT c;
+	b = a;
+	c = b + 2_ui;
+	IF ( c > b ) {
+		b = 5_ui/1_ui;
+		a = 3_ui - 4_ui;
+	}END_IF
 }
 
-aa();
+ejemplo();

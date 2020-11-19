@@ -29,27 +29,26 @@ public class App {
 		parser.run();
 
 		System.out.println(" ----------------------------------------- ANALIZADOR SINTACTICO -----------------------------------------");
-		analizadorSintactico.printErrors();
-		analizadorSintactico.printStructures();
+//		analizadorSintactico.printErrors();
+//		analizadorSintactico.printStructures();
 		System.out.println('\n');
-		System.err.println('\n');
-		System.out.println("------------------------- ANALIZADOR LEXICO ------------------------------");
-//		analizadorLexico.printTokens();
-		analizadorLexico.printTablaSimbolos();		
+
 		analizadorLexico.printErrors();	
 		analizadorLexico.printWarnings();
 //		
 		System.out.println("\n" + "\n" + "Estructura de Código Intermedio (Polaca Inversa)");
 		code.printPolaca();
 		
-//		System.out.println("\n" + "Errores Semánticos");
+		System.out.println("\n" + "Errores Semánticos");
 		code.printErrors();
 		
 		if (analizadorLexico.hayErrores() || analizadorSintactico.hayErrores() || code.hayErrores())
 			System.out.println("ERROR - NO SE GENERA CÓDIGO ASSEMBLER POR ERRORES EN EL CODIGO");
 		else { 
+			code.printPolaca();
 			assembler = new GeneradorAssembler(code, analizadorLexico.getTS());
 			assembler.generarArchivoAssembler();
+			analizadorLexico.printTablaSimbolos();
 		}
 	}
 

@@ -1,12 +1,17 @@
+UINT z;
 UINT a;
 UINT b;
 UINT c;
+UINT d;
+UINT e;
+UINT f;
 
-IF (a - b > c + 1_ui) {
-	UINT j;
-	a = b + c;
+PROC aa() NI = 3_ui {
+IF (a < b) {
+	a = 4_ui;
 } ELSE {
-	a = b - c;
+	a = 1_ui;
 } END_IF
+}
 
-OUT('cadena');
+aa();

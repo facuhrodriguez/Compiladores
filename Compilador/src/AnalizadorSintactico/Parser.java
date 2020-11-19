@@ -460,7 +460,7 @@ final static String yyrule[] = {
 "operador : COMPARACION",
 };
 
-//#line 542 ".\parser.y"
+//#line 544 ".\parser.y"
 
 AnalizadorLexico l;
 AnalizadorSintactico s;
@@ -1033,26 +1033,27 @@ case 42:
 								this.ts.removeToken((String) tAux.getAttr("NOMBRE"));
 								tAux.addAttr("USO", AnalizadorSintactico.VARIABLE);
 								this.ts.addToken((String) tAux.getAttr("NOMBRE"), tAux);
+								polaca.addOperando(t.getAttr("NOMBRE").toString());
 							}
-							polaca.addOperando(t.getAttr("NOMBRE").toString());
 						}
+						
 						}
 break;
 case 43:
-//#line 335 ".\parser.y"
+//#line 337 ".\parser.y"
 { 	/* factor : CONSTANTE */
 						yyval = val_peek(0);
 						polaca.addOperando(yyval.sval);
 					}
 break;
 case 44:
-//#line 340 ".\parser.y"
+//#line 342 ".\parser.y"
 { /* factor : cadena*/
 					yyval = val_peek(0); 
 					 }
 break;
 case 45:
-//#line 345 ".\parser.y"
+//#line 347 ".\parser.y"
 { 
 															  this.s.addSyntaxStruct( AnalizadorSintactico.ifStructure );
 															  /* Desapila dirección incompleta */
@@ -1063,15 +1064,15 @@ case 45:
 															 }
 break;
 case 46:
-//#line 353 ".\parser.y"
+//#line 355 ".\parser.y"
 { this.s.addSyntaxError( new Error(AnalizadorSintactico.errorCondition, this.l, this.l.getLine()));}
 break;
 case 47:
-//#line 354 ".\parser.y"
+//#line 356 ".\parser.y"
 { this.s.addSyntaxError(new Error(AnalizadorSintactico.parFinal, this.l, this.l.getLine()));}
 break;
 case 48:
-//#line 355 ".\parser.y"
+//#line 357 ".\parser.y"
 { 
 																			this.s.addSyntaxStruct( AnalizadorSintactico.ifStructure );
 																			this.s.addSyntaxStruct( AnalizadorSintactico.ifStructure );
@@ -1079,35 +1080,35 @@ case 48:
 																			}
 break;
 case 49:
-//#line 360 ".\parser.y"
+//#line 362 ".\parser.y"
 { this.s.addSyntaxError( new Error(AnalizadorSintactico.errorCondition, this.l, this.l.getLine()));}
 break;
 case 50:
-//#line 361 ".\parser.y"
+//#line 363 ".\parser.y"
 { this.s.addSyntaxError(new Error(AnalizadorSintactico.sinPar, this.l, this.l.getLine()));}
 break;
 case 51:
-//#line 362 ".\parser.y"
+//#line 364 ".\parser.y"
 { this.s.addSyntaxError( new Error( AnalizadorSintactico.sinLlaves, this.l, this.l.getLine())); }
 break;
 case 52:
-//#line 363 ".\parser.y"
+//#line 365 ".\parser.y"
 { this.s.addSyntaxError(new Error(AnalizadorSintactico.parI, this.l, this.l.getLine()));}
 break;
 case 53:
-//#line 364 ".\parser.y"
-{ this.s.addSyntaxError( new Error(AnalizadorSintactico.sinLlaves, this.l, this.l.getLine())); }
-break;
-case 54:
-//#line 365 ".\parser.y"
-{ this.s.addSyntaxError( new Error(AnalizadorSintactico.sinLlaves, this.l, this.l.getLine())); }
-break;
-case 55:
 //#line 366 ".\parser.y"
 { this.s.addSyntaxError( new Error(AnalizadorSintactico.sinLlaves, this.l, this.l.getLine())); }
 break;
+case 54:
+//#line 367 ".\parser.y"
+{ this.s.addSyntaxError( new Error(AnalizadorSintactico.sinLlaves, this.l, this.l.getLine())); }
+break;
+case 55:
+//#line 368 ".\parser.y"
+{ this.s.addSyntaxError( new Error(AnalizadorSintactico.sinLlaves, this.l, this.l.getLine())); }
+break;
 case 56:
-//#line 370 ".\parser.y"
+//#line 372 ".\parser.y"
 { /* Desapila dirección incompleta */
 											  Integer pasoIncompleto = polaca.getTop();
 											  /* Completa el destino de la BF*/
@@ -1124,7 +1125,7 @@ case 56:
 											  }
 break;
 case 58:
-//#line 388 ".\parser.y"
+//#line 390 ".\parser.y"
 {	this.s.addSyntaxStruct( AnalizadorSintactico.ifStructure );
 													/* Desapila dirección incompleta */
 													Integer pasoIncompleto = polaca.getTop(); 	
@@ -1132,7 +1133,7 @@ case 58:
 													polaca.addDirection(pasoIncompleto, CodigoIntermedio.polacaNumber); }
 break;
 case 60:
-//#line 399 ".\parser.y"
+//#line 401 ".\parser.y"
 { polaca.addOperador(val_peek(1).sval);
 																/* Apilo paso incompleto*/
 																 polaca.stackUp(CodigoIntermedio.polacaNumber);
@@ -1143,12 +1144,12 @@ case 60:
 																}
 break;
 case 62:
-//#line 410 ".\parser.y"
+//#line 412 ".\parser.y"
 { polaca.addOperando(val_peek(1).sval);
 										polaca.addOperador("OUT");}
 break;
 case 63:
-//#line 414 ".\parser.y"
+//#line 416 ".\parser.y"
 {   String id = val_peek(3).sval;
 																		  Token t = this.checkAmbitoUso(val_peek(3).sval, this.s.getNombreProcedimiento());
 																		  this.ts.removeToken(id);
@@ -1170,7 +1171,7 @@ case 63:
 																				/* Apilo paso incompleto*/
 																			  Integer paso = polaca.getTopProcedure();
 																			  polaca.addOperador("");
-																			  polaca.addDirection(CodigoIntermedio.polacaNumber - 1, paso);
+																			  polaca.addDirectionProc(CodigoIntermedio.polacaNumber - 1, t.getAttr("NOMBRE").toString());
 																			  polaca.addOperador("BI");
 																			  
 																			  }
@@ -1179,7 +1180,7 @@ case 63:
 																		}
 break;
 case 64:
-//#line 443 ".\parser.y"
+//#line 445 ".\parser.y"
 {
 													 String id = val_peek(2).sval;
 													 Token t = this.checkAmbitoUso(val_peek(2).sval, this.s.getNombreProcedimiento());
@@ -1201,7 +1202,7 @@ case 64:
 															  t.addAttr("INVOCACIONES DISPONIBLES", (previousCount-1));
 															  Integer paso = polaca.getTopProcedure();
 															  polaca.addOperador("");
-															  polaca.addDirection(CodigoIntermedio.polacaNumber - 1, paso);
+															  polaca.addDirectionProc(CodigoIntermedio.polacaNumber - 1, t.getAttr("NOMBRE").toString());
 															  polaca.addOperador("BI");
 															
 															  }
@@ -1211,7 +1212,7 @@ case 64:
 													}
 break;
 case 65:
-//#line 474 ".\parser.y"
+//#line 476 ".\parser.y"
 { this.countParameter++;
 														  String lexemaProc = val_peek(2).sval;
 														  String lexemaPar = val_peek(0).sval;
@@ -1228,7 +1229,7 @@ case 65:
 														}
 break;
 case 66:
-//#line 489 ".\parser.y"
+//#line 491 ".\parser.y"
 {
 														this.countParameter++;
 														String lexemaProc = val_peek(2).sval;
@@ -1247,7 +1248,7 @@ case 66:
 					  }
 break;
 case 67:
-//#line 507 ".\parser.y"
+//#line 509 ".\parser.y"
 { this.s.addSyntaxStruct( AnalizadorSintactico.whileStructure ) ; 
 																					  /* Desapilo el tope de la pila */
 																					  Integer paso = polaca.getTop();
@@ -1260,49 +1261,49 @@ case 67:
 																					  }
 break;
 case 68:
-//#line 517 ".\parser.y"
+//#line 519 ".\parser.y"
 { this.s.addSyntaxError( new Error(AnalizadorSintactico.errorCondition, this.l, this.l.getLine()));}
 break;
 case 69:
-//#line 518 ".\parser.y"
+//#line 520 ".\parser.y"
 { this.s.addSyntaxError( new Error(AnalizadorSintactico.sinPar, this.l, this.l.getLine()));}
 break;
 case 70:
-//#line 519 ".\parser.y"
+//#line 521 ".\parser.y"
 { this.s.addSyntaxError( new Error(AnalizadorSintactico.sinLlaves, this.l, this.l.getLine())); }
 break;
 case 71:
-//#line 522 ".\parser.y"
+//#line 524 ".\parser.y"
 { /* Apilamos el número de paso donde comienza la condición*/
 						polaca.stackUp(CodigoIntermedio.polacaNumber);
 						polaca.addOperando(("L").concat(CodigoIntermedio.polacaNumber.toString()));
 						}
 break;
 case 74:
-//#line 533 ".\parser.y"
+//#line 535 ".\parser.y"
 { yyval.sval = "<"; }
 break;
 case 75:
-//#line 534 ".\parser.y"
+//#line 536 ".\parser.y"
 { yyval.sval = ">"; }
 break;
 case 76:
-//#line 535 ".\parser.y"
+//#line 537 ".\parser.y"
 { yyval.sval = ">="; }
 break;
 case 77:
-//#line 536 ".\parser.y"
+//#line 538 ".\parser.y"
 { yyval.sval = "<=";}
 break;
 case 78:
-//#line 537 ".\parser.y"
+//#line 539 ".\parser.y"
 { yyval.sval = "!="; }
 break;
 case 79:
-//#line 538 ".\parser.y"
+//#line 540 ".\parser.y"
 { yyval.sval = "==";}
 break;
-//#line 1228 "Parser.java"
+//#line 1230 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

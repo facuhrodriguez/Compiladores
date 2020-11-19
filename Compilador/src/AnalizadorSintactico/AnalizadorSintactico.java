@@ -129,4 +129,8 @@ public class AnalizadorSintactico {
 	public String getNombreProcedimiento() {
 		return this.nameProc;
 	}
+	
+	public boolean hayErrores() {
+		return (this.syntaxErrors.size() > 0);
+	}
 }

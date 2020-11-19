@@ -7,7 +7,7 @@ import AnalizadorSintactico.AnalizadorSintactico;
 
 public class TablaDeSimbolos {
 	private Hashtable <String, Token > simbolos;
-	
+	private Integer count = 0;
 	public TablaDeSimbolos () {
 		simbolos = new Hashtable<String,Token>();		
 	}
@@ -86,15 +86,15 @@ public class TablaDeSimbolos {
 					assembler.append("_" + t.getAttr("NOMBRE")+ " DW ? " + System.lineSeparator());
 				else 
 					// Constante Double
-					assembler.append("_" + t.getAttr("NOMBRE") + " DQ ? " + System.lineSeparator());
+					assembler.append("_" + t.getAttr("NOMBRE") + " QWORD ? " + System.lineSeparator());
 			}
 			else {
 				if (((Short) t.getAttr("NUMERO DE TOKEN") == AnalizadorLexico.CONSTANTE) && 
 					(t.getAttr("TIPO").toString() == AnalizadorLexico.TYPE_UINT )) 
-					assembler.append("@aux" + t.getAttr("NOMBRE") + " DW ? " + System.lineSeparator());
+					assembler.append("_" + t.getAttr("NOMBRE") + " DW " + t.getAttr("NOMBRE") + System.lineSeparator());
 				if (((Short) t.getAttr("NUMERO DE TOKEN") == AnalizadorLexico.CONSTANTE) && 
 					(t.getAttr("TIPO").toString() == AnalizadorLexico.TYPE_DOUBLE ))
-					assembler.append("@aux" + t.getAttr("NOMBRE") + " DQ ? " + System.lineSeparator());
+					assembler.append("@" + this.getCount() + " QWORD " + t.getAttr("NOMBRE") + System.lineSeparator());
 				if (((Short) t.getAttr("NUMERO DE TOKEN") == AnalizadorLexico.CADENA) && 
 						(t.getAttr("TIPO").toString().toUpperCase() == AnalizadorLexico.TYPE_CADENA ))
 					assembler.append(t.getAttr("NOMBRE") + " DB " + "\"" + t.getAttr("NOMBRE") + "\"" + ", 0" + System.lineSeparator());
@@ -103,4 +103,8 @@ public class TablaDeSimbolos {
 		return assembler.toString();
 	}
 	
+	public Integer getCount() {
+		this.count++;
+		return this.count;
+	}
 }

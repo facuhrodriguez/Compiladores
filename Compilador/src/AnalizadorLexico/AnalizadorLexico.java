@@ -12,7 +12,7 @@ public class AnalizadorLexico {
 	public static final Integer MAX_CAR_ID = 20;
 	private HashMap<Integer, Integer> input;
 	private AnalizadorSintactico as;
-
+	private int vAuxDouble = 0;
 	// Caracteres ASCII
 	private static final Integer LETRAMINUSCULA = 97;
 	private static final Integer LETRAMAYUSCULA = 65;
@@ -1727,4 +1727,10 @@ public class AnalizadorLexico {
 		}
 		return false;
 	}
+	
+	public boolean hayErrores() {
+		return (this.errors.size() > 0);
+	}
+	
+	
 }

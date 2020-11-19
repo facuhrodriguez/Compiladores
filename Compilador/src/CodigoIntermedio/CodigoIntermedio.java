@@ -225,4 +225,13 @@ public class CodigoIntermedio {
 	public boolean isProc(String l) {
 		return (l.matches("L:.*"));
 	}
+	
+	public void addDirectionProc(Integer i, String l) {
+		if (i != null && this.polaca.containsKey(i) && l != null)
+			this.polaca.put(i, l);
+	}
+	
+	public boolean hayErrores() {
+		return (this.errors.size() > 0);
+	}
 }

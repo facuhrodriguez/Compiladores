@@ -59,13 +59,14 @@ public class GeneradorAssembler {
 		+ "estado DW ?" + System.lineSeparator());
         bw.write(".code" + System.lineSeparator());
         bw.write("start: " + System.lineSeparator() );
+        bw.write(this.generarAssembler());
+        bw.write("invoke ExitProcess, 0" + System.lineSeparator());
         bw.write("LabelDivisionCero:" + System.lineSeparator());
         bw.write("invoke MessageBox, NULL, addr DivisionCero, addr DivisionCero, MB_OK" + System.lineSeparator());
         bw.write("invoke ExitProcess, 0" + System.lineSeparator());
         bw.write("LabelRestaNegativa:" + System.lineSeparator());
         bw.write("invoke MessageBox, NULL, addr RestaNegativa, addr RestaNegativa, MB_OK" + System.lineSeparator());
         bw.write("invoke ExitProcess, 0" + System.lineSeparator());
-        bw.write(this.generarAssembler());
         bw.write("end start ");
         bw.close();
         
@@ -78,288 +79,209 @@ public class GeneradorAssembler {
 		Collection<String> polaca = this.polaca.getStructure();
 		for (String op : polaca) {
 			count++;
-			if (! this.polaca.isOperator(op) && !this.polaca.isLabel(op) && !this.polaca.isProc(op) && !this.polaca.endProc(op)) 
+			if (! this.polaca.isOperator(op) && !this.polaca.isLabel(op) && !this.polaca.isProc(op) ) 
 				this.stack.push(op);
 			else {
 				if (this.polaca.isProc(op)) {
-					op = op.replaceFirst("L:", "");
-					assembler.append("start " + op + ":" + System.lineSeparator());
+					op = op.replaceFirst(":", "");
+					assembler.append( op + ":" + System.lineSeparator());
 				} else {
 					if (this.polaca.isLabel(op)) {
 						assembler.append(op + ":" + System.lineSeparator());
 					} else {
-						if (this.polaca.endProc(op)) {
-							op = op.replaceFirst(":end", "");
-							assembler.append("end " + op + System.lineSeparator());
-						}
+						
 						if (this.polaca.isOperator(op) && this.polaca.isBinary(op)) {
 							String var2 = this.stack.pop();
 							String var1 = this.stack.pop();
 							Token t1 = this.ts.getToken(var1);
 							Token t2 = this.ts.getToken(var2);
-							// Situación 1
-							if (t1 != null && t2 != null && t1.getAttr("TIPO") == t2.getAttr("TIPO")) {
-								if (t1.getAttr("TIPO") == AnalizadorLexico.TYPE_UINT) {
-									switch (op) {
-									case "+":
-										String regSuma = getRegistroLibre();
-										this.setEstadoRegistro(regSuma, true);
-										assembler.append("MOV "+ regSuma + "," + "_" + var1 + System.lineSeparator());
-										assembler.append("ADD " + regSuma + "," + "_" + var2 + System.lineSeparator());
-										this.stack.push(regSuma);
-										break;  
-									case "-":
-										String regResta = getRegistroLibre();
-										this.setEstadoRegistro(regResta, true);
-										assembler.append("MOV " + regResta + "," + "_" + var1 + System.lineSeparator());
-										assembler.append("SUB " + regResta + "," + "_" + var2 + System.lineSeparator());
-										// TODO: Crear labels de chequeos en tiempo de ejecución
-										assembler.append("JS " + labelRestaNegativa + System.lineSeparator());
-										this.stack.push(regResta);
-										break;
-									case "*":
-										String regMult = getRegistroLibreMultDiv();
-										this.setEstadoRegistro(regMult, true);
-										assembler.append("MOV " + regMult + "," + "_" + var1 + System.lineSeparator());
-										assembler.append("IMUL " + regMult + "," + "_" + var2 + System.lineSeparator());
-										this.stack.push(regMult);
-										break;
-									case "/":
-										String regDiv = getRegistroLibreMultDiv();
-										this.setEstadoRegistro(regDiv, true);
-										assembler.append("MOV " + regDiv + "," + "_" + var1 + System.lineSeparator());
-										assembler.append("IDIV " + regDiv + "," + "_" + var2 + System.lineSeparator());
-										assembler.append("CMP " + regDiv + "," + 0 + System.lineSeparator());
-										// TODO: Crear labels de chequeos de div por cero
-										assembler.append("JE " + labelDivisionCero + System.lineSeparator());
-										this.stack.push(regDiv);
-										break;
-									case "=":
-										String regAsig = getRegistroLibre();
-										this.setEstadoRegistro(regAsig, true);
-										assembler.append("MOV " + regAsig + "," + var2 + System.lineSeparator());
-										assembler.append("MOV " + var1 + "," + regAsig + System.lineSeparator());
-										this.setEstadoRegistro(regAsig, false);
-										break;
-									case "==":
-										String regCompIgual = getRegistroLibre();
-										this.setEstadoRegistro(regCompIgual, true);
-										assembler.append("MOV " + regCompIgual + "," + var1 + System.lineSeparator());
-										assembler.append("CMP " + regCompIgual + "," + var2 + System.lineSeparator());
-										this.stack.push(regCompIgual);
-										tipoSalto = "JNE ";
-										break;
-									case "!=":
-										String regCompDist = getRegistroLibre();
-										this.setEstadoRegistro(regCompDist, true);
-										assembler.append("MOV " + regCompDist + "," + var1 + System.lineSeparator());
-										assembler.append("CMP " + regCompDist + "," + var2 + System.lineSeparator());
-										this.stack.push(regCompDist);
-										tipoSalto = "JE ";
-										break;
-									case "<=": 
-										String regCompMenorI = getRegistroLibre();
-										this.setEstadoRegistro(regCompMenorI, true);
-										assembler.append("MOV " + regCompMenorI + "," + var1 + System.lineSeparator());
-										assembler.append("CMP " + regCompMenorI + "," + var2 + System.lineSeparator());
-										this.stack.push(regCompMenorI);
-										tipoSalto = "JNBE ";
-										break;
-									case ">=":
-										String regComMayorI = getRegistroLibre();
-										this.setEstadoRegistro(regComMayorI, true);
-										assembler.append("MOV " + regComMayorI + "," + var1 + System.lineSeparator());
-										assembler.append("CMP " + regComMayorI + "," + var2 + System.lineSeparator());
-										this.stack.push(regComMayorI);
-										tipoSalto = "JNAE ";
-										break;
-									case "<":
-										String regCompMen = getRegistroLibre();
-										this.setEstadoRegistro(regCompMen, true);
-										assembler.append("MOV " + regCompMen + "," + var1 + System.lineSeparator());
-										assembler.append("CMP " + regCompMen + "," + var2 + System.lineSeparator());
-										this.stack.push(regCompMen);
-										tipoSalto = "JNB ";
-										break;
-									case ">":
-										String regCompMay = getRegistroLibre();
-										this.setEstadoRegistro(regCompMay, true);
-										assembler.append("MOV " + regCompMay + "," + var1 + System.lineSeparator());
-										assembler.append("CMP " + regCompMay + "," + var2 + System.lineSeparator());
-										this.stack.push(regCompMay);
-										tipoSalto = "JNA ";
-										break;
-									default:
-										break;
-									}
-								} else {
-									this.getAssemblerDouble(op, var1, var2, count);
-								}
-							} 
-							else {
-								// Situación 2
-								if (esRegistro(var1) && t2 != null && ( t2.getAttr("USO") == AnalizadorSintactico.VARIABLE || 
-											t2.getAttr("USO") == AnalizadorSintactico.CONSTANTE)) {
-									if (t2.getAttr("TIPO") == AnalizadorLexico.TYPE_UINT){
+							if (! tiposIncompatibles(t1, t2)) {
+								// Situación 1
+								if (t1 != null && t2 != null) {
+									if (t1.getAttr("TIPO") == AnalizadorLexico.TYPE_UINT) {
 										switch (op) {
 										case "+":
-											assembler.append("ADD " + var1 + "," + "_" + var2 + System.lineSeparator());
-											this.stack.push(var1);
+											String regSuma = getRegistroLibre();
+											this.setEstadoRegistro(regSuma, true);
+											assembler.append("MOV "+ regSuma + "," + "_" + var1 + System.lineSeparator());
+											assembler.append("ADD " + regSuma + "," + "_" + var2 + System.lineSeparator());
+											this.stack.push(regSuma);
 											break;  
 										case "-":
-											assembler.append("SUB " + var1 + "," + "_" + var2 + System.lineSeparator());
-											// TODO: Crear labels de chequeos en tiempo de ejecución
+											String regResta = getRegistroLibre();
+											this.setEstadoRegistro(regResta, true);
+											assembler.append("MOV " + regResta + "," + "_" + var1 + System.lineSeparator());
+											assembler.append("SUB " + regResta + "," + "_" + var2 + System.lineSeparator());
 											assembler.append("JS " + labelRestaNegativa + System.lineSeparator());
-											this.stack.push(var1);
+											this.stack.push(regResta);
 											break;
 										case "*":
-											assembler.append("IMUL " + var1 + "," + "_" + var2 + System.lineSeparator());
-											this.stack.push(var1);
+											String regMult = getRegistroLibreMultDiv();
+											this.setEstadoRegistro(regMult, true);
+											assembler.append("MOV " + regMult + "," + "_" + var1 + System.lineSeparator());
+											assembler.append("IMUL " + regMult + "," + "_" + var2 + System.lineSeparator());
+											this.stack.push(regMult);
 											break;
 										case "/":
-											assembler.append("IDIV " + var1 + "," + "_" + var2 + System.lineSeparator());
-											assembler.append("CMP " + var1 + "," +  0 + System.lineSeparator());
-											// TODO: Crear labels de chequeos de div por cero
+											String regDiv = getRegistroLibreMultDiv();
+											assembler.append("CMP " + regDiv + "," + 0 + System.lineSeparator());
 											assembler.append("JE " + labelDivisionCero + System.lineSeparator());
-											this.stack.push(var1);
+											this.setEstadoRegistro(regDiv, true);
+											assembler.append("MOV " + regDiv + "," + "_" + var1 + System.lineSeparator());
+											assembler.append("IDIV " + regDiv + "," + "_" + var2 + System.lineSeparator());
+											this.stack.push(regDiv);
 											break;
 										case "=":
-											assembler.append("MOV " + "_" + var2 + "," + var1 + System.lineSeparator());
-											setEstadoRegistro(var1, false);
-											this.stack.push(var2);
+											String regAsig = getRegistroLibre();
+											this.setEstadoRegistro(regAsig, true);
+											assembler.append("MOV " + regAsig + "," + "_" + var2 + System.lineSeparator());
+											assembler.append("MOV " + "_" + var1 + "," + regAsig + System.lineSeparator());
+											this.setEstadoRegistro(regAsig, false);
 											break;
 										case "==":
-											assembler.append("CMP " + var1 + "," + var2 + System.lineSeparator());
-											this.stack.push(var1);
+											String regCompIgual = getRegistroLibre();
+											this.setEstadoRegistro(regCompIgual, true);
+											assembler.append("MOV " + regCompIgual + "," + "_" + var1 + System.lineSeparator());
+											assembler.append("CMP " + regCompIgual + "," + "_" + var2 + System.lineSeparator());
+											this.stack.push(regCompIgual);
 											tipoSalto = "JNE ";
 											break;
 										case "!=":
-											assembler.append("CMP " + var1 + "," + "_" + var2 + System.lineSeparator());
-											this.stack.push(var1);
+											String regCompDist = getRegistroLibre();
+											this.setEstadoRegistro(regCompDist, true);
+											assembler.append("MOV " + regCompDist + "," + "_" + var1 + System.lineSeparator());
+											assembler.append("CMP " + regCompDist + "," + "_" + var2 + System.lineSeparator());
+											this.stack.push(regCompDist);
 											tipoSalto = "JE ";
 											break;
 										case "<=": 
-											assembler.append("CMP " + var1 + "," + "_" + var2 + System.lineSeparator());
-											this.stack.push(var1);
+											String regCompMenorI = getRegistroLibre();
+											this.setEstadoRegistro(regCompMenorI, true);
+											assembler.append("MOV " + regCompMenorI + "," + "_" + var1 + System.lineSeparator());
+											assembler.append("CMP " + regCompMenorI + "," +  "_" + var2 + System.lineSeparator());
+											this.stack.push(regCompMenorI);
 											tipoSalto = "JNBE ";
 											break;
 										case ">=":
-											assembler.append("CMP " + var1 + "," + "_" + var2 + System.lineSeparator());
-											this.stack.push(var1);
+											String regComMayorI = getRegistroLibre();
+											this.setEstadoRegistro(regComMayorI, true);
+											assembler.append("MOV " + regComMayorI + "," +  "_" + var1 + System.lineSeparator());
+											assembler.append("CMP " + regComMayorI + "," +  "_" + var2 + System.lineSeparator());
+											this.stack.push(regComMayorI);
 											tipoSalto = "JNAE ";
 											break;
 										case "<":
-											assembler.append("CMP " + var1 + "," + "_" + var2 + System.lineSeparator());
-											this.stack.push(var1);
+											String regCompMen = getRegistroLibre();
+											this.setEstadoRegistro(regCompMen, true);
+											assembler.append("MOV " + regCompMen + "," +  "_" + var1 + System.lineSeparator());
+											assembler.append("CMP " + regCompMen + "," +  "_" + var2 + System.lineSeparator());
+											this.stack.push(regCompMen);
 											tipoSalto = "JNB ";
 											break;
 										case ">":
-											assembler.append("CMP " + var1 + "," + "_" + var2 + System.lineSeparator());
-											this.stack.push(var1);
-											tipoSalto = "JBE ";
-											break;
-										default:
-											break;
-										}
-									}
-								}
-								else {
-									// Situación 3
-									if (esRegistro(var1) && esRegistro(var2)) {
-										switch (op) {
-										case "+":
-											assembler.append("ADD " + var1 + "," + var2 + System.lineSeparator());
-											setEstadoRegistro(var2, false);
-											this.stack.push(var1);
-											break;  
-										case "-":
-											assembler.append("SUB " + var1 + "," + var2 + System.lineSeparator());
-											// TODO: Crear labels de chequeos en tiempo de ejecución
-											assembler.append("JS " + labelRestaNegativa + System.lineSeparator());
-											setEstadoRegistro(var2, false);
-											this.stack.push(var1);
-											break;
-										case "*":
-											assembler.append("IMUL " + var1 + "," + var2 + System.lineSeparator());
-											setEstadoRegistro(var2, false);
-											this.stack.push(var1);
-											break;
-										case "/":
-											assembler.append("IDIV " + var1 + "," + var2 + System.lineSeparator());
-											assembler.append("CMP " + var1 + "," +  0 + System.lineSeparator());
-											// TODO: Crear labels de chequeos de div por cero
-											assembler.append("JE " + labelDivisionCero + System.lineSeparator());
-											setEstadoRegistro(var2, false);
-											this.stack.push(var1);
-											break;
-										case "==":
-											assembler.append("CMP " + var1 + "," + var2 + System.lineSeparator());
-											setEstadoRegistro(var2, false);
-											this.stack.push(var1);
-											tipoSalto = "JNE ";
-											break;
-										case "!=":
-											assembler.append("CMP " + var1 + "," + var2 + System.lineSeparator());
-											setEstadoRegistro(var2, false);
-											this.stack.push(var1);
-											tipoSalto = "JE ";
-											break;
-										case "<=": 
-											assembler.append("CMP " + var1 + "," + var2 + System.lineSeparator());
-											setEstadoRegistro(var2, false);
-											this.stack.push(var1);
-											tipoSalto = "JNBE ";
-											break;
-										case ">=":
-											assembler.append("CMP " + var1 + "," + var2 + System.lineSeparator());
-											setEstadoRegistro(var2, false);
-											this.stack.push(var1);
-											tipoSalto = "JNAE ";
-											break;
-										case "<":
-											assembler.append("CMP " + var1 + "," + var2 + System.lineSeparator());
-											setEstadoRegistro(var2, false);
-											this.stack.push(var1);
-											tipoSalto = "JNB ";
-											break;
-										case ">":
-											assembler.append("CMP " + var1 + "," + var2 + System.lineSeparator());
-											setEstadoRegistro(var2, false);
-											this.stack.push(var1);
+											String regCompMay = getRegistroLibre();
+											this.setEstadoRegistro(regCompMay, true);
+											assembler.append("MOV " + regCompMay + "," +  "_" + var1 + System.lineSeparator());
+											assembler.append("CMP " + regCompMay + "," +  "_" + var2 + System.lineSeparator());
+											this.stack.push(regCompMay);
 											tipoSalto = "JNA ";
 											break;
 										default:
 											break;
 										}
+									} else {
+										this.getAssemblerDouble(op, var1, var2, count);
 									}
-									else {
-										// Situación 4
-										if (esRegistro(var2) && t1!= null && ( t1.getAttr("USO") == AnalizadorSintactico.VARIABLE || 
-												t1.getAttr("USO") == AnalizadorSintactico.CONSTANTE)) {
+								} 
+								else {
+									// Situación 2
+									if (esRegistro(var1) && t2 != null && ( t2.getAttr("USO") == AnalizadorSintactico.VARIABLE || 
+												t2.getAttr("USO") == AnalizadorSintactico.CONSTANTE)) {
+										if (t2.getAttr("TIPO") == AnalizadorLexico.TYPE_UINT){
 											switch (op) {
 											case "+":
-												assembler.append("ADD " + var2 + "," + "_" + var1 + System.lineSeparator());
-												this.stack.push(var2);
+												assembler.append("ADD " + var1 + "," + "_" + var2 + System.lineSeparator());
+												this.stack.push(var1);
 												break;  
 											case "-":
-												String regRes = this.getRegistroLibre();
-												setEstadoRegistro(regRes, true);
-												assembler.append("MOV " + regRes + "_" + var1 + System.lineSeparator());
-												assembler.append("SUB " + regRes + "," + "_" + var2 + System.lineSeparator());
+												assembler.append("SUB " + var1 + "," + "_" + var2 + System.lineSeparator());
+												assembler.append("JS " + labelRestaNegativa + System.lineSeparator());
+												this.stack.push(var1);
+												break;
+											case "*":
+												assembler.append("IMUL " + var1 + "," + "_" + var2 + System.lineSeparator());
+												this.stack.push(var1);
+												break;
+											case "/":
+												assembler.append("IDIV " + var1 + "," + "_" + var2 + System.lineSeparator());
+												assembler.append("CMP " + var1 + "," +  0 + System.lineSeparator());
+												// TODO: Crear labels de chequeos de div por cero
+												assembler.append("JE " + labelDivisionCero + System.lineSeparator());
+												this.stack.push(var1);
+												break;
+											case "=":
+												assembler.append("MOV " + "_" + var2 + "," + var1 + System.lineSeparator());
+												setEstadoRegistro(var1, false);
+												this.stack.push(var2);
+												break;
+											case "==":
+												assembler.append("CMP " + var1 + "," + "_" + var2 + System.lineSeparator());
+												this.stack.push(var1);
+												tipoSalto = "JNE ";
+												break;
+											case "!=":
+												assembler.append("CMP " + var1 + "," + "_" + var2 + System.lineSeparator());
+												this.stack.push(var1);
+												tipoSalto = "JE ";
+												break;
+											case "<=": 
+												assembler.append("CMP " + var1 + "," + "_" + var2 + System.lineSeparator());
+												this.stack.push(var1);
+												tipoSalto = "JNBE ";
+												break;
+											case ">=":
+												assembler.append("CMP " + var1 + "," + "_" + var2 + System.lineSeparator());
+												this.stack.push(var1);
+												tipoSalto = "JNAE ";
+												break;
+											case "<":
+												assembler.append("CMP " + var1 + "," + "_" + var2 + System.lineSeparator());
+												this.stack.push(var1);
+												tipoSalto = "JNB ";
+												break;
+											case ">":
+												assembler.append("CMP " + var1 + "," + "_" + var2 + System.lineSeparator());
+												this.stack.push(var1);
+												tipoSalto = "JBE ";
+												break;
+											default:
+												break;
+											}
+										}
+									}
+									else {
+										// Situación 3
+										if (esRegistro(var1) && esRegistro(var2)) {
+											switch (op) {
+											case "+":
+												assembler.append("ADD " + var1 + "," + var2 + System.lineSeparator());
+												setEstadoRegistro(var2, false);
+												this.stack.push(var1);
+												break;  
+											case "-":
+												assembler.append("SUB " + var1 + "," + var2 + System.lineSeparator());
 												// TODO: Crear labels de chequeos en tiempo de ejecución
 												assembler.append("JS " + labelRestaNegativa + System.lineSeparator());
 												setEstadoRegistro(var2, false);
 												this.stack.push(var1);
 												break;
 											case "*":
-												assembler.append("IMUL " + var2 + "," + "_" + var1 + System.lineSeparator());
-												this.stack.push(var2);
+												assembler.append("IMUL " + var1 + "," + var2 + System.lineSeparator());
+												setEstadoRegistro(var2, false);
+												this.stack.push(var1);
 												break;
 											case "/":
-												String regDiv = this.getRegistroLibre();
-												setEstadoRegistro(regDiv, true);
-												assembler.append("MOV " + regDiv + "_" + var1 + System.lineSeparator());
-												assembler.append("IDIV " + regDiv + "," + "_" + var2 + System.lineSeparator());
+												assembler.append("IDIV " + var1 + "," + var2 + System.lineSeparator());
 												assembler.append("CMP " + var1 + "," +  0 + System.lineSeparator());
 												// TODO: Crear labels de chequeos de div por cero
 												assembler.append("JE " + labelDivisionCero + System.lineSeparator());
@@ -367,43 +289,118 @@ public class GeneradorAssembler {
 												this.stack.push(var1);
 												break;
 											case "==":
-												assembler.append("CMP " + "_" + var1 + "," + var2 + System.lineSeparator());
-												this.stack.push(var2);
+												assembler.append("CMP " + var1 + "," + var2 + System.lineSeparator());
+												setEstadoRegistro(var2, false);
+												this.stack.push(var1);
 												tipoSalto = "JNE ";
 												break;
 											case "!=":
-												assembler.append("CMP " + "_" + var1 + "," + var2 + System.lineSeparator());
-												this.stack.push(var2);
+												assembler.append("CMP " + var1 + "," + var2 + System.lineSeparator());
+												setEstadoRegistro(var2, false);
+												this.stack.push(var1);
 												tipoSalto = "JE ";
 												break;
 											case "<=": 
-												assembler.append("CMP " + "_" + var1 + "," + var2 + System.lineSeparator());
-												this.stack.push(var2);
+												assembler.append("CMP " + var1 + "," + var2 + System.lineSeparator());
+												setEstadoRegistro(var2, false);
+												this.stack.push(var1);
 												tipoSalto = "JNBE ";
 												break;
 											case ">=":
-												assembler.append("CMP " + "_" + var1 + "," + var2 + System.lineSeparator());
-												this.stack.push(var2);
+												assembler.append("CMP " + var1 + "," + var2 + System.lineSeparator());
+												setEstadoRegistro(var2, false);
+												this.stack.push(var1);
 												tipoSalto = "JNAE ";
 												break;
 											case "<":
-												assembler.append("CMP " + "_" + var1 + "," + var2 + System.lineSeparator());
-												this.stack.push(var2);
+												assembler.append("CMP " + var1 + "," + var2 + System.lineSeparator());
+												setEstadoRegistro(var2, false);
+												this.stack.push(var1);
 												tipoSalto = "JNB ";
 												break;
 											case ">":
-												assembler.append("CMP " + "_" + var1 + "," + var2 + System.lineSeparator());
-												this.stack.push(var2);
+												assembler.append("CMP " + var1 + "," + var2 + System.lineSeparator());
+												setEstadoRegistro(var2, false);
+												this.stack.push(var1);
 												tipoSalto = "JNA ";
 												break;
 											default:
 												break;
 											}
 										}
+										else {
+											// Situación 4
+											if (esRegistro(var2) && t1!= null && ( t1.getAttr("USO") == AnalizadorSintactico.VARIABLE || 
+													t1.getAttr("USO") == AnalizadorSintactico.CONSTANTE)) {
+												switch (op) {
+												case "+":
+													assembler.append("ADD " + var2 + "," + "_" + var1 + System.lineSeparator());
+													this.stack.push(var2);
+													break;  
+												case "-":
+													String regRes = this.getRegistroLibre();
+													setEstadoRegistro(regRes, true);
+													assembler.append("MOV " + regRes + "_" + var1 + System.lineSeparator());
+													assembler.append("SUB " + regRes + "," + var2 + System.lineSeparator());
+													assembler.append("JS " + labelRestaNegativa + System.lineSeparator());
+													setEstadoRegistro(var2, false);
+													this.stack.push(var1);
+													break;
+												case "*":
+													assembler.append("IMUL " + var2 + "," + "_" + var1 + System.lineSeparator());
+													this.stack.push(var2);
+													break;
+												case "/":
+													String regDiv = this.getRegistroLibre();
+													setEstadoRegistro(regDiv, true);
+													assembler.append("CMP " + "_" + var1 + "," +  0 + System.lineSeparator());
+													assembler.append("JE " + labelDivisionCero + System.lineSeparator());
+													assembler.append("MOV " + regDiv + "_" + var1 + System.lineSeparator());
+													assembler.append("IDIV " + regDiv + "," + var2 + System.lineSeparator());
+													setEstadoRegistro(var2, false);
+													this.stack.push(var1);
+													break;
+												case "==":
+													assembler.append("CMP " + "_" + var1 + "," + var2 + System.lineSeparator());
+													this.stack.push(var2);
+													tipoSalto = "JNE ";
+													break;
+												case "!=":
+													assembler.append("CMP " + "_" + var1 + "," + var2 + System.lineSeparator());
+													this.stack.push(var2);
+													tipoSalto = "JE ";
+													break;
+												case "<=": 
+													assembler.append("CMP " + "_" + var1 + "," + var2 + System.lineSeparator());
+													this.stack.push(var2);
+													tipoSalto = "JNBE ";
+													break;
+												case ">=":
+													assembler.append("CMP " + "_" + var1 + "," + var2 + System.lineSeparator());
+													this.stack.push(var2);
+													tipoSalto = "JNAE ";
+													break;
+												case "<":
+													assembler.append("CMP " + "_" + var1 + "," + var2 + System.lineSeparator());
+													this.stack.push(var2);
+													tipoSalto = "JNB ";
+													break;
+												case ">":
+													assembler.append("CMP " + "_" + var1 + "," + var2 + System.lineSeparator());
+													this.stack.push(var2);
+													tipoSalto = "JNA ";
+													break;
+												default:
+													break;
+												}
+											}
+										}
 									}
 								}
+							} else {
+								System.err.println("ERROR - NO SE GENERA CODIGO INTERMEDIO POR INCOMPATIBILIDAD DE TIPOS");
+								return null;
 							}
-						
 						} else {
 							if (this.polaca.isOperator(op) && this.polaca.isUnary(op)) {
 								String var1 = this.stack.pop();
@@ -415,7 +412,7 @@ public class GeneradorAssembler {
 									assembler.append(tipoSalto + "L" + var1 + System.lineSeparator());
 									break;
 								case "OUT":
-									assembler.append("invoke MessageBox, NULL, addr OUT, addr " + var1 + "," + "MB_OK" + System.lineSeparator());
+									assembler.append("invoke MessageBox, NULL, addr \"OUT\", addr " + var1 + "," + "MB_OK" + System.lineSeparator());
 									break;
 								default:
 									break;
@@ -432,6 +429,12 @@ public class GeneradorAssembler {
 		}
 
 	
+	private boolean tiposIncompatibles(Token t1, Token t2) {
+		if (t1 != null && t2 != null && t1.getAttr("TIPO") == t2.getAttr("TIPO")) 
+			return false;
+		return true;
+	}
+
 	public void setRegistros() {
 		this.registros.put("AX", false);
 		this.registros.put("BX", false);

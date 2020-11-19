@@ -45,9 +45,12 @@ public class App {
 //		System.out.println("\n" + "Errores Semánticos");
 		code.printErrors();
 		
-		assembler = new GeneradorAssembler(code, analizadorLexico.getTS());
-		assembler.generarArchivoAssembler();
-		
+		if (analizadorLexico.hayErrores() || analizadorSintactico.hayErrores() || code.hayErrores())
+			System.out.println("ERROR - NO SE GENERA CÓDIGO ASSEMBLER POR ERRORES EN EL CODIGO");
+		else { 
+			assembler = new GeneradorAssembler(code, analizadorLexico.getTS());
+			assembler.generarArchivoAssembler();
+		}
 	}
 
 }

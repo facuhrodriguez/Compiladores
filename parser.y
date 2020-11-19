@@ -85,7 +85,8 @@ tipo : UINT { $$ = new ParserVal(AnalizadorLexico.TYPE_UINT);}
 declaraciones_procedimiento : encabezado_procedimiento '{' sentencias '}' { String lexema = $1.sval;
 																			Token t = this.ts.getToken(lexema);
 																			t.addAttr("USO", AnalizadorSintactico.NOMBREPROC);
-																			this.s.removeNombreProcedimiento((String) t.getAttr("NOMBRE_ANT"));}
+																			this.s.removeNombreProcedimiento((String) t.getAttr("NOMBRE_ANT"));
+																			}
 							;
 
 encabezado_procedimiento : PROC IDENTIFICADOR '(' parametros ')' NI '=' CONSTANTE { 
@@ -315,6 +316,7 @@ factor : '-' CONSTANTE { String valor = yylval.sval;
 								this.ts.removeToken((String) tAux.getAttr("NOMBRE"));
 								tAux.addAttr("USO", AnalizadorSintactico.VARIABLE);
 								this.ts.addToken((String) tAux.getAttr("NOMBRE"), tAux);
+								polaca.addOperando(tAux.getAttr("NOMBRE").toString());
 							}
 								
 						} else {
@@ -326,9 +328,10 @@ factor : '-' CONSTANTE { String valor = yylval.sval;
 								this.ts.removeToken((String) tAux.getAttr("NOMBRE"));
 								tAux.addAttr("USO", AnalizadorSintactico.VARIABLE);
 								this.ts.addToken((String) tAux.getAttr("NOMBRE"), tAux);
+								polaca.addOperando(t.getAttr("NOMBRE").toString());
 							}
 						}
-						 polaca.addOperando(lexema);
+						
 						}
 		| CONSTANTE { 	// factor : CONSTANTE 
 						$$ = $1;
@@ -430,7 +433,7 @@ invocaciones_procedimiento : IDENTIFICADOR '(' parametros_invocacion')' {   Stri
 																				// Apilo paso incompleto
 																			  Integer paso = polaca.getTopProcedure();
 																			  polaca.addOperador("");
-																			  polaca.addDirection(CodigoIntermedio.polacaNumber - 1, paso);
+																			  polaca.addDirectionProc(CodigoIntermedio.polacaNumber - 1, t.getAttr("NOMBRE").toString());
 																			  polaca.addOperador("BI");
 																			  
 																			  }
@@ -459,7 +462,7 @@ invocaciones_procedimiento : IDENTIFICADOR '(' parametros_invocacion')' {   Stri
 															  t.addAttr("INVOCACIONES DISPONIBLES", (previousCount-1));
 															  Integer paso = polaca.getTopProcedure();
 															  polaca.addOperador("");
-															  polaca.addDirection(CodigoIntermedio.polacaNumber - 1, paso);
+															  polaca.addDirectionProc(CodigoIntermedio.polacaNumber - 1, t.getAttr("NOMBRE").toString());
 															  polaca.addOperador("BI");
 															
 															  }

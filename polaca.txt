@@ -1,0 +1,12 @@
+PROC ejemplo() NI = 3_ui {
+	UINT a;
+	a = 4_ui;
+	UINT b;
+	UINT c;
+	b = a;
+	c = b + 2_ui;
+	IF ( c > b ) {
+		b = 5_ui;
+		a = 3_ui;
+	}END_IF
+}

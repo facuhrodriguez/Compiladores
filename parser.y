@@ -31,6 +31,7 @@ package AnalizadorSintactico;
 import AnalizadorLexico.*;
 import AnalizadorLexico.Error;
 import CodigoIntermedio.*;
+import java.util.ArrayList;
 %}
 
 programa : sentencias { this.s.addSyntaxStruct( AnalizadorSintactico.principalStruct );}
@@ -86,6 +87,11 @@ declaraciones_procedimiento : encabezado_procedimiento '{' sentencias '}' { Stri
 																			Token t = this.ts.getToken(lexema);
 																			t.addAttr("USO", AnalizadorSintactico.NOMBREPROC);
 																			this.s.removeNombreProcedimiento((String) t.getAttr("NOMBRE_ANT"));
+																			for (int i=Integer.parseInt(t.getAttr("CANT. PARAMETROS").toString()) - 1; i > 0 ; i--) {
+																					String par = parametros.get(i);
+																					this.removerParametro(par);
+																				}
+																			
 																			}
 							;
 
@@ -103,15 +109,25 @@ encabezado_procedimiento : PROC IDENTIFICADOR '(' parametros ')' NI '=' CONSTANT
 																						t.addAttr("CANT. INVOCACIONES", $8.sval);
 																						t.addAttr("INVOCACIONES DISPONIBLES", $8.sval);
 																						t.addAttr("CANT. PARAMETROS", this.count);
+																						Token tPar;
 																						this.s.setNombreProcedimiento(lexema);
+																						for (int i=0; i < Integer.parseInt(t.getAttr("CANT. PARAMETROS").toString()); i++) {
+																							String par = parametros.get(i);
+																							tPar = this.ts.getToken(par);
+																							this.ts.removeToken(tPar.getAttr("NOMBRE").toString());
+																							tPar.addAttr("AMBITO", this.s.getNombreProcedimiento());
+																							tPar.addAttr("NOMBRE", tPar.getAttr("NOMBRE").toString().concat("@").concat(this.s.getNombreProcedimiento()));
+																							this.ts.addToken(tPar.getAttr("NOMBRE").toString(), tPar);
+																						}
 																						this.ts.addToken((String) t.getAttr("NOMBRE"), t);
 																						$$.sval = (String) t.getAttr("NOMBRE");
 																						// Apilar paso incompleto
 																						polaca.stackUpProcedure(CodigoIntermedio.polacaNumber);
 																						polaca.addOperador(("L:").concat(t.getAttr("NOMBRE").toString()));
-																					} else 
+																					} else {
 																						polaca.addSemanticError(new Error(CodigoIntermedio.CONSTANTE_NI, this.l, this.l.getLine()));
 																						this.count = 0;
+																						}
 																					}
 						 | PROC IDENTIFICADOR '(' ')' NI '=' CONSTANTE  { this.s.addSyntaxStruct( AnalizadorSintactico.procStruct ); 
 																		  $$.sval = $2.sval;
@@ -148,10 +164,9 @@ parametros : declaracion_par { this.count++;
 							  String lexema = $1.sval;
 							  this.ts.removeToken(lexema);
 							  t.addAttr("FORMA DE PASAJE", "COPIA VALOR");
-							  t.addAttr("NOMBRE_ANT", lexema);
-							  t.addAttr("AMBITO", this.s.getNombreProcedimiento());
-							  t.addAttr("NOMBRE", lexema.concat("@").concat(this.s.getNombreProcedimiento()));
+							   t.addAttr("NOMBRE_ANT", lexema);
 							  this.ts.addToken( (String) t.getAttr("NOMBRE"), t);
+							  this.addParametro((String) t.getAttr("NOMBRE"));
 							}
 		   | parametros ',' declaracion_par { this.count++;
 											 if (this.count > AnalizadorSintactico.maxProcPar) 
@@ -160,10 +175,9 @@ parametros : declaracion_par { this.count++;
 											  String lexema = $3.sval;
 											  this.ts.removeToken(lexema);
 											  t.addAttr("FORMA DE PASAJE", "COPIA VALOR");
-											  t.addAttr("NOMBRE_ANT", lexema);
-											  t.addAttr("AMBITO", this.s.getNombreProcedimiento());
-											  t.addAttr("NOMBRE", lexema.concat("@").concat(this.s.getNombreProcedimiento()));
+											   t.addAttr("NOMBRE_ANT", lexema);
 											  this.ts.addToken( (String) t.getAttr("NOMBRE"), t);
+											  this.addParametro((String) t.getAttr("NOMBRE"));
 											}
 		   | parametros ',' REF declaracion_par { this.count++;
 											 if (this.count > AnalizadorSintactico.maxProcPar) 
@@ -171,11 +185,10 @@ parametros : declaracion_par { this.count++;
 											  Token t = this.ts.getToken($4.sval);
 											  String lexema = $4.sval;
 											  this.ts.removeToken($4.sval);
+											   t.addAttr("NOMBRE_ANT", lexema);
 											  t.addAttr("FORMA DE PASAJE", "REFERENCIA");
-											  t.addAttr("NOMBRE_ANT", lexema);
-											  t.addAttr("AMBITO", this.s.getNombreProcedimiento());
-											  t.addAttr("NOMBRE", lexema.concat("@").concat(this.s.getNombreProcedimiento()));
 											  this.ts.addToken( (String) t.getAttr("NOMBRE"), t);
+											   this.addParametro((String) t.getAttr("NOMBRE"));
 											}
 		   | REF declaracion_par {  this.count++;
 								   if (this.count > AnalizadorSintactico.maxProcPar){ 
@@ -187,9 +200,8 @@ parametros : declaracion_par { this.count++;
 									this.ts.removeToken($2.sval);
 									t.addAttr("FORMA DE PASAJE", "REFERENCIA");
 									t.addAttr("NOMBRE_ANT", lexema);
-									t.addAttr("AMBITO", this.s.getNombreProcedimiento());
-									t.addAttr("NOMBRE", lexema.concat("@").concat(this.s.getNombreProcedimiento()));
 									this.ts.addToken( (String) t.getAttr("NOMBRE"), t);
+									this.addParametro((String) t.getAttr("NOMBRE"));
 									
 								}
 		   ;
@@ -314,7 +326,7 @@ factor : '-' CONSTANTE { String valor = yylval.sval;
 							} else {
 								Token tAux = this.checkAmbitoUso($1.sval, this.s.getNombreProcedimiento());
 								this.ts.removeToken((String) tAux.getAttr("NOMBRE"));
-								tAux.addAttr("USO", AnalizadorSintactico.VARIABLE);
+								//tAux.addAttr("USO", AnalizadorSintactico.VARIABLE);
 								this.ts.addToken((String) tAux.getAttr("NOMBRE"), tAux);
 								polaca.addOperando(tAux.getAttr("NOMBRE").toString());
 							}
@@ -476,8 +488,8 @@ parametros_invocacion : IDENTIFICADOR ':' IDENTIFICADOR { this.countParameter++;
 														  String lexemaProc = $1.sval;
 														  String lexemaPar = $3.sval;
 														  Token t = this.checkAmbitoUso(lexemaProc, this.s.getNombreProcedimiento());
-														  Token t1 = this.checkAmbitoUso(lexemaPar, this.s.getNombreProcedimiento());
-														   if ( t == null || t1 == null || t.getAttr("USO")== null ||  !( t.getAttr("USO").toString().equals(AnalizadorSintactico.NOMBREPAR)))
+														   Token t1 = getAmbitoProc(lexemaPar);
+														   if ( t == null || t1 == null )
 															polaca.addSemanticError(new Error(CodigoIntermedio.ERROR_PARAM_PROC, this.l, this.l.getLine()));
 														  else {
 															if (t.getAttr("TIPO") == null || !t.getAttr("TIPO").toString().equals(t1.getAttr("TIPO"))) {
@@ -491,9 +503,10 @@ parametros_invocacion : IDENTIFICADOR ':' IDENTIFICADOR { this.countParameter++;
 														this.countParameter++;
 														String lexemaProc = $3.sval;
 														  String lexemaPar = $5.sval;
+														  Token t1 = getAmbitoProc(lexemaPar);
 														  Token t = this.checkAmbitoUso(lexemaProc, this.s.getNombreProcedimiento());
-														  Token t1 = this.checkAmbitoUso(lexemaPar, this.s.getNombreProcedimiento());
-														   if ( t == null || t1 == null || t.getAttr("USO")== null ||  !( t.getAttr("USO").toString().equals(AnalizadorSintactico.NOMBREPAR)))
+														
+														   if ( t == null || t1 == null )
 															polaca.addSemanticError(new Error(CodigoIntermedio.ERROR_PARAM_PROC, this.l, this.l.getLine()));
 														  else {
 															if (t.getAttr("TIPO") == null || !t.getAttr("TIPO").toString().equals(t1.getAttr("TIPO"))) {
@@ -547,6 +560,7 @@ TablaDeSimbolos ts;
 Integer count = 0;
 CodigoIntermedio polaca;
 Integer countParameter = 0;
+ArrayList<String> parametros = new ArrayList<String>();
 
 public void setLexico(AnalizadorLexico l) {
 	this.l = l;
@@ -568,6 +582,15 @@ public int yylex() {
 	int val = l.yylex();
 	this.yylval = new ParserVal(this.l.getYylval());
     return val;
+}
+
+public Token getAmbitoProc(String t1) {
+	for (Token t : this.ts.getTokens()){
+		if ((t.getAttr("USO") != null) && (t.getAttr("USO").toString() == AnalizadorSintactico.NOMBREPAR) && 
+			(t.getAttr("NOMBRE_ANT").toString().equals(t1)))
+			return t;
+	}
+	return null;
 }
 
 public void yyerror(String s) {
@@ -613,4 +636,12 @@ public boolean checkAmbitoUso(Token t, String ambitoVar, String nombreVar) {
 				&& ( ambitoT.contains(ambitoVar) || ambitoVar.contains(ambitoT) ) && 
 				( (String) t.getAttr("NOMBRE_ANT")).equals(nombreVar)  &&
 				(this.countAmbito(ambitoVar) >= this.countAmbito(ambitoT) ));
+}
+
+public void addParametro(String p) {
+	parametros.add(p);
+}
+
+public void removerParametro(String p) {
+	parametros.remove(p);
 }

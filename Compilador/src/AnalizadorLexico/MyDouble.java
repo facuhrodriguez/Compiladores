@@ -9,6 +9,7 @@ public class MyDouble {
 	private static Integer minExp = -308;
 	private static Integer maxExp = 308;
 	public static boolean truncate = false;
+	private final static int DIEZ = 10;
 	
 	public static Double getMaxValuePos() {
 		return maxValuePos;
@@ -72,9 +73,9 @@ public class MyDouble {
 			Integer exp = Integer.parseInt(buffer.substring(indexSign + 1, buffer.length()));
 			double mantissa = Double.parseDouble('-' + buffer.substring(0, buffer.indexOf('d')));
 			if (sign.equals('+')) 
-				 d = Math.pow(mantissa, exp);
+				 d = mantissa * Math.pow(DIEZ, exp);
 			 else 
-				 d = Math.pow(mantissa, -exp);
+				 d = mantissa * Math.pow(DIEZ, -exp);
 			if (d > 0)
 				number = MyDouble.checkPositiveRange(d);
 			else 

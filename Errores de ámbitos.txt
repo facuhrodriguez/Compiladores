@@ -1,0 +1,15 @@
+PROC af() NI = 3_ui {
+	j = 1_ui; /% Variable no declarada %/
+	PROC ag() NI = 2_ui {
+		UINT l;
+		l = j + l; /% Variable no declarada %/
+	}
+	PROC as() NI = 3_ui {
+		UINT s;
+		s = l + s; /% Error variable no declarada %/
+	} 
+}
+
+UINT a;
+UINT j; 
+af(a:j); /% El parámetro no existe en la declaración del procedimiento en línea 15

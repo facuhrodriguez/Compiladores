@@ -1,0 +1,8 @@
+model => tamaño del programa
+.stack => pila del procesador
+.data => Indica donde van a estar los datos (Tabla de simbolos)
+.code => código START END START(Codigo Intermedio) 
+Para emitir codigo por pantalla utilizar librerias que están
+en el ejemplo
+
+Los mensajes de error se imprimen como OUT

@@ -4,7 +4,7 @@ public class AddConstant implements AccionSemantica {
 	
 	private AnalizadorLexico l;
 	private Character type;
-	
+	private final int DIEZ = 10;
 	public AddConstant(AnalizadorLexico l, Character type) {
 		this.l = l;
 		this.type = type;
@@ -27,9 +27,10 @@ public class AddConstant implements AccionSemantica {
 				Integer exp = Integer.parseInt(buffer.substring(indexSign + 1, buffer.length()));
 				double mantissa = Double.parseDouble(buffer.substring(0, buffer.indexOf('d')));
 				if (sign.equals('+')) 
-					 d = Math.pow(mantissa, exp);
+					 d = mantissa * Math.pow(DIEZ, exp);
 				 else 
-					 d = Math.pow(mantissa, -exp);
+					 d = mantissa * Math.pow(DIEZ, -exp);
+					 
 				if (d > 0)
 					number = MyDouble.checkPositiveRange(d);
 				else 

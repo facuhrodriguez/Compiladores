@@ -1,14 +1,11 @@
-PROC ejemplo(UINT cc, REF UINT k) NI = 3_ui {
-	UINT a;
-	a = 4_ui;
-	UINT b;
+PROC aa() NI = 2_ui {
 	UINT c;
-	b = a;
-	c = b + 2_ui;
-	IF ( c > b ) {
-		b = 5_ui/1_ui;
-		a = 3_ui - 4_ui;
-	}END_IF
+	c = 1_ui + 4_ui;
+	IF (c > 2_ui) {
+		OUT('Todo Salio bien');
+	} ELSE {
+		OUT('Todo salio mal');
+	} END_IF
 }
 
-ejemplo();
+aa();

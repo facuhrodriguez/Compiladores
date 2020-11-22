@@ -1,1 +1,6 @@
 NUMERO ;NAME ;TIPO ;			 USO;AMBITO;FORMA DE PASAJE;CANT. INVOCACIONES;VALOR
+258;5;UINT;Constante;-;-;-;-
+258;4;UINT;Constante;-;-;-;-
+257;b@main;UINT;Variable;main;-;-;-
+257;a@main;UINT;Variable;main;-;-;-
+258;2;UINT;Constante;-;-;-;-

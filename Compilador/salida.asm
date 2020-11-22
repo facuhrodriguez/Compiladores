@@ -7,12 +7,11 @@ include \masm32\include\user32.inc
 includelib \masm32\lib\kernel32.lib
 includelib \masm32\lib\user32.lib
 .data
-Todosaliomal DB "Todosaliomal", 0
+_5 DW 5
 _4 DW 4
-TodoSaliobien DB "TodoSaliobien", 0
+_b@main DW ? 
+_a@main DW ? 
 _2 DW 2
-_1 DW 1
-_c@aa@main DW ? 
 
 DivisionCero db "Error al intentar dividir por 0", 0
 RestaNegativa db "Ocurrió overflow(resta negativa) en la resta", 0
@@ -20,19 +19,16 @@ CodigoTerminado db "Código finalizado correctamente", 0
 estado DW ?
 .code
 start: 
-Laa@main:
-MOV CX,_1
-ADD CX,_4
-MOV _c@aa@main,CX
-MOV CX,_c@aa@main
+MOV CX,_a@main
 CMP CX,_2
-JNA L16
-invoke MessageBox, NULL, addr TodoSaliobien, addr TodoSaliobien,MB_OK
-JMP L19
-L16:
-invoke MessageBox, NULL, addr Todosaliomal, addr Todosaliomal,MB_OK
-L19:
-JMP Laa@main
+JNB L11
+MOV BX,_b@main
+MOV _4,BX
+JMP L15
+L11:
+MOV BX,_b@main
+MOV _5,BX
+L15:
 invoke MessageBox, NULL, addr CodigoTerminado, addr CodigoTerminado, MB_OK
 invoke ExitProcess, 0
 LabelDivisionCero:

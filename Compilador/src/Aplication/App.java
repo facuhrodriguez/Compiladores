@@ -16,7 +16,7 @@ public class App {
 	static GeneradorAssembler assembler;
 	
 	public static void main(String[] args) throws IOException {
-		file = new FileHandler(args[0]);
+		file = new FileHandler("../../polaca.txt");
 		analizadorLexico = new AnalizadorLexico(file);
 		Parser parser = new Parser();
 		parser.setLexico(analizadorLexico);
@@ -33,18 +33,13 @@ public class App {
 		System.out.println('\n');
 		System.out.println("------------------------- ANALIZADOR LEXICO ------------------------------");
 //		analizadorLexico.printTokens();
-		analizadorLexico.printTablaSimbolos();		
+		//analizadorLexico.printTablaSimbolos();		
 
 //		analizadorLexico.printErrors();	
 //		analizadorLexico.printWarnings();
-		
-		System.out.println("\n" + "\n" + "Estructura de Cï¿½digo Intermedio (Polaca Inversa)");
-		code.printPolaca();
-		
-
 //		
-		System.out.println("\n" + "\n" + "Estructura de Código Intermedio (Polaca Inversa)");
-		code.printPolaca();
+		//System.out.println("\n" + "\n" + "Estructura de Código Intermedio (Polaca Inversa)");
+		//code.printPolaca();
 
 		System.out.println("Errores \n");
 		analizadorLexico.printErrors();	

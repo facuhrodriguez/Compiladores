@@ -1,17 +1,11 @@
-UINT z;
-UINT a;
-UINT b;
-UINT c;
-UINT d;
-UINT e;
-UINT f;
-
-PROC aa() NI = 3_ui {
-IF (a < b) {
-	a = 4_ui;
-} ELSE {
-	a = 1_ui;
-} END_IF
+PROC aa() NI = 2_ui {
+	UINT c;
+	c = 1_ui + 4_ui;
+	IF (c > 2_ui) {
+		OUT('Todo Salio bien');
+	} ELSE {
+		OUT('Todo salio mal');
+	} END_IF
 }
 
 aa();

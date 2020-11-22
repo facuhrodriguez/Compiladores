@@ -1,0 +1,5 @@
+generar la etiqueta en la gramatica
+con la direccion a saltar
+Agregarle dos puntos o algun caracter de escape al label
+
+UINT: 16 bits (AX)

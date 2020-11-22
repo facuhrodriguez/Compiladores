@@ -56,10 +56,12 @@ public class GeneradorAssembler {
         bw.write(this.ts.generarAssembler() +  System.lineSeparator());
         bw.write("DivisionCero db \"Error al intentar dividir por 0\", 0" + System.lineSeparator()
 		+ "RestaNegativa db \"Ocurrió overflow(resta negativa) en la resta\", 0" + System.lineSeparator()
+		+ "CodigoTerminado db \"Código finalizado correctamente\", 0" + System.lineSeparator() 
 		+ "estado DW ?" + System.lineSeparator());
         bw.write(".code" + System.lineSeparator());
         bw.write("start: " + System.lineSeparator() );
         bw.write(this.generarAssembler());
+        bw.write("invoke MessageBox, NULL, addr CodigoTerminado, addr CodigoTerminado, MB_OK" + System.lineSeparator());
         bw.write("invoke ExitProcess, 0" + System.lineSeparator());
         bw.write("LabelDivisionCero:" + System.lineSeparator());
         bw.write("invoke MessageBox, NULL, addr DivisionCero, addr DivisionCero, MB_OK" + System.lineSeparator());
@@ -95,9 +97,9 @@ public class GeneradorAssembler {
 							String var1 = this.stack.pop();
 							Token t1 = this.ts.getToken(var1);
 							Token t2 = this.ts.getToken(var2);
-							if (! tiposIncompatibles(t1, t2)) {
-								// Situación 1
-								if (t1 != null && t2 != null) {
+							// Situación 1
+							if (t1 != null && t2 != null) {
+								if (! tiposIncompatibles(t1, t2)) {
 									if (t1.getAttr("TIPO") == AnalizadorLexico.TYPE_UINT) {
 										switch (op) {
 										case "+":
@@ -111,7 +113,7 @@ public class GeneradorAssembler {
 											String regResta = getRegistroLibre();
 											this.setEstadoRegistro(regResta, true);
 											assembler.append("MOV " + regResta + "," + "_" + var1 + System.lineSeparator());
-											assembler.append("SUB " + regResta + "," + "_" + var2 + System.lineSeparator());
+											assembler.append("SUB " + regResta  + "," + "_" + var2 + System.lineSeparator());
 											assembler.append("JS " + labelRestaNegativa + System.lineSeparator());
 											this.stack.push(regResta);
 											break;
@@ -124,11 +126,11 @@ public class GeneradorAssembler {
 											break;
 										case "/":
 											String regDiv = getRegistroLibreMultDiv();
-											assembler.append("CMP " + regDiv + "," + 0 + System.lineSeparator());
+											assembler.append("CMP " + "_" + var2 + "," + 0 + System.lineSeparator());
 											assembler.append("JE " + labelDivisionCero + System.lineSeparator());
 											this.setEstadoRegistro(regDiv, true);
 											assembler.append("MOV " + regDiv + "," + "_" + var1 + System.lineSeparator());
-											assembler.append("IDIV " + regDiv + "," + "_" + var2 + System.lineSeparator());
+											assembler.append("IDIV " + "_" + var2 + System.lineSeparator());
 											this.stack.push(regDiv);
 											break;
 										case "=":
@@ -192,8 +194,12 @@ public class GeneradorAssembler {
 									} else {
 										this.getAssemblerDouble(op, var1, var2, count);
 									}
-								} 
-								else {
+								} else {
+									System.err.println("ERROR - NO SE GENERA CODIGO INTERMEDIO POR INCOMPATIBILIDAD DE TIPOS");
+									System.exit(0);
+									
+								}
+							}else {
 									// Situación 2
 									if (esRegistro(var1) && t2 != null && ( t2.getAttr("USO") == AnalizadorSintactico.VARIABLE || 
 												t2.getAttr("USO") == AnalizadorSintactico.CONSTANTE)) {
@@ -213,10 +219,9 @@ public class GeneradorAssembler {
 												this.stack.push(var1);
 												break;
 											case "/":
-												assembler.append("IDIV " + var1 + "," + "_" + var2 + System.lineSeparator());
 												assembler.append("CMP " + var1 + "," +  0 + System.lineSeparator());
-												// TODO: Crear labels de chequeos de div por cero
 												assembler.append("JE " + labelDivisionCero + System.lineSeparator());
+												assembler.append("IDIV " + "_" + var1 + System.lineSeparator());
 												this.stack.push(var1);
 												break;
 											case "=":
@@ -269,8 +274,7 @@ public class GeneradorAssembler {
 												this.stack.push(var1);
 												break;  
 											case "-":
-												assembler.append("SUB " + var1 + "," + var2 + System.lineSeparator());
-												// TODO: Crear labels de chequeos en tiempo de ejecución
+												assembler.append("SUB " +  var1 + "," + var2 + System.lineSeparator());
 												assembler.append("JS " + labelRestaNegativa + System.lineSeparator());
 												setEstadoRegistro(var2, false);
 												this.stack.push(var1);
@@ -281,10 +285,9 @@ public class GeneradorAssembler {
 												this.stack.push(var1);
 												break;
 											case "/":
-												assembler.append("IDIV " + var1 + "," + var2 + System.lineSeparator());
-												assembler.append("CMP " + var1 + "," +  0 + System.lineSeparator());
-												// TODO: Crear labels de chequeos de div por cero
+												assembler.append("CMP " + "_" + var2 + "," +  0 + System.lineSeparator());
 												assembler.append("JE " + labelDivisionCero + System.lineSeparator());
+												assembler.append("IDIV " + "_" + var2 + System.lineSeparator());
 												setEstadoRegistro(var2, false);
 												this.stack.push(var1);
 												break;
@@ -341,7 +344,7 @@ public class GeneradorAssembler {
 													String regRes = this.getRegistroLibre();
 													setEstadoRegistro(regRes, true);
 													assembler.append("MOV " + regRes + "_" + var1 + System.lineSeparator());
-													assembler.append("SUB " + regRes + "," + var2 + System.lineSeparator());
+													assembler.append("SUB " + regRes  + "," + var2 + System.lineSeparator());
 													assembler.append("JS " + labelRestaNegativa + System.lineSeparator());
 													setEstadoRegistro(var2, false);
 													this.stack.push(var1);
@@ -353,10 +356,10 @@ public class GeneradorAssembler {
 												case "/":
 													String regDiv = this.getRegistroLibre();
 													setEstadoRegistro(regDiv, true);
-													assembler.append("CMP " + "_" + var1 + "," +  0 + System.lineSeparator());
+													assembler.append("CMP " + var2 + "," +  0 + System.lineSeparator());
 													assembler.append("JE " + labelDivisionCero + System.lineSeparator());
 													assembler.append("MOV " + regDiv + "_" + var1 + System.lineSeparator());
-													assembler.append("IDIV " + regDiv + "," + var2 + System.lineSeparator());
+													assembler.append("IDIV " + var2 + System.lineSeparator());
 													setEstadoRegistro(var2, false);
 													this.stack.push(var1);
 													break;
@@ -396,34 +399,31 @@ public class GeneradorAssembler {
 											}
 										}
 									}
-								}
-							} else {
-								System.err.println("ERROR - NO SE GENERA CODIGO INTERMEDIO POR INCOMPATIBILIDAD DE TIPOS");
-								return null;
 							}
-						} else {
-							if (this.polaca.isOperator(op) && this.polaca.isUnary(op)) {
-								String var1 = this.stack.pop();
-								switch (op) {
-								case "BI":
-									assembler.append("JMP " + "L"+ var1 + System.lineSeparator());
-									break;
-								case "BF":
-									assembler.append(tipoSalto + "L" + var1 + System.lineSeparator());
-									break;
-								case "OUT":
-									assembler.append("invoke MessageBox, NULL, addr \"OUT\", addr " + var1 + "," + "MB_OK" + System.lineSeparator());
-									break;
-								default:
-									break;
-								}
-								
+						 
+					} else {
+						if (this.polaca.isOperator(op) && this.polaca.isUnary(op)) {
+							String var1 = this.stack.pop();
+							switch (op) {
+							case "BI":
+								assembler.append("JMP " + "L"+ var1 + System.lineSeparator());
+								break;
+							case "BF":
+								assembler.append(tipoSalto + "L" + var1 + System.lineSeparator());
+								break;
+							case "OUT":
+								assembler.append("invoke MessageBox, NULL, addr " + var1 + ", addr " + var1 + "," + "MB_OK" + System.lineSeparator());
+								break;
+							default:
+								break;
 							}
+							
 						}
-					} 
-				}
-				
-				}
+					}
+				} 
+			}
+			
+			}
 			}
 			return assembler.toString();
 		}
@@ -474,13 +474,15 @@ public class GeneradorAssembler {
 	
 	public String getAssemblerDouble(String op, String var1, String var2, Integer c) {
 		StringBuilder assembler = new StringBuilder();
-
+		Token t;
 		switch (op) {
 			case "+":
 				assembler.append("FLD " + var1 + System.lineSeparator());
 				assembler.append("FLD " + var2 + System.lineSeparator());
 				assembler.append("FADD " + System.lineSeparator());
 				assembler.append("FSTP " + "@aux" + c + System.lineSeparator());
+				t = new Token(AnalizadorLexico.CONSTANTE, "@aux" + c, "VARIABLE AUXILIAR");
+				this.ts.addToken("@aux" + c, t);
 				stack.push("@aux"+c);
 				break;  
 			case "-":
@@ -488,6 +490,8 @@ public class GeneradorAssembler {
 				assembler.append("FLD " + var2 + System.lineSeparator());
 				assembler.append("FSUB " + System.lineSeparator());
 				assembler.append("FSTP " + "@aux" + c + System.lineSeparator());
+				t = new Token(AnalizadorLexico.CONSTANTE, "@aux" + c, "VARIABLE AUXILIAR");
+				this.ts.addToken("@aux" + c, t);
 				stack.push("@aux" + c);
 				break;
 			case "*":
@@ -495,6 +499,8 @@ public class GeneradorAssembler {
 				assembler.append("FLD " + var2 + System.lineSeparator());
 				assembler.append("FMUL " + System.lineSeparator());
 				assembler.append("FSTP " + "@aux" + c + System.lineSeparator());
+				t = new Token(AnalizadorLexico.CONSTANTE, "@aux" + c, "VARIABLE AUXILIAR");
+				this.ts.addToken("@aux" + c, t);
 				stack.push("@aux" + c);
 				break;
 			case "/":
@@ -507,6 +513,8 @@ public class GeneradorAssembler {
 				assembler.append("JE "+ labelDivisionCero +System.lineSeparator());
 				assembler.append("FDIV "+System.lineSeparator());
 				assembler.append("FSTP "+"@aux"+ c +System.lineSeparator());
+				t = new Token(AnalizadorLexico.CONSTANTE, "@aux" + c, "VARIABLE AUXILIAR");
+				this.ts.addToken("@aux" + c, t);
 				this.stack.push("@aux"+c);
 				break;
 			case "=":

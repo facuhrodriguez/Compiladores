@@ -29,7 +29,6 @@ public class App {
 		parser.run();
 
 		System.out.println(" ----------------------------------------- ANALIZADOR SINTACTICO -----------------------------------------");
-//		analizadorSintactico.printStructures();
 		System.out.println('\n');
 		System.out.println("Errores \n");
 		analizadorLexico.printErrors();	
@@ -37,6 +36,13 @@ public class App {
 		analizadorLexico.printWarnings();
 		
 		System.out.println("\n" + "Errores Semánticos");
+
+		System.err.println('\n');
+		System.out.println("------------------------- ANALIZADOR LEXICO ------------------------------");
+		analizadorLexico.printTablaSimbolos();		
+
+		System.out.println("\n" + "\n" + "Estructura de Código Intermedio (Polaca Inversa)");
+		code.printPolaca();
 		code.printErrors();
 		
 		if (analizadorLexico.hayErrores() || analizadorSintactico.hayErrores() || code.hayErrores())

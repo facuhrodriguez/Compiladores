@@ -30,7 +30,6 @@ public class AddConstant implements AccionSemantica {
 					 d = mantissa * Math.pow(DIEZ, exp);
 				 else 
 					 d = mantissa * Math.pow(DIEZ, -exp);
-					 
 				if (d > 0)
 					number = MyDouble.checkPositiveRange(d);
 				else 

@@ -82,18 +82,18 @@ public class AnalizadorLexico {
 	public static final Integer MIN_EXPONENT_DOUBLE = -308;
 
 	// Warnings
-	public static final String WARNING_IDENTIFICADOR = "Warning - Identificador muy largo en línea ";
-	public static final String WARNING_CONSTANT_UI = "Warning - Constante entera sin signo fuera de rango en línea ";
-	public static final String WARNING_CONSTANT_DOUBLE = "Warning - Constante double fuera de rango en línea ";
+	public static final String WARNING_IDENTIFICADOR = "Warning - Identificador muy largo en lï¿½nea ";
+	public static final String WARNING_CONSTANT_UI = "Warning - Constante entera sin signo fuera de rango en lï¿½nea ";
+	public static final String WARNING_CONSTANT_DOUBLE = "Warning - Constante double fuera de rango en lï¿½nea ";
 
 	// Errores
-	public static final String ERROR_CARACTER_NO_RECONOCIDO = "Error - Caracter no reconocido en línea ";
-	public static final String ERROR_CONSTANTE_MAL_DECLARADA = "Error - Constante mal declarada en línea ";
-	public static final String ERROR_CONSTANTE_ENTERA_MAL_DECLARADA = "Error - Constante entera sin signo mal declarada en línea ";
-	public static final String ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA = "Error - Constante double mal declarada en línea ";
-	public static final String ERROR_IDENTIFICADOR_MAL_DECLARADO = "Error - Identificador mal declarado en línea ";
-	public static final String ERROR_PALABRA_RESERVADA_MAL_DEFINIDA = "Error - Palabra reservada mal definida en línea ";
-	public static final String ERROR_CADENA_MAL_DEFINIDA = "Error- Cadena mal definida en línea ";
+	public static final String ERROR_CARACTER_NO_RECONOCIDO = "Error - Caracter no reconocido en lï¿½nea ";
+	public static final String ERROR_CONSTANTE_MAL_DECLARADA = "Error - Constante mal declarada en lï¿½nea ";
+	public static final String ERROR_CONSTANTE_ENTERA_MAL_DECLARADA = "Error - Constante entera sin signo mal declarada en lï¿½nea ";
+	public static final String ERROR_CONSTANTE_DOUBLE_MAL_DECLARADA = "Error - Constante double mal declarada en lï¿½nea ";
+	public static final String ERROR_IDENTIFICADOR_MAL_DECLARADO = "Error - Identificador mal declarado en lï¿½nea ";
+	public static final String ERROR_PALABRA_RESERVADA_MAL_DEFINIDA = "Error - Palabra reservada mal definida en lï¿½nea ";
+	public static final String ERROR_CADENA_MAL_DEFINIDA = "Error- Cadena mal definida en lï¿½nea ";
 	
 	public static final String TYPE_UINT = "UINT";
 	public static final String TYPE_DOUBLE = "DOUBLE";
@@ -1524,7 +1524,7 @@ public class AnalizadorLexico {
 	}
 
 	/**
-	 * Realiza el análisis léxico
+	 * Realiza el anï¿½lisis lï¿½xico
 	 * @return
 	 */
 	public int yylex() {
@@ -1553,7 +1553,7 @@ public class AnalizadorLexico {
 	}
 
 	/**
-	 * Devuelve a la entrada el último caracter leído
+	 * Devuelve a la entrada el ï¿½ltimo caracter leï¿½do
 	 */
 	public void unget() {
 		this.fh.goBack();
@@ -1577,7 +1577,7 @@ public class AnalizadorLexico {
 	}
 
 	/**
-	 * Devuelve las palabras reservadas reconocidas por el Analizador Léxico.
+	 * Devuelve las palabras reservadas reconocidas por el Analizador Lï¿½xico.
 	 * @return
 	 */
 	public PalabrasReservadas getPalabrasReservadas() {
@@ -1585,7 +1585,7 @@ public class AnalizadorLexico {
 	}
 
 	/**
-	 * Agrega un token a la tabla de símbolos
+	 * Agrega un token a la tabla de sï¿½mbolos
 	 * @param token
 	 * @param lexema
 	 */
@@ -1594,7 +1594,7 @@ public class AnalizadorLexico {
 	}
 	
 	/**
-	 * Devuelve la línea actual del código.
+	 * Devuelve la lï¿½nea actual del cï¿½digo.
 	 * @return
 	 */
 	public Integer getLine() {
@@ -1612,7 +1612,7 @@ public class AnalizadorLexico {
 	}
 
 	/**
-	 * Retorna el caracter leído actualmente.
+	 * Retorna el caracter leï¿½do actualmente.
 	 * @return
 	 */
 	public Character currentCharacter() {
@@ -1658,7 +1658,7 @@ public class AnalizadorLexico {
 	
 	
 	/**
-	 * Imprime los errores léxicos encontrados
+	 * Imprime los errores lï¿½xicos encontrados
 	 */
 	public void printErrors() {
 		System.out.println("\n");
@@ -1673,20 +1673,18 @@ public class AnalizadorLexico {
 	}
 	
 	/**
-	 * Imprime el contenido de la tabla de símbolos.
+	 * Almacena la tabla de simbolo en archivo CSV.
 	 */
 	public void printTablaSimbolos() {
 		System.out.println("\n");
-		System.out.println("					TABLA DE SIMBOLOS					" + "\n" );
-		System.out.println("NUMERO " + "     	NAME            " + "       	        	TIPO     " +   
-		"			 USO" + "          		AMBITO" + " 			FORMA DE PASAJE"  + "        	CANT. INVOCACIONES");
+		System.out.println("Archivo CSV generado para la tabla de símbolos \n" );
 		this.table.print();
 	}
 
 	
 	/**
-	 * En los casos que haya errores léxicos, se ejecuta el modo pánico.
-	 * Descarta todos los caracteres hasta que se encuentra con un salto de línea, tabulación
+	 * En los casos que haya errores lï¿½xicos, se ejecuta el modo pï¿½nico.
+	 * Descarta todos los caracteres hasta que se encuentra con un salto de lï¿½nea, tabulaciï¿½n
 	 * o retorno de carro.
 	 */
 	public void panicMode() {

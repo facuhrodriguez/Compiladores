@@ -1,11 +1,13 @@
-PROC aa() NI = 2_ui {
+PROC a(UINT j) NI = 2_ui {
+	UINT b;
 	UINT c;
-	c = 1_ui + 4_ui;
-	IF (c > 2_ui) {
-		OUT('Todo Salio bien');
+	c = b + 2_ui;
+	a = 3_ui - 3_ui;
+	IF (3_ui > 2_ui) {
+    		OUT('Todo Anda bien');
 	} ELSE {
-		OUT('Todo salio mal');
+    		OUT('Algo salio mal');
 	} END_IF
 }
-
-aa();
+UINT m;
+a(m:j);

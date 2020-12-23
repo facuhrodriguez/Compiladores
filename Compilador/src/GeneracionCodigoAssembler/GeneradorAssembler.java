@@ -430,6 +430,7 @@ public class GeneradorAssembler {
 
 	
 	private boolean tiposIncompatibles(Token t1, Token t2) {
+		
 		if (t1 != null && t2 != null && t1.getAttr("TIPO") == t2.getAttr("TIPO")) 
 			return false;
 		return true;
@@ -481,7 +482,7 @@ public class GeneradorAssembler {
 				assembler.append("FLD " + var2 + System.lineSeparator());
 				assembler.append("FADD " + System.lineSeparator());
 				assembler.append("FSTP " + "@aux" + c + System.lineSeparator());
-				t = new Token(AnalizadorLexico.CONSTANTE, "@aux" + c, "VARIABLE AUXILIAR");
+				t = new Token(AnalizadorLexico.CONSTANTE, "@aux" + c, AnalizadorLexico.TYPE_DOUBLE);
 				this.ts.addToken("@aux" + c, t);
 				stack.push("@aux"+c);
 				break;  
@@ -490,7 +491,7 @@ public class GeneradorAssembler {
 				assembler.append("FLD " + var2 + System.lineSeparator());
 				assembler.append("FSUB " + System.lineSeparator());
 				assembler.append("FSTP " + "@aux" + c + System.lineSeparator());
-				t = new Token(AnalizadorLexico.CONSTANTE, "@aux" + c, "VARIABLE AUXILIAR");
+				t = new Token(AnalizadorLexico.CONSTANTE, "@aux" + c, AnalizadorLexico.TYPE_DOUBLE);
 				this.ts.addToken("@aux" + c, t);
 				stack.push("@aux" + c);
 				break;
@@ -499,7 +500,7 @@ public class GeneradorAssembler {
 				assembler.append("FLD " + var2 + System.lineSeparator());
 				assembler.append("FMUL " + System.lineSeparator());
 				assembler.append("FSTP " + "@aux" + c + System.lineSeparator());
-				t = new Token(AnalizadorLexico.CONSTANTE, "@aux" + c, "VARIABLE AUXILIAR");
+				t = new Token(AnalizadorLexico.CONSTANTE, "@aux" + c, AnalizadorLexico.TYPE_DOUBLE);
 				this.ts.addToken("@aux" + c, t);
 				stack.push("@aux" + c);
 				break;
@@ -513,7 +514,7 @@ public class GeneradorAssembler {
 				assembler.append("JE "+ labelDivisionCero +System.lineSeparator());
 				assembler.append("FDIV "+System.lineSeparator());
 				assembler.append("FSTP "+"@aux"+ c +System.lineSeparator());
-				t = new Token(AnalizadorLexico.CONSTANTE, "@aux" + c, "VARIABLE AUXILIAR");
+				t = new Token(AnalizadorLexico.CONSTANTE, "@aux" + c, AnalizadorLexico.TYPE_DOUBLE);
 				this.ts.addToken("@aux" + c, t);
 				this.stack.push("@aux"+c);
 				break;

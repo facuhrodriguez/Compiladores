@@ -1,0 +1,3 @@
+UINT a;
+a = 4_ui;
+a = 1_ui/0_ui;

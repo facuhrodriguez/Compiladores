@@ -91,7 +91,9 @@ declaraciones_procedimiento : encabezado_procedimiento '{' sentencias '}' { Stri
 																					String par = parametros.get(i);
 																					this.removerParametro(par);
 																				}
-																			
+																			polaca.stackUp(CodigoIntermedio.polacaNumber);
+																			polaca.addOperador("");
+																			polaca.addOperador("BI");
 																			}
 							;
 
@@ -360,8 +362,8 @@ sentencia_seleccion : IF '(' condicion ')' cuerpo_if_bien_definido END_IF {
 															  // Desapila dirección incompleta 
 															  Integer pasoIncompleto = polaca.getTop(); 	
 															  // Completo el destino de BI
-															  polaca.addDirection(pasoIncompleto, CodigoIntermedio.polacaNumber);
-															  polaca.addOperador("L".concat(CodigoIntermedio.polacaNumber.toString()));
+															  polaca.addDirection(pasoIncompleto, CodigoIntermedio.polacaNumber - 1);
+															  //polaca.addOperador("L".concat(CodigoIntermedio.polacaNumber.toString()));
 															 } 
 					| IF '(' ')' cuerpo_if_bien_definido END_IF { this.s.addSyntaxError( new Error(AnalizadorSintactico.errorCondition, this.l, this.l.getLine()));} 
 					| IF '(' condicion cuerpo_if_bien_definido END_IF { this.s.addSyntaxError(new Error(AnalizadorSintactico.parFinal, this.l, this.l.getLine()));}
@@ -443,11 +445,14 @@ invocaciones_procedimiento : IDENTIFICADOR '(' parametros_invocacion')' {   Stri
 																			  else {
 																				t.addAttr("INVOCACIONES DISPONIBLES", (previousCount-1));
 																				// Apilo paso incompleto
-																			  Integer paso = polaca.getTopProcedure();
+																			  //Integer paso = polaca.getTopProcedure();
 																			  polaca.addOperador("");
 																			  polaca.addDirectionProc(CodigoIntermedio.polacaNumber - 1, t.getAttr("NOMBRE").toString());
 																			  polaca.addOperador("BI");
-																			  
+																				// Agrego Etiqueta L-NUMEROPOLACA
+																				polaca.addOperador(("L").concat((CodigoIntermedio.polacaNumber).toString()));
+																				Integer paso = polaca.getTop();
+																				polaca.addDirection(paso, CodigoIntermedio.polacaNumber-1);
 																			  }
 																			}
 																		}
@@ -472,14 +477,16 @@ invocaciones_procedimiento : IDENTIFICADOR '(' parametros_invocacion')' {   Stri
 															polaca.addSemanticError(new Error(CodigoIntermedio.ERROR_INVOCACIONES_PROC, this.l, this.l.getLine()));
 														  else {
 															  t.addAttr("INVOCACIONES DISPONIBLES", (previousCount-1));
-															  Integer paso = polaca.getTopProcedure();
+															//  Integer paso = polaca.getTopProcedure();
 															  polaca.addOperador("");
 															  polaca.addDirectionProc(CodigoIntermedio.polacaNumber - 1, t.getAttr("NOMBRE").toString());
 															  polaca.addOperador("BI");
-															
+															 // Agrego Etiqueta L-NUMEROPOLACA
+															polaca.addOperador(("L").concat((CodigoIntermedio.polacaNumber).toString()));
 															  }
 														  }
-														  
+														  Integer paso = polaca.getTop();
+														  polaca.addDirection(paso, CodigoIntermedio.polacaNumber-1);
 														}
 													}
 				           ;

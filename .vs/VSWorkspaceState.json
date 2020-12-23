@@ -1,0 +1,11 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\Compilador",
+    "\\Compilador\\src",
+    "\\Compilador\\src\\AnalizadorSintactico",
+    "\\Compilador\\src\\CodigoIntermedio"
+  ],
+  "SelectedNode": "\\Compilador\\src\\AnalizadorSintactico\\Parser.java",
+  "PreviewInSolutionExplorer": false
+}

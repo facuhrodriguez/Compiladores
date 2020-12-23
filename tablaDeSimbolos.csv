@@ -1,0 +1,12 @@
+NUMERO ;NAME ;TIPO ;			 USO;AMBITO;FORMA DE PASAJE;CANT. INVOCACIONES;VALOR
+259;TodoAndabien;CADENA;-;-;-;-;-
+257;j@a@main;UINT;Nombre de parametro;a@main;COPIA VALOR;-;-
+257;m@main;UINT;Variable;main;-;-;-
+257;m;-;-;-;-;-;-
+257;j;-;-;-;-;-;-
+257;c@a@main;UINT;Variable;a@main;-;-;-
+257;a@main;-;Nombre de procedimiento;main;-;2;-
+257;b@a@main;UINT;Variable;a@main;-;-;-
+258;3;UINT;Constante;-;-;-;-
+258;2;UINT;Constante;-;-;-;-
+259;Algosaliomal;CADENA;-;-;-;-;-
